@@ -1,6 +1,6 @@
 import { db, getSettings, uid } from '../db/db'
-import type { GradeResult, Passage, Register, Word } from '../db/types'
-import { introduceWords, pickNewWords, todayStr } from './session'
+import type { GradeResult, Passage, PassageLine, Register, Word } from '../db/types'
+import { currentTier, introduceWords, pickNewWords, todayStr } from './session'
 
 /** Topic rotation — avoid repeating within 7 days (§5.2). */
 const TOPICS = [
@@ -31,10 +31,11 @@ async function pickTopic(): Promise<string> {
 export class GenerationError extends Error {}
 
 interface GenerateResponse {
-  passage: string
+  format: 'dialogue' | 'prose'
+  lines: { speaker: 'A' | 'B' | null; text: string; gloss: string }[]
   translation: string
   glossary: { word: string; gloss: string }[]
-  question: { prompt: string; answer: string }
+  question: { prompt: string; prompt_en?: string; answer: string }
 }
 
 /**
@@ -62,21 +63,29 @@ export async function getOrGeneratePassage(register: Register): Promise<Passage>
   }
 
   const settings = await getSettings()
+  const tier = await currentTier()
   const cards = await db.cards.toArray()
   const studiedIds = new Set(cards.map((c) => c.wordId))
   const newIds = new Set(newWords.map((w) => w.id))
   const all = await db.words.toArray()
   const studied = all.filter((w) => studiedIds.has(w.id) && !newIds.has(w.id)).map((w) => w.baku)
-  const available = all
-    .filter((w) => !studiedIds.has(w.id) && !newIds.has(w.id) && w.source === 'seed')
-    .map((w) => w.baku)
 
   const res = await fetch('/api/generate', {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({
+      // The tier and its constraints are sent explicitly (P0.1) — the model
+      // never infers level from list sizes, and the server validates against
+      // these same numbers.
+      tier: {
+        id: tier.id,
+        format: tier.format,
+        length_words: tier.lengthWords,
+        containment: tier.containment,
+        min_occurrences: tier.minOccurrences,
+        question_language: tier.questionLanguage,
+      },
       studied_words: studied,
-      available_words: available,
       new_words: newWords.map((w) => w.baku),
       register,
       topic,
@@ -86,15 +95,27 @@ export async function getOrGeneratePassage(register: Register): Promise<Passage>
   if (!res.ok) throw new GenerationError('Tak boleh jana hari ini — cuba lagi.')
   const out = (await res.json()) as GenerateResponse
 
+  const lines: PassageLine[] = (out.lines ?? []).map((l) => ({
+    speaker: l.speaker === 'A' || l.speaker === 'B' ? l.speaker : null,
+    text: l.text ?? '',
+    gloss: l.gloss ?? '',
+  }))
   const passage: Passage = {
     id: uid(),
     date,
     register,
     topic,
-    text: out.passage,
-    translation: out.translation,
+    text: lines.map((l) => l.text).join(' '),
+    format: out.format === 'dialogue' ? 'dialogue' : 'prose',
+    lines,
+    tier: tier.id,
+    translation: out.translation ?? '',
     glossary: Array.isArray(out.glossary) ? out.glossary : [],
-    question: out.question ?? { prompt: '', answer: '' },
+    question: {
+      prompt: out.question?.prompt ?? '',
+      promptEn: out.question?.prompt_en ?? '',
+      answer: out.question?.answer ?? '',
+    },
     newWordIds: newWords.map((w) => w.id),
   }
   await db.passages.add(passage)

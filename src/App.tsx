@@ -20,7 +20,12 @@ function Shell({ needsOnboarding }: { needsOnboarding: boolean }) {
   if (needsOnboarding && location.pathname !== '/onboarding') {
     return <Navigate to="/onboarding" replace />
   }
-  if (!needsOnboarding && location.pathname === '/onboarding') {
+  // Allow deliberate re-runs from Settings (?redo=1); otherwise bounce home.
+  if (
+    !needsOnboarding &&
+    location.pathname === '/onboarding' &&
+    !location.search.includes('redo')
+  ) {
     return <Navigate to="/" replace />
   }
   return (

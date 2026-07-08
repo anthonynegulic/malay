@@ -4,6 +4,7 @@ import { db } from '../db/db'
 import type { GradeResult } from '../db/types'
 import { gradeResponse, outputPrompt } from '../lib/api'
 import { todayStr, updateSession } from '../lib/session'
+import { SectionLabel } from '../components/ui'
 
 export function Speak() {
   const navigate = useNavigate()
@@ -51,10 +52,8 @@ export function Speak() {
         </div>
       </header>
 
-      <div className="bg-white rounded-2xl border border-ink/10 p-5">
-        <div className="font-mono text-[10px] uppercase tracking-widest text-ink/40 mb-2">
-          situasi · the situation
-        </div>
+      <div className="panel-m p-5">
+        <SectionLabel ms="situasi" en="the situation" color="mansion" className="mb-2" />
         <div className="font-medium text-lg">{prompt}</div>
       </div>
 
@@ -65,7 +64,7 @@ export function Speak() {
             onChange={(e) => setAnswer(e.target.value)}
             placeholder="Jawab dalam Bahasa Melayu… (answer in Malay — imperfect is fine)"
             rows={4}
-            className="mt-4 w-full rounded-2xl border border-ink/15 bg-white p-4 passage focus:border-mansion"
+            className="mt-4 w-full rounded-2xl border border-ink/20 bg-limewash p-4 passage focus:border-mansion"
           />
           {error && (
             <div className="mt-2 text-sm text-ink/70">
@@ -92,11 +91,11 @@ export function Speak() {
 
       {result && (
         <div className="fade-in mt-4 space-y-4">
-          <div className="bg-white rounded-2xl border border-ink/10 p-5">
+          <div className="panel p-5">
             <div className="text-sm text-ink/50 line-through">{answer}</div>
             <div className="passage mt-2 text-shutter font-medium">{result.corrected}</div>
           </div>
-          <div className="bg-shutter/10 rounded-2xl p-5">
+          <div className="panel-s p-5">
             <div className="font-medium">
               {result.understood ? '✓ ' : ''}
               {result.encouragement}

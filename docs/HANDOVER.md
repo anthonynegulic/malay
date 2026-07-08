@@ -140,3 +140,38 @@ dotenv dep) — restart after editing.
 |--------|------|
 | `e8f72f0` | Full v1 build (everything in §1–§4) |
 | `2705f6f` | Bilingual UI layer (English subtitles throughout) |
+
+---
+
+## 9. v1.1 — Remediation (see `docs/REMEDIATION-v1.1.md`)
+
+Executed in full after the first live session exposed generation-quality failures:
+
+- **P0.1 Difficulty ramp** — `src/lib/tier.ts` (shared client/server). Four tiers keyed
+  to studied-word count; tier constraints are sent explicitly in every generation
+  request. Tier 0 (≤24 words) = 15–35-word A/B dialogue, ≤3 new words/day, always-visible
+  per-line English glosses, English comprehension question.
+- **P0.2 Containment validator** — `server/validate.ts`, pure + unit-tested
+  (`tests/p0.test.ts`, includes a regression test on the exact observed leak).
+  Multi-word units fused before tokenising; proper-noun heuristic gives no free pass to
+  sentence-initial capitals. 100%/95%/90% thresholds by tier; one feedback retry with the
+  violating tokens; then best-of-two accepted with leaks auto-glossed and logged for QA.
+- **P0.3 Selection diversity** — `src/lib/select.ts`, pure + unit-tested. Queued
+  harvest → tag priority → seed order; max 2 per POS/day; contrast pairs
+  (`CONTRAST_PAIRS`) never co-introduced; grammatical POS deprioritised while
+  studied < 50 (the "first two weeks" made mechanical).
+- **P1 design pass** — Hill rebuilt as earned-mound-vs-ghost-silhouette; surface system
+  (`.panel/.panel-m/.panel-s/.paper`, white reserved for tile + passage, no shadows);
+  poster headword at clamp(64px,18vw,96px); `SectionLabel` + `CornerMotif` (tile +
+  completion only); nyonya marker-underline for new words; footpath-stone weekday row;
+  SVG line icons in the tab bar; status chips (BARU/BELAJAR/MATANG) in Words.
+- **P2** — register coverage hidden until 20 studied; re-runnable self-assessment from
+  Settings (`/onboarding?redo=1`, backlog-only); spinner/cloud icons replace emoji;
+  betul/tak comprehension self-mark stored on the session row (data only).
+
+Old cached passages (pre-v1.1, no `lines`) degrade to a single prose block. Passage
+generation quality still needs live-key QA — now against the tier-0 acceptance criteria.
+
+| Commit | What |
+|--------|------|
+| (v1.1) | P0 ramp/validator/selection + P1 design pass + P2 fixes |

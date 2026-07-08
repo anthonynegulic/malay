@@ -47,15 +47,27 @@ export interface Card {
   lastReview?: number
 }
 
+export interface PassageLine {
+  speaker: 'A' | 'B' | null
+  text: string
+  gloss: string
+}
+
 export interface Passage {
   id: string
   date: string // YYYY-MM-DD
   register: Register
   topic: string
+  /** Joined text of all lines — used for harvesting/tokenising. */
   text: string
+  /** Tier-aware structure (P0.1): dialogue lines or prose sentences with glosses. */
+  format: 'dialogue' | 'prose'
+  lines: PassageLine[]
+  /** Difficulty tier this passage was generated at. */
+  tier: 0 | 1 | 2 | 3
   translation: string
   glossary: { word: string; gloss: string }[]
-  question: { prompt: string; answer: string }
+  question: { prompt: string; promptEn: string; answer: string }
   newWordIds: string[]
 }
 
@@ -68,6 +80,8 @@ export interface Session {
   outputAttempted: boolean
   /** Due count at first open of the day — powers the review-debt trend. */
   dueAtStart: number
+  /** Honest self-mark on the comprehension question (P2 — data only, no gating). */
+  comprehension?: 'betul' | 'tak'
 }
 
 export interface Settings {

@@ -28,13 +28,59 @@ body {
   overscroll-behavior-y: none;
 }
 
-/* Poster headword on review tiles */
+/* Poster headword on review tiles — Georgetown shop sign, not flashcard (P1.2) */
 .headword {
   font-family: var(--font-display);
   font-weight: 800;
   letter-spacing: -0.03em;
-  font-size: clamp(3.2rem, 16vw, 6rem);
+  font-size: clamp(64px, 18vw, 96px);
   line-height: 1.02;
+}
+
+/* ————— Surface system (P1.2): no default shadows, depth from borders & tint —————
+   .panel        limewash + ink hairline (primary content)
+   .panel-m      mansion tint ~7% (secondary blocks)
+   .panel-s      shutter tint ~6% (secondary blocks)
+   .paper        white — reserved for the review tile and the passage only */
+.panel {
+  background: var(--color-limewash);
+  border: 1px solid color-mix(in srgb, var(--color-ink) 18%, transparent);
+  border-radius: 1rem;
+}
+.panel-m {
+  background: color-mix(in srgb, var(--color-mansion) 7%, var(--color-limewash));
+  border: 1px solid color-mix(in srgb, var(--color-mansion) 20%, transparent);
+  border-radius: 1rem;
+}
+.panel-s {
+  background: color-mix(in srgb, var(--color-shutter) 6%, var(--color-limewash));
+  border: 1px solid color-mix(in srgb, var(--color-shutter) 20%, transparent);
+  border-radius: 1rem;
+}
+.paper {
+  background: #ffffff;
+  border: 1px solid color-mix(in srgb, var(--color-ink) 12%, transparent);
+  border-radius: 1.25rem;
+}
+
+/* New-word marker: nyonya underline, not a block (P1.3) */
+.mark-new {
+  background: linear-gradient(transparent 72%, var(--color-nyonya) 72%, var(--color-nyonya) 94%, transparent 94%);
+}
+
+/* Quiet loading spinner (replaces emoji-as-icon) */
+.spinner {
+  width: 22px;
+  height: 22px;
+  border-radius: 9999px;
+  border: 2.5px solid color-mix(in srgb, var(--color-mansion) 25%, transparent);
+  border-top-color: var(--color-mansion);
+  animation: spin 900ms linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Reading passage measure */

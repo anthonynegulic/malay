@@ -5,6 +5,7 @@ import type { Card, Word } from '../db/types'
 import { dueCards, gradeCard, previewIntervals, Rating, type Grade } from '../lib/fsrs'
 import { getOrCreateTodaySession, updateSession } from '../lib/session'
 import { VariantRow } from '../components/RegisterChip'
+import { CornerMotif } from '../components/ui'
 import { speak, ttsAvailable } from '../lib/tts'
 
 const SIKIT_CAP = 20
@@ -79,10 +80,7 @@ export function Review() {
         <h1 className="font-display font-extrabold text-2xl tracking-tight">Ulangkaji</h1>
         <div className="text-xs text-ink/40">review</div>
         <div className="flex-1 grid place-items-center text-center text-ink/60">
-          <div>
-            <div className="text-4xl mb-3">🌤</div>
-            Tiada kad hari ini — the queue is clear.
-          </div>
+          <div>Tiada kad hari ini — the queue is clear.</div>
         </div>
         <button
           onClick={finish}
@@ -116,8 +114,9 @@ export function Review() {
           {/* front */}
           <button
             onClick={() => setFlipped(true)}
-            className="flip-face absolute inset-0 w-full bg-white rounded-3xl border border-ink/10 shadow-sm grid place-items-center px-4"
+            className="flip-face paper absolute inset-0 w-full grid place-items-center px-4"
           >
+            <CornerMotif className="absolute top-0 right-0" />
             <div className="text-center">
               <div className="headword text-mansion break-words">{word.baku}</div>
               <div className="mt-6 text-ink/40 text-sm">
@@ -127,7 +126,7 @@ export function Review() {
           </button>
 
           {/* back */}
-          <div className="flip-face flip-back absolute inset-0 w-full bg-white rounded-3xl border border-ink/10 shadow-sm px-6 py-8 overflow-y-auto">
+          <div className="flip-face flip-back paper absolute inset-0 w-full px-6 py-8 overflow-y-auto">
             {flipped && (
               <div className="flex flex-col gap-5 h-full">
                 <div className="flex items-start justify-between gap-2">

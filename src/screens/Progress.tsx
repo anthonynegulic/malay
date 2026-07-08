@@ -3,6 +3,7 @@ import { db } from '../db/db'
 import { dueCount } from '../lib/fsrs'
 import { historyDays, weekRhythm, type WeekRhythm } from '../lib/session'
 import { Hill } from '../components/Hill'
+import { SectionLabel } from '../components/ui'
 
 interface Stats {
   studied: number
@@ -59,10 +60,8 @@ export function Progress() {
       </div>
 
       {rhythm && (
-        <div className="mt-5 bg-white rounded-2xl border border-ink/10 p-5">
-          <div className="font-mono text-[10px] uppercase tracking-widest text-ink/40 mb-2">
-            rentak mingguan · weekly rhythm
-          </div>
+        <div className="panel-s mt-5 p-5">
+          <SectionLabel ms="rentak mingguan" en="weekly rhythm" color="shutter" className="mb-2" />
           <div className="text-2xl font-display font-extrabold tracking-tight">
             {rhythm.daysDone}
             <span className="text-ink/40">/{rhythm.target} hari</span>
@@ -74,10 +73,8 @@ export function Progress() {
       )}
 
       <div className="mt-3 grid grid-cols-2 gap-3">
-        <div className="bg-white rounded-2xl border border-ink/10 p-5">
-          <div className="font-mono text-[10px] uppercase tracking-widest text-ink/40 mb-1">
-            hutang ulangkaji · review debt
-          </div>
+        <div className="panel-m p-5">
+          <SectionLabel ms="hutang ulangkaji" en="debt" color="mansion" className="mb-1" />
           <div className="text-2xl font-display font-extrabold tracking-tight text-mansion">
             {stats.due}
           </div>
@@ -94,24 +91,30 @@ export function Progress() {
             </div>
           )}
         </div>
-        <div className="bg-white rounded-2xl border border-ink/10 p-5">
-          <div className="font-mono text-[10px] uppercase tracking-widest text-ink/40 mb-1">
-            liputan loghat · registers
+        {/* meaningless at tiny n — hidden until 20 studied words (P2) */}
+        {stats.studied >= 20 ? (
+          <div className="panel p-5">
+            <SectionLabel ms="liputan loghat" en="registers" color="ink" className="mb-1" />
+            <div className="text-2xl font-display font-extrabold tracking-tight text-shutter">
+              {stats.coverage}%
+            </div>
+            <div className="text-xs text-ink/50 mt-1">
+              of studied words have colloquial / northern variants
+            </div>
           </div>
-          <div className="text-2xl font-display font-extrabold tracking-tight text-shutter">
-            {stats.coverage}%
+        ) : (
+          <div className="panel p-5">
+            <SectionLabel ms="liputan loghat" en="registers" color="ink" className="mb-1" />
+            <div className="text-xs text-ink/45 mt-2">
+              Unlocks at 20 studied words — {20 - stats.studied} to go.
+            </div>
           </div>
-          <div className="text-xs text-ink/50 mt-1">
-            of studied words have colloquial / northern variants
-          </div>
-        </div>
+        )}
       </div>
 
       {history.length > 0 && (
-        <div className="mt-3 bg-white rounded-2xl border border-ink/10 p-5">
-          <div className="font-mono text-[10px] uppercase tracking-widest text-ink/40 mb-3">
-            laluan · the footpath — full history, gaps and all
-          </div>
+        <div className="panel mt-3 p-5">
+          <SectionLabel ms="laluan" en="the footpath — full history" color="ink" className="mb-3" />
           <div className="flex flex-wrap gap-1.5">
             {history.map((d) => (
               <span

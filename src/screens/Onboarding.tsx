@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { db, saveSettings } from '../db/db'
 import type { Word } from '../db/types'
 import { knownCard } from '../lib/fsrs'
@@ -12,16 +12,24 @@ import { VariantRow } from '../components/RegisterChip'
  */
 export function Onboarding() {
   const navigate = useNavigate()
+  const [params] = useSearchParams()
+  // Re-run from Settings (P2): only backlog words, no onboarded flag to set.
+  const redo = params.get('redo') === '1'
   const [words, setWords] = useState<Word[] | null>(null)
   const [i, setI] = useState(0)
   const [knownCount, setKnownCount] = useState(0)
 
   useEffect(() => {
-    db.words.orderBy('addedAt').toArray().then(setWords)
-  }, [])
+    ;(async () => {
+      const all = await db.words.orderBy('addedAt').toArray()
+      if (!redo) return setWords(all)
+      const withCard = new Set((await db.cards.toArray()).map((c) => c.wordId))
+      setWords(all.filter((w) => !withCard.has(w.id)))
+    })()
+  }, [redo])
 
   async function finish() {
-    await saveSettings({ onboarded: true })
+    if (!redo) await saveSettings({ onboarded: true })
     navigate('/', { replace: true })
   }
 
@@ -36,18 +44,26 @@ export function Onboarding() {
     else setI(i + 1)
   }
 
-  if (!words) return null
+  // Redo with an empty backlog: nothing to assess, go home.
+  useEffect(() => {
+    if (words && words.length === 0) {
+      navigate('/', { replace: true })
+    }
+  }, [words, navigate])
+
+  if (!words || words.length === 0 || i >= words.length) return null
   const w = words[i]
 
   return (
     <div className="min-h-dvh flex flex-col max-w-md mx-auto px-5 py-8">
       <header className="mb-6">
         <h1 className="font-display font-extrabold text-2xl tracking-tight">
-          Selamat datang ke Bukit
+          {redo ? 'Tanda kata yang anda tahu' : 'Selamat datang ke Bukit'}
         </h1>
         <p className="text-ink/70 mt-1 text-sm">
-          One-time setup: mark the words you already know. They join your review pile as studied —
-          everything else waits in the backlog.
+          {redo
+            ? 'Mark any backlog words you already know — they join your reviews as studied.'
+            : 'One-time setup: mark the words you already know. They join your review pile as studied — everything else waits in the backlog.'}
         </p>
       </header>
 
@@ -61,7 +77,7 @@ export function Onboarding() {
         />
       </div>
 
-      <div key={w.id} className="fade-in bg-white rounded-2xl shadow-sm border border-ink/10 p-6 flex-1 flex flex-col justify-center text-center">
+      <div key={w.id} className="fade-in paper p-6 flex-1 flex flex-col justify-center text-center">
         <div className="headword text-mansion" style={{ fontSize: 'clamp(2.4rem, 12vw, 4rem)' }}>
           {w.baku}
         </div>

@@ -44,7 +44,7 @@ export function Settings() {
         </button>
       </header>
 
-      <section className="mt-6 bg-white rounded-2xl border border-ink/10 p-5 space-y-5">
+      <section className="mt-6 panel p-5 space-y-5">
         <div>
           <label className="font-medium">
             Kata baru sehari — {s.newWordsPerDay}
@@ -141,7 +141,24 @@ export function Settings() {
         </div>
       </section>
 
-      <section className="mt-4 bg-white rounded-2xl border border-ink/10 p-5 space-y-3">
+      <section className="mt-4 panel p-5 space-y-3">
+        <div className="font-mono text-[10px] uppercase tracking-widest text-ink/40">
+          penilaian semula · reassess
+        </div>
+        <div className="text-xs text-ink/50">
+          Know more Malay than your reviews suggest? Re-run the know / don&rsquo;t-know pass over
+          the words still in the backlog.
+        </div>
+        <button
+          onClick={() => navigate('/onboarding?redo=1')}
+          className="w-full py-3 rounded-xl border border-ink/20 text-ink/70 font-medium"
+        >
+          Tanda kata yang anda tahu
+          <span className="block text-xs font-normal text-ink/40">mark words you know</span>
+        </button>
+      </section>
+
+      <section className="mt-4 panel p-5 space-y-3">
         <div className="font-mono text-[10px] uppercase tracking-widest text-ink/40">
           sandaran · backup
         </div>

@@ -1,6 +1,8 @@
 import { db, getSettings, uid } from '../db/db'
 import type { Session, Word } from '../db/types'
 import { dueCount, newCard } from './fsrs'
+import { pickDiverse } from './select'
+import { tierFor, type Tier } from './tier'
 
 export function todayStr(d = new Date()): string {
   const y = d.getFullYear()
@@ -52,62 +54,63 @@ export async function newWordsUsedToday(): Promise<number> {
   return s.newWordsLearned
 }
 
-export async function newWordBudgetRemaining(): Promise<number> {
-  const settings = await getSettings()
-  const used = await newWordsUsedToday()
-  return Math.max(0, settings.newWordsPerDay - used)
+export async function studiedCount(): Promise<number> {
+  return db.cards.count()
+}
+
+export async function currentTier(): Promise<Tier> {
+  return tierFor(await studiedCount())
 }
 
 /**
- * Domain priority for scheduling new words from the seed backlog.
- * Earlier tags win; within a tag, seed order (addedAt) wins.
+ * Daily new-word budget: the user setting capped by the tier's daily maximum
+ * (P0.1) — shared between scheduled new words and harvesting.
  */
-const TAG_PRIORITY = [
-  'survival',
-  'numbers',
-  'time',
-  'food',
-  'market',
-  'family',
-  'transport',
-  'masjid',
-  'school',
-]
-
-function wordPriority(w: Word): number {
-  const idx = w.tags.map((t) => TAG_PRIORITY.indexOf(t)).filter((i) => i >= 0)
-  return idx.length ? Math.min(...idx) : TAG_PRIORITY.length
+export async function newWordBudgetRemaining(): Promise<number> {
+  const settings = await getSettings()
+  const tier = await currentTier()
+  const cap = Math.min(settings.newWordsPerDay, tier.maxNewWordsPerDay)
+  const used = await newWordsUsedToday()
+  return Math.max(0, cap - used)
 }
 
-/** Words with no card yet = the backlog. Queued-yesterday words come first. */
+/** Words with no card yet = the backlog (unsorted; selection sorts). */
 export async function backlogWords(): Promise<Word[]> {
   const cards = await db.cards.toArray()
   const withCard = new Set(cards.map((c) => c.wordId))
   const all = await db.words.toArray()
-  const backlog = all.filter((w) => !withCard.has(w.id))
-  backlog.sort((a, b) => {
-    const qa = a.queuedAt ?? Infinity
-    const qb = b.queuedAt ?? Infinity
-    if (qa !== qb) return qa - qb
-    const pa = wordPriority(a)
-    const pb = wordPriority(b)
-    if (pa !== pb) return pa - pb
-    return a.addedAt - b.addedAt
-  })
-  return backlog
+  return all.filter((w) => !withCard.has(w.id))
 }
 
 /**
- * Pick today's new words for the passage: 3–5, capped by remaining budget.
- * Does NOT create cards — cards are created once the passage actually
- * generates (introduceWords), so a failed generation doesn't burn budget.
+ * Pick today's new words for the passage, capped by remaining budget and the
+ * tier's passage count, with P0.3 diversity constraints (max 2 per POS, no
+ * contrast pairs, concrete-first while studied < 50). Does NOT create cards —
+ * cards are created once the passage actually generates (introduceWords), so a
+ * failed generation doesn't burn budget.
  */
 export async function pickNewWords(): Promise<Word[]> {
   const budget = await newWordBudgetRemaining()
   if (budget <= 0) return []
-  const n = Math.min(5, budget)
+  const tier = await currentTier()
+  const n = Math.min(tier.passageNewWords, budget)
   const backlog = await backlogWords()
-  return backlog.slice(0, n)
+  const studied = await studiedCount()
+
+  // Words already introduced today (harvests) count toward diversity limits.
+  const s = await getOrCreateTodaySession()
+  let introducedToday: Word[] = []
+  if (s.newWordsLearned > 0) {
+    const cards = await db.cards.toArray()
+    const todayStart = new Date()
+    todayStart.setHours(0, 0, 0, 0)
+    const todayIds = cards
+      .filter((c) => c.reps === 0 && c.due > todayStart.getTime())
+      .map((c) => c.wordId)
+    introducedToday = ((await db.words.bulkGet(todayIds)).filter(Boolean) as Word[]) ?? []
+  }
+
+  return pickDiverse(backlog, n, studied, introducedToday)
 }
 
 /**

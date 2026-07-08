@@ -10,8 +10,31 @@ import {
   type WeekRhythm,
 } from '../lib/session'
 import { Hill } from '../components/Hill'
+import { CornerMotif } from '../components/ui'
 
 const DAY_LABELS = ['I', 'S', 'R', 'K', 'J', 'S', 'A'] // Isnin..Ahad
+
+/** Weekday indicator drawn as a footpath stone, matching the Hill's language (P1.3). */
+function DayStone({ state, label }: { state: boolean | null; label: string }) {
+  return (
+    <span className="flex flex-col items-center gap-0.5">
+      <svg viewBox="0 0 20 14" className="w-6 h-4" aria-hidden>
+        <ellipse
+          cx="10"
+          cy="7"
+          rx="8.5"
+          ry="5.5"
+          fill={state === true ? 'var(--color-shutter)' : 'none'}
+          stroke={state === true ? 'var(--color-shutter)' : 'var(--color-ink)'}
+          strokeOpacity={state === true ? 1 : state === false ? 0.35 : 0.2}
+          strokeWidth="1.4"
+          strokeDasharray={state === false ? '2.5 2.5' : undefined}
+        />
+      </svg>
+      <span className="font-mono text-[9px] text-ink/40">{label}</span>
+    </span>
+  )
+}
 
 export function Today() {
   const navigate = useNavigate()
@@ -31,7 +54,7 @@ export function Today() {
       setBudget(await newWordBudgetRemaining())
       setStudied(await db.cards.count())
       setRhythm(await weekRhythm())
-      setHistory((await historyDays()).slice(-12).map((d) => d.counted))
+      setHistory((await historyDays()).slice(-14).map((d) => d.counted))
     })()
   }, [done])
 
@@ -42,92 +65,93 @@ export function Today() {
   })
 
   return (
-    <div className="max-w-md mx-auto px-5 pt-8 pb-28 fade-in">
-      <header className="flex items-start justify-between">
-        <div>
-          <div className="text-sm text-ink/60 capitalize">{today}</div>
-          <h1 className="font-display font-extrabold text-3xl tracking-tight text-ink">
-            {done ? 'Siap! 🎉' : 'Selamat datang balik'}
-          </h1>
-          <div className="text-xs text-ink/40">{done ? 'done!' : 'welcome back'}</div>
-        </div>
-        <Link to="/settings" aria-label="Settings" className="text-ink/50 text-xl p-1">
-          ⚙
-        </Link>
-      </header>
-
-      <div className="mt-4 -mx-2">
+    <div className="max-w-md mx-auto pb-24 fade-in">
+      {/* hill scene anchored full-bleed to the top — no floating */}
+      <div className="relative">
         <Hill wordCount={studied} history={history} grow={Boolean(done)} />
+        <header className="absolute top-0 inset-x-0 px-5 pt-6 flex items-start justify-between">
+          <div>
+            <div className="text-xs text-ink/55 capitalize">{today}</div>
+            <h1 className="font-display font-extrabold text-2xl tracking-tight text-ink">
+              {done ? 'Siap!' : 'Selamat datang balik'}
+            </h1>
+            <div className="text-[11px] text-ink/40">{done ? 'done!' : 'welcome back'}</div>
+          </div>
+          <Link to="/settings" aria-label="Settings" className="text-ink/45 p-1">
+            <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden>
+              <circle cx="12" cy="12" r="3" />
+              <path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1" />
+            </svg>
+          </Link>
+        </header>
       </div>
 
-      {rhythm && (
-        <div className="mt-3 flex items-center justify-between">
-          <div className="flex gap-1.5">
-            {rhythm.days.map((d, i) => (
-              <span
-                key={i}
-                className={`w-7 h-7 rounded-full grid place-items-center text-[10px] font-mono ${
-                  d === true
-                    ? 'bg-shutter text-limewash'
-                    : d === false
-                      ? 'bg-ink/5 text-ink/40'
-                      : 'border border-dashed border-ink/20 text-ink/30'
-                }`}
-              >
-                {DAY_LABELS[i]}
-              </span>
-            ))}
+      <div className="px-5">
+        {/* weekday footpath stones */}
+        {rhythm && (
+          <div className="mt-3 flex items-end justify-between">
+            <div className="flex gap-1.5">
+              {rhythm.days.map((d, i) => (
+                <DayStone key={i} state={d} label={DAY_LABELS[i]} />
+              ))}
+            </div>
+            <div className="font-mono text-[10px] text-ink/50 text-right pb-0.5">
+              {rhythm.daysDone}/{rhythm.target} minggu ini
+              <span className="block text-ink/35">days this week</span>
+            </div>
           </div>
-          <div className="text-xs font-mono text-ink/60 text-right">
-            {rhythm.daysDone}/{rhythm.target} minggu ini
-            <span className="block text-[10px] text-ink/40">days this week</span>
-          </div>
-        </div>
-      )}
+        )}
 
-      <div className="mt-6 grid grid-cols-2 gap-3">
-        <div className="bg-white rounded-xl border border-ink/10 p-4">
-          <div className="font-mono text-2xl font-medium text-mansion">{due}</div>
-          <div className="text-xs text-ink/60 mt-0.5">kad untuk diulang</div>
-          <div className="text-[10px] text-ink/40">cards to review</div>
-        </div>
-        <div className="bg-white rounded-xl border border-ink/10 p-4">
-          <div className="font-mono text-2xl font-medium text-shutter">{budget}</div>
-          <div className="text-xs text-ink/60 mt-0.5">kata baru hari ini</div>
-          <div className="text-[10px] text-ink/40">new words left today</div>
-        </div>
-      </div>
-
-      {done ? (
-        <div className="mt-8 text-center text-ink/70 text-sm">
-          {done === 'sikit'
-            ? 'Sikit je pun kira. Jumpa esok.'
-            : 'Sesi penuh selesai. Bukit itu tumbuh sedikit lagi.'}
-          <div className="text-xs text-ink/40 mt-1">
-            {done === 'sikit'
-              ? 'A little still counts. See you tomorrow.'
-              : 'Full session complete. The hill grew a little.'}
-          </div>
-        </div>
-      ) : (
-        <div className="mt-8 space-y-3">
-          <button
-            onClick={() => navigate('/review?mode=full')}
-            className="w-full py-4 rounded-2xl bg-mansion text-limewash font-display font-extrabold text-xl tracking-tight active:scale-[0.98] shadow-sm"
-          >
-            Mula
-            <span className="block font-body font-normal text-xs text-limewash/70 tracking-normal">
-              start today&rsquo;s session
+        {/* one compact stat strip */}
+        <div className="panel mt-5 grid grid-cols-2 divide-x divide-ink/10">
+          <div className="px-4 py-3">
+            <span className="font-mono text-xl text-mansion">{due}</span>
+            <span className="block font-mono text-[9px] uppercase tracking-widest text-ink/45 mt-0.5">
+              kad diulang · due
             </span>
-          </button>
-          <button
-            onClick={() => navigate('/review?mode=sikit')}
-            className="w-full py-3 rounded-2xl bg-transparent border border-ink/15 text-ink/70 font-medium active:scale-[0.98]"
-          >
-            Sikit je <span className="text-ink/40 text-sm">— reviews only, ~5 min</span>
-          </button>
+          </div>
+          <div className="px-4 py-3">
+            <span className="font-mono text-xl text-shutter">{budget}</span>
+            <span className="block font-mono text-[9px] uppercase tracking-widest text-ink/45 mt-0.5">
+              kata baru · new left
+            </span>
+          </div>
         </div>
-      )}
+
+        {done ? (
+          <div className="panel-m relative mt-5 px-5 py-6 text-center">
+            <CornerMotif className="absolute top-0 right-0 w-9 h-9" />
+            <div className="text-ink/80 text-sm">
+              {done === 'sikit'
+                ? 'Sikit je pun kira. Jumpa esok.'
+                : 'Sesi penuh selesai. Bukit itu tumbuh sedikit lagi.'}
+            </div>
+            <div className="text-xs text-ink/45 mt-1">
+              {done === 'sikit'
+                ? 'A little still counts. See you tomorrow.'
+                : 'Full session complete. The hill grew a little.'}
+            </div>
+          </div>
+        ) : (
+          <div className="mt-5 space-y-3">
+            <button
+              onClick={() => navigate('/review?mode=full')}
+              className="w-full py-4 rounded-2xl bg-mansion text-limewash font-display font-extrabold text-xl tracking-tight active:scale-[0.98]"
+            >
+              Mula
+              <span className="block font-body font-normal text-xs text-limewash/70 tracking-normal">
+                start today&rsquo;s session
+              </span>
+            </button>
+            <button
+              onClick={() => navigate('/review?mode=sikit')}
+              className="w-full py-3 rounded-2xl border border-ink/20 text-ink/70 font-medium active:scale-[0.98]"
+            >
+              Sikit je <span className="text-ink/40 text-sm">— reviews only, ~5 min</span>
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   )
 }

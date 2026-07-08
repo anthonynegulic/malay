@@ -1,9 +1,10 @@
 import { NavLink } from 'react-router-dom'
+import { BookIcon, HillIcon, StonesIcon } from './ui'
 
 const tabs = [
-  { to: '/', label: 'Hari ini', sub: 'today', icon: '⛰' },
-  { to: '/words', label: 'Kata', sub: 'words', icon: '📖' },
-  { to: '/progress', label: 'Bukit', sub: 'progress', icon: '🪨' },
+  { to: '/', label: 'Hari ini', sub: 'today', Icon: HillIcon },
+  { to: '/words', label: 'Kata', sub: 'words', Icon: BookIcon },
+  { to: '/progress', label: 'Bukit', sub: 'progress', Icon: StonesIcon },
 ]
 
 export function NavBar() {
@@ -21,9 +22,7 @@ export function NavBar() {
               }`
             }
           >
-            <span aria-hidden className="text-base leading-none">
-              {t.icon}
-            </span>
+            <t.Icon className="w-5 h-5" />
             {t.label}
             <span className="text-[9px] font-normal opacity-60 -mt-0.5">{t.sub}</span>
           </NavLink>

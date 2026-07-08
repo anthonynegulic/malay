@@ -1,8 +1,23 @@
 import { useEffect, useMemo, useState } from 'react'
 import { db } from '../db/db'
-import type { Word } from '../db/types'
-import { VariantRow } from '../components/RegisterChip'
+import type { CardState, Word } from '../db/types'
+import { RegisterChip, VariantRow } from '../components/RegisterChip'
 import { speak, ttsAvailable } from '../lib/tts'
+
+/** Study-state chip (P1.3): BARU = backlog, BELAJAR = in learning, MATANG = mature. */
+function StatusChip({ state }: { state: CardState | undefined }) {
+  const [label, cls] =
+    state === undefined
+      ? ['BARU', 'bg-ink/8 text-ink/50 border border-ink/15']
+      : state === 'review'
+        ? ['MATANG', 'bg-shutter text-limewash']
+        : ['BELAJAR', 'bg-mansion text-limewash']
+  return (
+    <span className={`font-mono text-[9px] tracking-widest rounded px-1.5 py-0.5 ${cls}`}>
+      {label}
+    </span>
+  )
+}
 
 const TAG_FILTERS = [
   'survival',
@@ -19,6 +34,7 @@ const TAG_FILTERS = [
 export function Words() {
   const [words, setWords] = useState<Word[]>([])
   const [studiedIds, setStudiedIds] = useState<Set<string>>(new Set())
+  const [cardStates, setCardStates] = useState<Map<string, CardState>>(new Map())
   const [q, setQ] = useState('')
   const [tag, setTag] = useState<string | null>(null)
   const [filter, setFilter] = useState<'all' | 'studied' | 'backlog' | 'variants' | 'harvested'>(
@@ -28,7 +44,10 @@ export function Words() {
 
   useEffect(() => {
     db.words.orderBy('addedAt').toArray().then(setWords)
-    db.cards.toArray().then((cs) => setStudiedIds(new Set(cs.map((c) => c.wordId))))
+    db.cards.toArray().then((cs) => {
+      setStudiedIds(new Set(cs.map((c) => c.wordId)))
+      setCardStates(new Map(cs.map((c) => [c.wordId, c.state])))
+    })
   }, [])
 
   const shown = useMemo(() => {
@@ -104,25 +123,20 @@ export function Words() {
 
       <ul className="mt-4 space-y-2">
         {shown.map((w) => (
-          <li key={w.id} className="bg-white rounded-xl border border-ink/10">
+          <li key={w.id} className="panel">
             <button
               onClick={() => setOpenId(openId === w.id ? null : w.id)}
-              className="w-full flex items-center justify-between px-4 py-3 text-left"
+              className="w-full flex items-center justify-between gap-2 px-4 py-3 text-left"
             >
-              <div>
+              <div className="min-w-0">
                 <span className="font-semibold">{w.baku}</span>
                 <span className="text-ink/50 text-sm ml-2">{w.gloss_en}</span>
               </div>
-              <div className="flex items-center gap-1.5">
-                {w.arabic_cognate && <span className="text-brass text-xs">ع</span>}
-                {(w.colloquial || w.utara) && (
-                  <span className="w-2 h-2 rounded-full bg-nyonya inline-block" />
-                )}
-                <span
-                  className={`w-2 h-2 rounded-full inline-block ${
-                    studiedIds.has(w.id) ? 'bg-shutter' : 'bg-ink/15'
-                  }`}
-                />
+              <div className="flex items-center gap-1 shrink-0">
+                {w.arabic_cognate && <span className="text-brass text-xs mr-0.5">ع</span>}
+                {w.colloquial && <RegisterChip kind="colloq" />}
+                {w.utara && <RegisterChip kind="utara" />}
+                <StatusChip state={cardStates.get(w.id)} />
               </div>
             </button>
             {openId === w.id && (
