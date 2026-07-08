@@ -94,15 +94,16 @@ export function Read() {
     <div className="min-h-dvh max-w-md mx-auto px-5 py-6 flex flex-col">
       <header className="flex items-center justify-between mb-4">
         <button onClick={() => navigate('/')} className="text-ink/50 text-sm">
-          ← keluar
+          ← keluar <span className="text-ink/35">· exit</span>
         </button>
         <button
           onClick={toggleRegister}
           disabled={loading}
           className="flex items-center gap-2 border border-ink/15 rounded-full px-3 py-1.5 text-xs font-mono disabled:opacity-40"
+          title="Regenerate this passage in the other register"
         >
           <RegisterChip kind={register === 'baku' ? 'baku' : 'colloq'} />
-          tukar ↺
+          tukar ↺ <span className="text-ink/40">switch</span>
         </button>
       </header>
 
@@ -111,6 +112,7 @@ export function Read() {
           <div>
             <div className="text-3xl mb-3 animate-pulse">✍️</div>
             Menjana bacaan hari ini…
+            <div className="text-xs text-ink/40 mt-1">writing today&rsquo;s reading…</div>
           </div>
         </div>
       )}
@@ -121,7 +123,8 @@ export function Read() {
             <div className="text-3xl mb-3">🌧</div>
             <div className="text-ink/80 font-medium">Tak boleh jana hari ini — cuba lagi.</div>
             <div className="text-ink/50 text-sm mt-1">
-              Generation needs the network and a running API server.
+              Could not generate today&rsquo;s reading. Check that the API server is running and
+              your ANTHROPIC_API_KEY is set in .env (restart npm run dev after editing it).
             </div>
             <div className="mt-5 flex gap-3 justify-center">
               <button
@@ -129,12 +132,14 @@ export function Read() {
                 className="px-5 py-2.5 rounded-xl bg-mansion text-limewash font-medium"
               >
                 Cuba lagi
+                <span className="block text-xs font-normal text-limewash/70">try again</span>
               </button>
               <button
                 onClick={() => navigate('/?done=sikit', { replace: true })}
                 className="px-5 py-2.5 rounded-xl border border-ink/15 text-ink/70"
               >
                 Selesai tanpa bacaan
+                <span className="block text-xs text-ink/40">finish without reading</span>
               </button>
             </div>
           </div>
@@ -152,7 +157,7 @@ export function Read() {
                 onClick={() => speak(passage.text)}
                 className="text-shutter text-sm font-medium"
               >
-                ▶ dengar
+                ▶ dengar <span className="opacity-60">· listen</span>
               </button>
             )}
           </div>
@@ -178,10 +183,10 @@ export function Read() {
           {newWords.length > 0 && (
             <div className="mt-3 text-xs text-ink/60">
               <span className="font-mono uppercase tracking-widest text-[10px] text-ink/40 mr-2">
-                baru
+                baru · new
               </span>
               {newWords.map((w) => w.baku).join(' · ')}
-              <span className="text-ink/40"> — kad mereka mula esok</span>
+              <span className="text-ink/40"> — their review cards start tomorrow</span>
             </div>
           )}
 
@@ -190,6 +195,10 @@ export function Read() {
             className="mt-4 text-sm text-mansion font-medium"
           >
             {showTranslation ? 'Sembunyi terjemahan' : 'Tunjuk terjemahan'}
+            <span className="text-mansion/50">
+              {' '}
+              · {showTranslation ? 'hide' : 'show'} translation
+            </span>
           </button>
           {showTranslation && (
             <p className="fade-in mt-2 text-sm text-ink/70 bg-mansion/5 rounded-xl p-4">
@@ -200,7 +209,7 @@ export function Read() {
           {passage.question.prompt && (
             <div className="mt-6 bg-white rounded-2xl border border-ink/10 p-5">
               <div className="font-mono text-[10px] uppercase tracking-widest text-ink/40 mb-2">
-                soalan
+                soalan · question
               </div>
               <div className="font-medium">{passage.question.prompt}</div>
               {showAnswer ? (
@@ -212,7 +221,7 @@ export function Read() {
                   onClick={() => setShowAnswer(true)}
                   className="mt-3 text-sm text-mansion font-medium"
                 >
-                  Tunjuk jawapan
+                  Tunjuk jawapan <span className="text-mansion/50">· show answer</span>
                 </button>
               )}
             </div>
@@ -223,6 +232,9 @@ export function Read() {
             className="mt-6 w-full py-4 rounded-2xl bg-mansion text-limewash font-semibold active:scale-[0.98]"
           >
             Teruskan — cakap sikit
+            <span className="block text-xs font-normal text-limewash/70">
+              continue — a short speaking task
+            </span>
           </button>
         </div>
       )}
@@ -243,15 +255,25 @@ export function Read() {
             <div className="mt-2 text-ink/80">{popover.gloss ?? 'No gloss available.'}</div>
             <div className="mt-5">
               {popover.status === 'added' && (
-                <div className="text-shutter font-medium">Ditambah — kad mula esok. ✓</div>
+                <div className="text-shutter font-medium">
+                  Ditambah — kad mula esok. ✓
+                  <div className="text-xs font-normal text-ink/50">
+                    Added — its review card starts tomorrow.
+                  </div>
+                </div>
               )}
               {popover.status === 'queued' && (
                 <div className="text-brass font-medium">
                   Kuota hari ini penuh — masuk giliran esok.
+                  <div className="text-xs font-normal text-ink/50">
+                    Today&rsquo;s new-word cap is full — queued for tomorrow.
+                  </div>
                 </div>
               )}
               {(popover.hasCard || popover.status === 'already') && !popover.status && (
-                <div className="text-ink/50 text-sm">Sudah dalam ulangkaji.</div>
+                <div className="text-ink/50 text-sm">
+                  Sudah dalam ulangkaji. <span className="text-ink/35">· already in reviews</span>
+                </div>
               )}
               {!popover.hasCard && !popover.status && (
                 <button
@@ -259,6 +281,9 @@ export function Read() {
                   className="w-full py-3.5 rounded-xl bg-shutter text-limewash font-semibold"
                 >
                   Tambah
+                  <span className="block text-xs font-normal text-limewash/70">
+                    add to my words
+                  </span>
                 </button>
               )}
             </div>

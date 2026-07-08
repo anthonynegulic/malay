@@ -49,6 +49,7 @@ export function Today() {
           <h1 className="font-display font-extrabold text-3xl tracking-tight text-ink">
             {done ? 'Siap! 🎉' : 'Selamat datang balik'}
           </h1>
+          <div className="text-xs text-ink/40">{done ? 'done!' : 'welcome back'}</div>
         </div>
         <Link to="/settings" aria-label="Settings" className="text-ink/50 text-xl p-1">
           ⚙
@@ -77,8 +78,9 @@ export function Today() {
               </span>
             ))}
           </div>
-          <div className="text-xs font-mono text-ink/60">
+          <div className="text-xs font-mono text-ink/60 text-right">
             {rhythm.daysDone}/{rhythm.target} minggu ini
+            <span className="block text-[10px] text-ink/40">days this week</span>
           </div>
         </div>
       )}
@@ -87,10 +89,12 @@ export function Today() {
         <div className="bg-white rounded-xl border border-ink/10 p-4">
           <div className="font-mono text-2xl font-medium text-mansion">{due}</div>
           <div className="text-xs text-ink/60 mt-0.5">kad untuk diulang</div>
+          <div className="text-[10px] text-ink/40">cards to review</div>
         </div>
         <div className="bg-white rounded-xl border border-ink/10 p-4">
           <div className="font-mono text-2xl font-medium text-shutter">{budget}</div>
           <div className="text-xs text-ink/60 mt-0.5">kata baru hari ini</div>
+          <div className="text-[10px] text-ink/40">new words left today</div>
         </div>
       </div>
 
@@ -99,6 +103,11 @@ export function Today() {
           {done === 'sikit'
             ? 'Sikit je pun kira. Jumpa esok.'
             : 'Sesi penuh selesai. Bukit itu tumbuh sedikit lagi.'}
+          <div className="text-xs text-ink/40 mt-1">
+            {done === 'sikit'
+              ? 'A little still counts. See you tomorrow.'
+              : 'Full session complete. The hill grew a little.'}
+          </div>
         </div>
       ) : (
         <div className="mt-8 space-y-3">
@@ -107,6 +116,9 @@ export function Today() {
             className="w-full py-4 rounded-2xl bg-mansion text-limewash font-display font-extrabold text-xl tracking-tight active:scale-[0.98] shadow-sm"
           >
             Mula
+            <span className="block font-body font-normal text-xs text-limewash/70 tracking-normal">
+              start today&rsquo;s session
+            </span>
           </button>
           <button
             onClick={() => navigate('/review?mode=sikit')}

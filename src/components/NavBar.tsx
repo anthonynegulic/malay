@@ -1,9 +1,9 @@
 import { NavLink } from 'react-router-dom'
 
 const tabs = [
-  { to: '/', label: 'Hari ini', icon: '⛰' },
-  { to: '/words', label: 'Kata', icon: '📖' },
-  { to: '/progress', label: 'Bukit', icon: '🪨' },
+  { to: '/', label: 'Hari ini', sub: 'today', icon: '⛰' },
+  { to: '/words', label: 'Kata', sub: 'words', icon: '📖' },
+  { to: '/progress', label: 'Bukit', sub: 'progress', icon: '🪨' },
 ]
 
 export function NavBar() {
@@ -25,6 +25,7 @@ export function NavBar() {
               {t.icon}
             </span>
             {t.label}
+            <span className="text-[9px] font-normal opacity-60 -mt-0.5">{t.sub}</span>
           </NavLink>
         ))}
       </div>

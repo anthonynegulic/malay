@@ -44,16 +44,16 @@ export function Speak() {
     <div className="min-h-dvh max-w-md mx-auto px-5 py-6 flex flex-col">
       <header className="flex items-center justify-between mb-5">
         <button onClick={() => navigate('/')} className="text-ink/50 text-sm">
-          ← keluar
+          ← keluar <span className="text-ink/35">· exit</span>
         </button>
         <div className="font-mono text-[10px] uppercase tracking-widest text-ink/40">
-          cakap / tulis
+          cakap / tulis · speak / write
         </div>
       </header>
 
       <div className="bg-white rounded-2xl border border-ink/10 p-5">
         <div className="font-mono text-[10px] uppercase tracking-widest text-ink/40 mb-2">
-          situasi
+          situasi · the situation
         </div>
         <div className="font-medium text-lg">{prompt}</div>
       </div>
@@ -63,13 +63,13 @@ export function Speak() {
           <textarea
             value={answer}
             onChange={(e) => setAnswer(e.target.value)}
-            placeholder="Jawab dalam Bahasa Melayu…"
+            placeholder="Jawab dalam Bahasa Melayu… (answer in Malay — imperfect is fine)"
             rows={4}
             className="mt-4 w-full rounded-2xl border border-ink/15 bg-white p-4 passage focus:border-mansion"
           />
           {error && (
-            <div className="mt-2 text-sm text-nyonya-800 text-ink/70">
-              Tak boleh semak sekarang — cuba lagi.
+            <div className="mt-2 text-sm text-ink/70">
+              Tak boleh semak sekarang — cuba lagi. <span className="text-ink/40">(Could not check right now — try again.)</span>
             </div>
           )}
           <div className="mt-4 space-y-3">
@@ -78,10 +78,13 @@ export function Speak() {
               disabled={busy || !answer.trim()}
               className="w-full py-4 rounded-2xl bg-mansion text-limewash font-semibold disabled:opacity-40 active:scale-[0.98]"
             >
-              {busy ? 'Menyemak…' : 'Hantar'}
+              {busy ? 'Menyemak… (checking…)' : 'Hantar'}
+              {!busy && (
+                <span className="block text-xs font-normal text-limewash/70">send</span>
+              )}
             </button>
             <button onClick={finish} className="w-full py-2 text-ink/50 text-sm">
-              Langkau hari ini — tak apa
+              Langkau hari ini — tak apa <span className="text-ink/35">· skip today, no guilt</span>
             </button>
           </div>
         </>
@@ -111,6 +114,7 @@ export function Speak() {
             className="w-full py-4 rounded-2xl bg-mansion text-limewash font-semibold active:scale-[0.98]"
           >
             Selesai hari ini
+            <span className="block text-xs font-normal text-limewash/70">done for today</span>
           </button>
         </div>
       )}

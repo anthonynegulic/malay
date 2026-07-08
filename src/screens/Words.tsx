@@ -57,23 +57,24 @@ export function Words() {
       <h1 className="font-display font-extrabold text-3xl tracking-tight">Kata</h1>
       <div className="text-sm text-ink/60 mt-1">
         {words.length} dalam inventori · {studiedIds.size} sedang dipelajari
+        <span className="block text-xs text-ink/40">words in inventory · being studied</span>
       </div>
 
       <input
         value={q}
         onChange={(e) => setQ(e.target.value)}
-        placeholder="Cari…"
+        placeholder="Cari… (search)"
         className="mt-4 w-full rounded-xl border border-ink/15 bg-white px-4 py-3"
       />
 
       <div className="mt-3 flex gap-2 overflow-x-auto pb-1 -mx-5 px-5">
         {(
           [
-            ['all', 'semua'],
-            ['studied', 'dipelajari'],
+            ['all', 'semua · all'],
+            ['studied', 'dipelajari · studied'],
             ['backlog', 'backlog'],
-            ['variants', 'ada loghat'],
-            ['harvested', 'dituai'],
+            ['variants', 'ada loghat · has variants'],
+            ['harvested', 'dituai · harvested'],
           ] as const
         ).map(([k, label]) => (
           <button
@@ -155,7 +156,10 @@ export function Words() {
           </li>
         ))}
         {shown.length === 0 && (
-          <li className="text-center text-ink/50 py-10">Tiada padanan — cuba carian lain.</li>
+          <li className="text-center text-ink/50 py-10">
+            Tiada padanan — cuba carian lain.
+            <span className="block text-xs text-ink/35">No matches — try another search.</span>
+          </li>
         )}
       </ul>
     </div>

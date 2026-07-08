@@ -44,8 +44,10 @@ export function Progress() {
   return (
     <div className="max-w-md mx-auto px-5 pt-8 pb-28 fade-in">
       <h1 className="font-display font-extrabold text-3xl tracking-tight">Bukit anda</h1>
+      <div className="text-xs text-ink/40">your hill</div>
       <div className="text-sm text-ink/60 mt-1">
         {stats.studied} kata sedang dipelajari · {stats.inventory} dalam inventori
+        <span className="block text-xs text-ink/40">words being studied · in inventory</span>
       </div>
 
       <div className="mt-4 -mx-2">
@@ -59,15 +61,14 @@ export function Progress() {
       {rhythm && (
         <div className="mt-5 bg-white rounded-2xl border border-ink/10 p-5">
           <div className="font-mono text-[10px] uppercase tracking-widest text-ink/40 mb-2">
-            rentak mingguan
+            rentak mingguan · weekly rhythm
           </div>
           <div className="text-2xl font-display font-extrabold tracking-tight">
             {rhythm.daysDone}
             <span className="text-ink/40">/{rhythm.target} hari</span>
           </div>
           <div className="text-xs text-ink/50 mt-1">
-            Tiada streak, tiada rasa bersalah — cuma rentak. Jurang kekal kelihatan, bukit tak
-            pernah mengecil.
+            No streaks, no guilt — just a rhythm. Gaps stay visible, and the hill never shrinks.
           </div>
         </div>
       )}
@@ -75,7 +76,7 @@ export function Progress() {
       <div className="mt-3 grid grid-cols-2 gap-3">
         <div className="bg-white rounded-2xl border border-ink/10 p-5">
           <div className="font-mono text-[10px] uppercase tracking-widest text-ink/40 mb-1">
-            hutang ulangkaji
+            hutang ulangkaji · review debt
           </div>
           <div className="text-2xl font-display font-extrabold tracking-tight text-mansion">
             {stats.due}
@@ -95,19 +96,21 @@ export function Progress() {
         </div>
         <div className="bg-white rounded-2xl border border-ink/10 p-5">
           <div className="font-mono text-[10px] uppercase tracking-widest text-ink/40 mb-1">
-            liputan loghat
+            liputan loghat · registers
           </div>
           <div className="text-2xl font-display font-extrabold tracking-tight text-shutter">
             {stats.coverage}%
           </div>
-          <div className="text-xs text-ink/50 mt-1">kata dipelajari yang ada varian</div>
+          <div className="text-xs text-ink/50 mt-1">
+            of studied words have colloquial / northern variants
+          </div>
         </div>
       </div>
 
       {history.length > 0 && (
         <div className="mt-3 bg-white rounded-2xl border border-ink/10 p-5">
           <div className="font-mono text-[10px] uppercase tracking-widest text-ink/40 mb-3">
-            laluan — sejarah penuh
+            laluan · the footpath — full history, gaps and all
           </div>
           <div className="flex flex-wrap gap-1.5">
             {history.map((d) => (

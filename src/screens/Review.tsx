@@ -77,6 +77,7 @@ export function Review() {
     return (
       <div className="min-h-dvh max-w-md mx-auto px-5 py-10 flex flex-col fade-in">
         <h1 className="font-display font-extrabold text-2xl tracking-tight">Ulangkaji</h1>
+        <div className="text-xs text-ink/40">review</div>
         <div className="flex-1 grid place-items-center text-center text-ink/60">
           <div>
             <div className="text-4xl mb-3">🌤</div>
@@ -88,6 +89,9 @@ export function Review() {
           className="w-full py-4 rounded-2xl bg-mansion text-limewash font-semibold"
         >
           {sikit ? 'Selesai' : 'Teruskan ke bacaan'}
+          <span className="block text-xs font-normal text-limewash/70">
+            {sikit ? 'finish' : 'continue to reading'}
+          </span>
         </button>
       </div>
     )
@@ -99,10 +103,11 @@ export function Review() {
     <div className="min-h-dvh max-w-md mx-auto px-5 py-6 flex flex-col">
       <header className="flex items-center justify-between mb-4">
         <button onClick={() => navigate('/')} className="text-ink/50 text-sm">
-          ← keluar
+          ← keluar <span className="text-ink/35">· exit</span>
         </button>
         <div className="font-mono text-xs text-ink/60">
           {graded} siap · {queue.length} lagi{sikit ? ` (sikit je)` : ''}
+          <span className="block text-[10px] text-ink/40 text-right">done · left</span>
         </div>
       </header>
 
@@ -115,7 +120,9 @@ export function Review() {
           >
             <div className="text-center">
               <div className="headword text-mansion break-words">{word.baku}</div>
-              <div className="mt-6 text-ink/40 text-sm">ketuk untuk buka</div>
+              <div className="mt-6 text-ink/40 text-sm">
+                ketuk untuk buka <span className="text-ink/30">· tap to reveal</span>
+              </div>
             </div>
           </button>
 
@@ -185,10 +192,10 @@ export function Review() {
       <div className="mt-5 pb-2">
         {flipped && intervals ? (
           <div className="grid grid-cols-4 gap-2 fade-in">
-            <GradeBtn label="Lagi" sub={intervals.again} color="bg-nyonya text-ink" onClick={() => grade(Rating.Again)} />
-            <GradeBtn label="Susah" sub={intervals.hard} color="bg-ink/10 text-ink" onClick={() => grade(Rating.Hard)} />
-            <GradeBtn label="Okey" sub={intervals.good} color="bg-mansion text-limewash" onClick={() => grade(Rating.Good)} />
-            <GradeBtn label="Senang" sub={intervals.easy} color="bg-shutter text-limewash" onClick={() => grade(Rating.Easy)} />
+            <GradeBtn label="Lagi" sub={`again · ${intervals.again}`} color="bg-nyonya text-ink" onClick={() => grade(Rating.Again)} />
+            <GradeBtn label="Susah" sub={`hard · ${intervals.hard}`} color="bg-ink/10 text-ink" onClick={() => grade(Rating.Hard)} />
+            <GradeBtn label="Okey" sub={`good · ${intervals.good}`} color="bg-mansion text-limewash" onClick={() => grade(Rating.Good)} />
+            <GradeBtn label="Senang" sub={`easy · ${intervals.easy}`} color="bg-shutter text-limewash" onClick={() => grade(Rating.Easy)} />
           </div>
         ) : (
           <button
@@ -196,6 +203,7 @@ export function Review() {
             className="w-full py-4 rounded-2xl bg-mansion text-limewash font-semibold active:scale-[0.98]"
           >
             Buka jawapan
+            <span className="block text-xs font-normal text-limewash/70">show answer</span>
           </button>
         )}
       </div>
