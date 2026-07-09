@@ -7,8 +7,8 @@
  * (not module load) so Vercel dashboard vars and the local .env both work.
  */
 import { Hono } from 'hono'
-import { validatePassage, type PassageLine } from './validate'
-import { FUNCTION_WORDS } from '../src/lib/tier'
+import { validatePassage, type PassageLine } from './validate.js'
+import { FUNCTION_WORDS } from '../src/lib/tier.js'
 
 function config() {
   return {
