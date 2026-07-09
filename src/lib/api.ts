@@ -2,6 +2,32 @@ import { db, getSettings, uid } from '../db/db'
 import type { GradeResult, Passage, PassageLine, Register, Word } from '../db/types'
 import { currentTier, introduceWords, pickNewWords, todayStr } from './session'
 
+/**
+ * POST to the API proxy. If the deployment sets APP_PASSPHRASE, the server
+ * returns 401 until the client sends a matching x-bukit-pass header; we prompt
+ * for it once, store it, and retry. When no passphrase is configured this is a
+ * plain POST.
+ */
+async function postApi(path: string, body: unknown): Promise<Response> {
+  const send = () => {
+    const pass = localStorage.getItem('bukit_pass')
+    return fetch(path, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', ...(pass ? { 'x-bukit-pass': pass } : {}) },
+      body: JSON.stringify(body),
+    })
+  }
+  let res = await send()
+  if (res.status === 401 && typeof window !== 'undefined') {
+    const entered = window.prompt('Enter your Bukit passphrase:')
+    if (entered) {
+      localStorage.setItem('bukit_pass', entered)
+      res = await send()
+    }
+  }
+  return res
+}
+
 /** Topic rotation — avoid repeating within 7 days (§5.2). */
 const TOPICS = [
   'pasar',
@@ -70,27 +96,23 @@ export async function getOrGeneratePassage(register: Register): Promise<Passage>
   const all = await db.words.toArray()
   const studied = all.filter((w) => studiedIds.has(w.id) && !newIds.has(w.id)).map((w) => w.baku)
 
-  const res = await fetch('/api/generate', {
-    method: 'POST',
-    headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({
-      // The tier and its constraints are sent explicitly (P0.1) — the model
-      // never infers level from list sizes, and the server validates against
-      // these same numbers.
-      tier: {
-        id: tier.id,
-        format: tier.format,
-        length_words: tier.lengthWords,
-        containment: tier.containment,
-        min_occurrences: tier.minOccurrences,
-        question_language: tier.questionLanguage,
-      },
-      studied_words: studied,
-      new_words: newWords.map((w) => w.baku),
-      register,
-      topic,
-      user_context: settings.userContext,
-    }),
+  const res = await postApi('/api/generate', {
+    // The tier and its constraints are sent explicitly (P0.1) — the model
+    // never infers level from list sizes, and the server validates against
+    // these same numbers.
+    tier: {
+      id: tier.id,
+      format: tier.format,
+      length_words: tier.lengthWords,
+      containment: tier.containment,
+      min_occurrences: tier.minOccurrences,
+      question_language: tier.questionLanguage,
+    },
+    studied_words: studied,
+    new_words: newWords.map((w) => w.baku),
+    register,
+    topic,
+    user_context: settings.userContext,
   })
   if (!res.ok) throw new GenerationError('Tak boleh jana hari ini — cuba lagi.')
   const out = (await res.json()) as GenerateResponse
@@ -127,11 +149,7 @@ export async function getOrGeneratePassage(register: Register): Promise<Passage>
 }
 
 export async function gradeResponse(prompt: string, response: string): Promise<GradeResult> {
-  const res = await fetch('/api/grade', {
-    method: 'POST',
-    headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ prompt, response }),
-  })
+  const res = await postApi('/api/grade', { prompt, response })
   if (!res.ok) throw new GenerationError('Tak boleh semak sekarang — cuba lagi.')
   const out = (await res.json()) as GradeResult
   return {
