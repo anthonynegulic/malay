@@ -173,8 +173,10 @@ export function sessionCounts(s: Session): boolean {
 export interface WeekRhythm {
   daysDone: number
   target: number
-  /** Mon..Sun for the current week; true = counted day, null = future. */
+  /** Mon..Sun for the current week; true = counted day, false = past gap, null = future. */
   days: (boolean | null)[]
+  /** Index (Mon=0) of today, so the UI can mark it distinctly. */
+  todayIndex: number
 }
 
 export async function weekRhythm(): Promise<WeekRhythm> {
@@ -197,11 +199,34 @@ export async function weekRhythm(): Promise<WeekRhythm> {
     if (done) daysDone++
     days.push(done)
   }
-  return { daysDone, target: settings.weeklyTargetDays, days }
+  return { daysDone, target: settings.weeklyTargetDays, days, todayIndex: dow }
 }
 
 /** Full session history for the footpath: date → counted. */
 export async function historyDays(): Promise<{ date: string; counted: boolean }[]> {
   const sessions = await db.sessions.orderBy('date').toArray()
   return sessions.map((s) => ({ date: s.date, counted: sessionCounts(s) }))
+}
+
+export const MILESTONES = [100, 250, 500, 1000]
+
+export function nextMilestone(count: number): number {
+  return MILESTONES.find((m) => count < m) ?? MILESTONES[MILESTONES.length - 1]
+}
+
+/**
+ * Word of the day for the Today header — deterministic by date so it's stable
+ * through the day and rotates daily. Prefers studied words (reinforcement);
+ * falls back to the seed deck so day-zero users still get a poster word.
+ */
+export async function wordOfTheDay(date = todayStr()): Promise<Word | undefined> {
+  const cards = await db.cards.toArray()
+  const studiedIds = new Set(cards.map((c) => c.wordId))
+  const all = await db.words.orderBy('addedAt').toArray()
+  const pool = all.filter((w) => studiedIds.has(w.id))
+  const source = pool.length ? pool : all.filter((w) => w.source === 'seed')
+  if (!source.length) return undefined
+  let h = 0
+  for (let i = 0; i < date.length; i++) h = (h * 31 + date.charCodeAt(i)) >>> 0
+  return source[h % source.length]
 }

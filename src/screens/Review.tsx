@@ -4,8 +4,8 @@ import { db, getSettings } from '../db/db'
 import type { Card, Word } from '../db/types'
 import { dueCards, gradeCard, previewIntervals, Rating, type Grade } from '../lib/fsrs'
 import { getOrCreateTodaySession, updateSession } from '../lib/session'
-import { VariantRow } from '../components/RegisterChip'
-import { CornerMotif } from '../components/ui'
+import { VariantLedger } from '../components/RegisterChip'
+import { Label, SpeakerIcon } from '../components/ui'
 import { speak, ttsAvailable } from '../lib/tts'
 
 const SIKIT_CAP = 20
@@ -23,6 +23,7 @@ export function Review() {
   const [queue, setQueue] = useState<QueueItem[] | null>(null)
   const [flipped, setFlipped] = useState(false)
   const [graded, setGraded] = useState(0)
+  const [total, setTotal] = useState(0)
   const [tts, setTts] = useState(false)
 
   useEffect(() => {
@@ -37,21 +38,16 @@ export function Review() {
         if (word) items.push({ card, word })
       }
       setQueue(items)
+      setTotal(items.length)
     })()
   }, [sikit])
 
   const current = queue?.[0]
-  const intervals = useMemo(
-    () => (current ? previewIntervals(current.card) : null),
-    [current],
-  )
+  const intervals = useMemo(() => (current ? previewIntervals(current.card) : null), [current])
 
-  async function finish() {
-    if (sikit) {
-      navigate('/?done=sikit', { replace: true })
-    } else {
-      navigate('/read', { replace: true })
-    }
+  function finish() {
+    if (sikit) navigate('/?done=sikit', { replace: true })
+    else navigate('/read', { replace: true })
   }
 
   async function grade(rating: Grade) {
@@ -64,11 +60,10 @@ export function Review() {
     setFlipped(false)
 
     let next = queue.slice(1)
-    // Learning-step cards graded Again/Hard can come back within this session.
     if (updated.due <= Date.now() + 10 * 60 * 1000 && updated.state !== 'review') {
       next = [...next, { card: updated, word: current.word }]
     }
-    if (next.length === 0) await finish()
+    if (next.length === 0) finish()
     else setQueue(next)
   }
 
@@ -76,155 +71,174 @@ export function Review() {
 
   if (queue.length === 0) {
     return (
-      <div className="min-h-dvh max-w-md mx-auto px-5 py-10 flex flex-col fade-in">
-        <h1 className="font-display font-extrabold text-2xl tracking-tight">Ulangkaji</h1>
-        <div className="text-xs text-ink/40">review</div>
-        <div className="flex-1 grid place-items-center text-center text-ink/60">
-          <div>Tiada kad hari ini — the queue is clear.</div>
+      <div className="min-h-dvh flex flex-col bg-indigo text-plaster">
+        <div className="px-5 pt-6">
+          <button onClick={() => navigate('/')} className="mono text-indigo-hi">
+            ← keluar · exit
+          </button>
         </div>
-        <button
-          onClick={finish}
-          className="w-full py-4 rounded-2xl bg-mansion text-limewash font-semibold"
-        >
-          {sikit ? 'Selesai' : 'Teruskan ke bacaan'}
-          <span className="block text-xs font-normal text-limewash/70">
-            {sikit ? 'finish' : 'continue to reading'}
-          </span>
-        </button>
+        <div className="flex-1 grid place-items-center text-center px-6">
+          <div>
+            <Label ms="ulangkaji" en="review" color="indigo-lo" />
+            <p className="text-indigo-hi mt-3">Tiada kad hari ini — the queue is clear.</p>
+          </div>
+        </div>
+        <div className="p-5">
+          <button
+            onClick={finish}
+            className="w-full border-[1.5px] border-plaster/50 text-plaster py-4 rounded-[4px]"
+          >
+            {sikit ? 'Selesai · finish' : 'Teruskan ke bacaan · continue to reading'}
+          </button>
+        </div>
       </div>
     )
   }
 
   const { card, word } = current!
 
-  return (
-    <div className="min-h-dvh max-w-md mx-auto px-5 py-6 flex flex-col">
-      <header className="flex items-center justify-between mb-4">
-        <button onClick={() => navigate('/')} className="text-ink/50 text-sm">
-          ← keluar <span className="text-ink/35">· exit</span>
-        </button>
-        <div className="font-mono text-xs text-ink/60">
-          {graded} siap · {queue.length} lagi{sikit ? ` (sikit je)` : ''}
-          <span className="block text-[10px] text-ink/40 text-right">done · left</span>
-        </div>
-      </header>
-
-      <div className="flip-scene relative flex-1" style={{ minHeight: 400 }}>
-        <div className={`flip-inner absolute inset-0 ${flipped ? 'flipped' : ''}`}>
-          {/* front */}
-          <button
-            onClick={() => setFlipped(true)}
-            className="flip-face paper absolute inset-0 w-full grid place-items-center px-4"
-          >
-            <CornerMotif className="absolute top-0 right-0" />
-            <div className="text-center">
-              <div className="headword text-mansion break-words">{word.baku}</div>
-              <div className="mt-6 text-ink/40 text-sm">
-                ketuk untuk buka <span className="text-ink/30">· tap to reveal</span>
-              </div>
-            </div>
+  // ————— front: indigo full-bleed, headword alone —————
+  if (!flipped) {
+    return (
+      <div className="min-h-dvh flex flex-col bg-indigo text-plaster">
+        <div className="px-5 pt-6 flex items-center justify-between">
+          <button onClick={() => navigate('/')} className="mono text-indigo-hi">
+            ← keluar · exit
           </button>
+          <span className="mono text-gold">
+            {graded + 1} / {total}
+            {sikit ? ' · sikit je' : ''}
+          </span>
+        </div>
 
-          {/* back */}
-          <div className="flip-face flip-back paper absolute inset-0 w-full px-6 py-8 overflow-y-auto">
-            {flipped && (
-              <div className="flex flex-col gap-5 h-full">
-                <div className="flex items-start justify-between gap-2">
-                  <div>
-                    <div className="font-display font-extrabold text-3xl tracking-tight text-mansion">
-                      {word.baku}
-                    </div>
-                    <div className="font-mono text-[10px] uppercase tracking-widest text-ink/40 mt-1">
-                      {word.pos}
-                    </div>
-                  </div>
-                  {tts && (
-                    <button
-                      onClick={() => speak(word.example_baku || word.baku)}
-                      aria-label="Play audio"
-                      className="w-11 h-11 rounded-full bg-shutter text-limewash grid place-items-center text-lg shrink-0"
-                    >
-                      ▶
-                    </button>
-                  )}
-                </div>
-
-                <div className="text-lg">{word.gloss_en}</div>
-
-                {word.arabic_cognate && (
-                  <div className="text-sm text-ink/70">
-                    <span className="font-mono text-[10px] uppercase tracking-widest text-brass mr-2">
-                      Arabic
-                    </span>
-                    <span className="text-xl text-brass" dir="rtl">
-                      {word.arabic_cognate}
-                    </span>
-                  </div>
-                )}
-
-                {word.example_baku && (
-                  <div className="text-ink/80 italic border-l-2 border-mansion/30 pl-3">
-                    {word.example_baku}
-                    {word.example_colloq && (
-                      <div className="not-italic text-sm text-ink/60 mt-1">
-                        {word.example_colloq}
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {(word.colloquial || word.utara) && (
-                  <VariantRow
-                    baku={word.baku}
-                    colloquial={word.colloquial}
-                    utara={word.utara}
-                    animate
-                  />
-                )}
-              </div>
+        <div className="flex-1 grid place-items-center px-5">
+          <div className="text-center">
+            <button
+              onClick={() => setFlipped(true)}
+              className="headword text-plaster break-words block"
+            >
+              {word.baku}
+            </button>
+            {tts && (
+              <button
+                onClick={() => speak(word.example_baku || word.baku)}
+                aria-label="Main audio"
+                className="text-gold mt-8"
+              >
+                <SpeakerIcon className="w-8 h-8 mx-auto" />
+              </button>
             )}
           </div>
         </div>
-      </div>
 
-      {/* thumb-reachable grading */}
-      <div className="mt-5 pb-2">
-        {flipped && intervals ? (
-          <div className="grid grid-cols-4 gap-2 fade-in">
-            <GradeBtn label="Lagi" sub={`again · ${intervals.again}`} color="bg-nyonya text-ink" onClick={() => grade(Rating.Again)} />
-            <GradeBtn label="Susah" sub={`hard · ${intervals.hard}`} color="bg-ink/10 text-ink" onClick={() => grade(Rating.Hard)} />
-            <GradeBtn label="Okey" sub={`good · ${intervals.good}`} color="bg-mansion text-limewash" onClick={() => grade(Rating.Good)} />
-            <GradeBtn label="Senang" sub={`easy · ${intervals.easy}`} color="bg-shutter text-limewash" onClick={() => grade(Rating.Easy)} />
-          </div>
-        ) : (
+        <div className="p-5">
           <button
             onClick={() => setFlipped(true)}
-            className="w-full py-4 rounded-2xl bg-mansion text-limewash font-semibold active:scale-[0.98]"
+            className="w-full bg-plaster text-charcoal py-4 rounded-[4px] border-[1.5px] border-charcoal active:opacity-90"
           >
-            Buka jawapan
-            <span className="block text-xs font-normal text-limewash/70">show answer</span>
+            <span className="font-medium">Tunjuk</span>
+            <span className="mono-sm text-muted block mt-0.5">tap to reveal</span>
           </button>
+        </div>
+      </div>
+    )
+  }
+
+  // ————— back: shrunk headword on indigo, ledger on plaster —————
+  return (
+    <div className="min-h-dvh flex flex-col bg-plaster">
+      <div className="bg-indigo text-plaster px-5 pt-6 pb-5">
+        <div className="flex items-center justify-between mb-3">
+          <button onClick={() => navigate('/')} className="mono text-indigo-hi">
+            ← keluar · exit
+          </button>
+          <span className="mono text-gold">
+            {graded + 1} / {total}
+          </span>
+        </div>
+        <div className="reveal-head display text-plaster" style={{ fontSize: 44 }}>
+          {word.baku}
+        </div>
+        <div className="flex items-center gap-3 mt-1">
+          <span className="text-indigo-hi">{word.gloss_en}</span>
+          <span className="mono text-indigo-lo">{word.pos}</span>
+        </div>
+      </div>
+
+      <div className="reveal-body flex-1 overflow-y-auto px-5 py-5 space-y-6">
+        {word.example_baku && (
+          <div>
+            <div className="flex items-center justify-between">
+              <Label ms="contoh" en="example" color="muted" />
+              {tts && (
+                <button onClick={() => speak(word.example_baku)} aria-label="Main audio" className="text-gold">
+                  <SpeakerIcon className="w-5 h-5" />
+                </button>
+              )}
+            </div>
+            <div className="mt-1.5 italic">{word.example_baku}</div>
+            {word.example_colloq && <div className="text-muted text-sm mt-0.5">{word.example_colloq}</div>}
+          </div>
+        )}
+
+        {(word.colloquial || word.utara) && (
+          <div>
+            <Label ms="loghat" en="register" color="muted" className="block mb-1" />
+            <VariantLedger
+              baku={word.baku}
+              colloquial={word.colloquial}
+              utara={word.utara}
+              exampleBaku={word.example_baku}
+              exampleColloq={word.example_colloq}
+            />
+          </div>
+        )}
+
+        {word.arabic_cognate && (
+          <div>
+            <Label ms="arab" en="arabic" color="gold" className="block mb-1" />
+            <div className="text-2xl text-charcoal" dir="rtl">
+              {word.arabic_cognate}
+            </div>
+          </div>
         )}
       </div>
+
+      {/* grades */}
+      {intervals && (
+        <div className="px-5 pb-5 pt-3 border-t-[1.5px] border-charcoal">
+          <Label ms="ingat?" en="how well?" color="muted" className="block mb-2" />
+          <div className="grid grid-cols-2 gap-2">
+            <GradeBtn label="Lagi" en="again" sub={intervals.again} cls="border-[1.5px] border-oxblood text-oxblood" onClick={() => grade(Rating.Again)} />
+            <GradeBtn label="Susah" en="hard" sub={intervals.hard} cls="border-[1.5px] border-charcoal text-charcoal" onClick={() => grade(Rating.Hard)} />
+            <GradeBtn label="Okey" en="good" sub={intervals.good} cls="border-[1.5px] border-charcoal text-charcoal" onClick={() => grade(Rating.Good)} />
+            <GradeBtn label="Senang" en="easy" sub={intervals.easy} cls="bg-jade text-jade-ink border-[1.5px] border-jade" onClick={() => grade(Rating.Easy)} />
+          </div>
+        </div>
+      )}
     </div>
   )
 }
 
 function GradeBtn({
   label,
+  en,
   sub,
-  color,
+  cls,
   onClick,
 }: {
   label: string
+  en: string
   sub: string
-  color: string
+  cls: string
   onClick: () => void
 }) {
   return (
-    <button onClick={onClick} className={`py-3.5 rounded-xl font-semibold active:scale-[0.97] ${color}`}>
-      {label}
-      <span className="block font-mono text-[10px] font-normal opacity-70">{sub}</span>
+    <button onClick={onClick} className={`py-3 rounded-[4px] active:opacity-90 ${cls}`}>
+      <span className="font-medium">{label}</span>
+      <span className="mono-sm block mt-0.5 opacity-70">
+        {en} · {sub}
+      </span>
     </button>
   )
 }

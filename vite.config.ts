@@ -15,8 +15,8 @@ export default defineConfig({
         short_name: 'Bukit',
         description:
           'Sedikit-sedikit, lama-lama jadi bukit. A daily Malay learning loop: spaced repetition + generated reading.',
-        theme_color: '#2E4FA3',
-        background_color: '#F6F4EC',
+        theme_color: '#2B4C9B',
+        background_color: '#EFE9DA',
         display: 'standalone',
         orientation: 'portrait',
         start_url: '/',

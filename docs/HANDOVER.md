@@ -175,3 +175,45 @@ generation quality still needs live-key QA — now against the tier-0 acceptance
 | Commit | What |
 |--------|------|
 | (v1.1) | P0 ramp/validator/selection + P1 design pass + P2 fixes |
+
+---
+
+## 10. v1.1 — Remediation, revised (supersedes §9; see `docs/REMEDIATION-v1.1.md`)
+
+The owner replaced the earlier v1.1 note with a revised brief. Two changes vs §9:
+
+**The Hill and the Peranakan motif are deleted, not restyled.** `src/components/Hill.tsx`
+is removed; `CornerMotif` is gone from `ui.tsx`. The name Bukit and the proverb survive as
+language (Today/Progress footer), not illustration. Progress is now a display numeral + an
+oxblood milestone bar. The app contains no illustration of any kind (the launcher icon is a
+flat geometric mark).
+
+**Full design rebuild — "Mansion".** The Rumah Api palette is replaced entirely by the
+Mansion tokens (`src/styles.css` `@theme`): indigo is a *field* (headers, review front),
+never a button; gold and oxblood are the action colours. Two surfaces only — indigo field
+and plaster page — separated by charcoal rules and hairlines; no cards, no shadows. Every
+label follows the signage rule `MALAY · english` (`Label` in `ui.tsx`). Register chips are a
+three-colour language (BAKU jade, COLLOQ oxblood, UTARA gold). Screen-by-screen per P1.5:
+Today (indigo header + word-of-the-day, progress/rhythm/ledger on plaster), Review
+(indigo front headword-only → plaster back with the register ledger), Read (gold underline
+for new words, tier gloss), Words (BARU/BELAJAR/MATANG status chips), Progress (numeral +
+bar), tab bar indigo with third tab **Kemajuan · progress**.
+
+P0 (ramp/validator/selection) was already built in §9 and is unchanged — it matches the
+revised P0 verbatim. P2 items all done.
+
+**Interpretations made (documented for override):**
+- "Exactly one gold element per screen" read as *one gold fill/action*, with gold permitted
+  as accents (date, audio icons, milestone ticks) where P1.5 calls for them.
+- The 300ms flip is implemented as a 300ms shrink+reveal (headword persists and shrinks, per
+  P1.5) rather than a 3D flip; `prefers-reduced-motion` → instant.
+- Word of the day: deterministic by date, studied-words-first, seed fallback.
+
+**Not verified — needs a live key.** Acceptance criterion P0.4 (generate at 2/30/150 studied
+words, all pass their tier's containment) cannot run here (no `ANTHROPIC_API_KEY`).
+`scripts/verify-generation.mjs` runs it: `npm run dev:api` then `node scripts/verify-generation.mjs`.
+The offline validator is unit-tested (`tests/p0.test.ts`, incl. the observed leak).
+
+| Commit | What |
+|--------|------|
+| (v1.1) | P0 ramp/validator/selection + Mansion design rebuild (Hill deleted) + P2 |

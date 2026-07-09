@@ -3,17 +3,16 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { db, saveSettings } from '../db/db'
 import type { Word } from '../db/types'
 import { knownCard } from '../lib/fsrs'
-import { VariantRow } from '../components/RegisterChip'
+import { RegisterChip } from '../components/RegisterChip'
 
 /**
- * One-time self-assessment: swipe through the seed deck marking words you
- * already know. Known words enter the SRS as studied — day-one reviews are
- * honest (prior Ling exposure + Arabic loanwords count for something).
+ * One-time self-assessment: swipe the seed deck marking words you already know.
+ * Known words enter the SRS as studied. Re-runnable from Settings (?redo=1),
+ * where it walks only the backlog.
  */
 export function Onboarding() {
   const navigate = useNavigate()
   const [params] = useSearchParams()
-  // Re-run from Settings (P2): only backlog words, no onboarded flag to set.
   const redo = params.get('redo') === '1'
   const [words, setWords] = useState<Word[] | null>(null)
   const [i, setI] = useState(0)
@@ -44,73 +43,86 @@ export function Onboarding() {
     else setI(i + 1)
   }
 
-  // Redo with an empty backlog: nothing to assess, go home.
   useEffect(() => {
-    if (words && words.length === 0) {
-      navigate('/', { replace: true })
-    }
+    if (words && words.length === 0) navigate('/', { replace: true })
   }, [words, navigate])
 
   if (!words || words.length === 0 || i >= words.length) return null
   const w = words[i]
 
   return (
-    <div className="min-h-dvh flex flex-col max-w-md mx-auto px-5 py-8">
-      <header className="mb-6">
-        <h1 className="font-display font-extrabold text-2xl tracking-tight">
+    <div className="min-h-dvh flex flex-col max-w-md mx-auto">
+      <header className="bg-indigo text-plaster px-5 pt-6 pb-5">
+        <div className="mono text-gold">
+          {redo ? 'PENILAIAN SEMULA · REASSESS' : 'SELAMAT DATANG · WELCOME'}
+        </div>
+        <h1 className="display text-plaster text-2xl mt-2">
           {redo ? 'Tanda kata yang anda tahu' : 'Selamat datang ke Bukit'}
         </h1>
-        <p className="text-ink/70 mt-1 text-sm">
+        <p className="text-indigo-hi text-sm mt-1">
           {redo
             ? 'Mark any backlog words you already know — they join your reviews as studied.'
-            : 'One-time setup: mark the words you already know. They join your review pile as studied — everything else waits in the backlog.'}
+            : 'Mark the words you already know. They join your review pile; everything else waits in the backlog.'}
         </p>
+        <div className="mono-sm text-indigo-lo mt-3">
+          {i + 1} / {words.length} · {knownCount} known
+        </div>
+        <div className="h-1 bg-indigo-rl mt-1.5">
+          <div className="h-full bg-gold" style={{ width: `${((i + 1) / words.length) * 100}%` }} />
+        </div>
       </header>
 
-      <div className="text-xs font-mono text-ink/60 mb-2">
-        {i + 1} / {words.length} · {knownCount} known
-      </div>
-      <div className="h-1.5 bg-ink/10 rounded-full mb-6">
-        <div
-          className="h-full bg-shutter rounded-full transition-all"
-          style={{ width: `${((i + 1) / words.length) * 100}%` }}
-        />
-      </div>
-
-      <div key={w.id} className="fade-in paper p-6 flex-1 flex flex-col justify-center text-center">
-        <div className="headword text-mansion" style={{ fontSize: 'clamp(2.4rem, 12vw, 4rem)' }}>
+      <div key={w.id} className="fade-in flex-1 flex flex-col justify-center text-center px-6 py-8">
+        <div className="display text-indigo" style={{ fontSize: 'clamp(44px, 15vw, 68px)' }}>
           {w.baku}
         </div>
         {w.arabic_cognate && (
-          <div className="text-brass text-2xl mt-1" dir="rtl">
+          <div className="text-gold text-2xl mt-2" dir="rtl">
             {w.arabic_cognate}
           </div>
         )}
-        <div className="text-ink/70 mt-3">{w.gloss_en}</div>
-        <div className="mt-4 flex justify-center">
-          <VariantRow baku={w.baku} colloquial={w.colloquial} utara={w.utara} />
+        <div className="text-muted mt-3">{w.gloss_en}</div>
+        <div className="mt-4 flex flex-wrap justify-center items-center gap-x-3 gap-y-2">
+          <span className="flex items-center gap-1.5">
+            <RegisterChip kind="baku" />
+            <span className="font-medium">{w.baku}</span>
+          </span>
+          {w.colloquial && (
+            <span className="flex items-center gap-1.5">
+              <RegisterChip kind="colloq" />
+              <span className="font-medium">{w.colloquial}</span>
+            </span>
+          )}
+          {w.utara && (
+            <span className="flex items-center gap-1.5">
+              <RegisterChip kind="utara" />
+              <span className="font-medium">{w.utara}</span>
+            </span>
+          )}
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 mt-6">
-        <button
-          onClick={() => mark(false)}
-          className="py-4 rounded-xl bg-ink/5 text-ink font-semibold active:scale-[0.98]"
-        >
-          Belum
-          <span className="block text-xs font-normal text-ink/50">not yet</span>
-        </button>
-        <button
-          onClick={() => mark(true)}
-          className="py-4 rounded-xl bg-shutter text-limewash font-semibold active:scale-[0.98]"
-        >
-          Tahu
-          <span className="block text-xs font-normal text-limewash/70">I know this</span>
+      <div className="px-5 pb-6">
+        <div className="grid grid-cols-2 border-[1.5px] border-charcoal rounded-[4px] overflow-hidden">
+          <button
+            onClick={() => mark(false)}
+            className="py-4 bg-transparent text-charcoal border-r-[1.5px] border-charcoal active:bg-charcoal/5"
+          >
+            <span className="font-semibold">Belum</span>
+            <span className="mono-sm block text-muted mt-0.5">not yet</span>
+          </button>
+          <button
+            onClick={() => mark(true)}
+            className="py-4 bg-jade text-jade-ink active:opacity-90"
+          >
+            <span className="font-semibold">Tahu</span>
+            <span className="mono-sm block text-jade-ink/70 mt-0.5">I know this</span>
+          </button>
+        </div>
+        <button onClick={finish} className="mt-4 w-full text-muted text-sm">
+          {redo ? 'Selesai · done' : 'Skip the rest — everything else goes to the backlog'}
         </button>
       </div>
-      <button onClick={finish} className="mt-4 text-sm text-ink/50 underline underline-offset-2">
-        Skip the rest — everything else goes to the backlog
-      </button>
     </div>
   )
 }

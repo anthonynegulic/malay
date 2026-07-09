@@ -1,16 +1,21 @@
-/** Small shared design-system pieces (remediation P1.2). */
+/** Shared "Mansion" design-system pieces (v1.1 P1). No illustration; identity is
+ *  typography, colour-as-architecture, and hairline rules. */
 
 const LABEL_COLORS = {
-  ink: 'text-ink/45',
-  mansion: 'text-mansion/80',
-  shutter: 'text-shutter/90',
+  charcoal: 'text-charcoal/70',
+  muted: 'text-muted',
+  gold: 'text-gold',
+  oxblood: 'text-oxblood',
+  jade: 'text-jade-ink',
+  'indigo-hi': 'text-indigo-hi',
+  'indigo-lo': 'text-indigo-lo',
 } as const
 
-/** Mono section label with a short rule: `SITUASI · THE SITUATION ———` */
-export function SectionLabel({
+/** Signage label: `KATA BARU · NEW WORDS` — Malay primary, English secondary (P1.2). */
+export function Label({
   ms,
   en,
-  color = 'ink',
+  color = 'muted',
   className = '',
 }: {
   ms: string
@@ -19,82 +24,77 @@ export function SectionLabel({
   className?: string
 }) {
   return (
-    <div className={`flex items-center gap-2.5 overflow-hidden ${className}`}>
-      <span
-        className={`font-mono text-[10px] uppercase tracking-widest whitespace-nowrap truncate min-w-0 ${LABEL_COLORS[color]}`}
-      >
-        {ms}
-        {en ? ` · ${en}` : ''}
-      </span>
-      <span className={`h-px w-8 shrink-0 bg-current opacity-25 ${LABEL_COLORS[color]}`} aria-hidden />
-    </div>
+    <span className={`mono ${LABEL_COLORS[color]} ${className}`}>
+      {ms}
+      {en ? <span className="opacity-60"> · {en}</span> : null}
+    </span>
   )
 }
 
-/**
- * Peranakan tile-corner ornament: two concentric quarter-arcs, mansion + nyonya.
- * Used on exactly two surfaces — the review tile and the session-complete
- * moment (P1.2). Do not sprinkle it anywhere else.
- */
-export function CornerMotif({ className = '' }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 48 48"
-      className={`w-10 h-10 ${className}`}
-      aria-hidden
-      fill="none"
-    >
-      <path d="M48 4 A44 44 0 0 0 4 48" stroke="var(--color-mansion)" strokeWidth="2.5" />
-      <path d="M48 18 A30 30 0 0 0 18 48" stroke="var(--color-nyonya)" strokeWidth="2.5" />
-      <circle cx="41" cy="41" r="2.5" fill="var(--color-brass)" />
-    </svg>
-  )
-}
+/* ————— Line icons (P1: no emoji). Inherit colour via currentColor. ————— */
 
-/* ————— Tab-bar line icons (P1.4: no emoji) ————— */
-
-const iconProps = {
+const svg = {
   viewBox: '0 0 24 24',
   fill: 'none',
   stroke: 'currentColor',
-  strokeWidth: 1.8,
+  strokeWidth: 1.7,
   strokeLinecap: 'round',
   strokeLinejoin: 'round',
 } as const
 
-export function HillIcon({ className = 'w-5 h-5' }: { className?: string }) {
+export function TodayIcon({ className = 'w-5 h-5' }: { className?: string }) {
   return (
-    <svg {...iconProps} className={className} aria-hidden>
-      <path d="M2 19 Q8 7 12 12 T22 19 Z" />
-      <circle cx="18.5" cy="6" r="2" />
+    <svg {...svg} className={className} aria-hidden>
+      <rect x="4" y="5" width="16" height="15" rx="1.5" />
+      <path d="M4 9h16M8 3v4M16 3v4" />
     </svg>
   )
 }
 
 export function BookIcon({ className = 'w-5 h-5' }: { className?: string }) {
   return (
-    <svg {...iconProps} className={className} aria-hidden>
+    <svg {...svg} className={className} aria-hidden>
       <path d="M12 6 C10 4.5 7 4.5 4 5.5 V18.5 C7 17.5 10 17.5 12 19 C14 17.5 17 17.5 20 18.5 V5.5 C17 4.5 14 4.5 12 6 Z" />
       <path d="M12 6 V19" />
     </svg>
   )
 }
 
-export function StonesIcon({ className = 'w-5 h-5' }: { className?: string }) {
+export function ChartIcon({ className = 'w-5 h-5' }: { className?: string }) {
   return (
-    <svg {...iconProps} className={className} aria-hidden>
-      <ellipse cx="8" cy="17" rx="5" ry="3.2" />
-      <ellipse cx="16.5" cy="12" rx="3.6" ry="2.4" />
-      <ellipse cx="10" cy="7.5" rx="2.6" ry="1.8" />
+    <svg {...svg} className={className} aria-hidden>
+      <path d="M4 20 V4" />
+      <path d="M4 20 H20" />
+      <rect x="7.5" y="12" width="2.5" height="5" />
+      <rect x="12" y="8.5" width="2.5" height="8.5" />
+      <rect x="16.5" y="5.5" width="2.5" height="11.5" />
+    </svg>
+  )
+}
+
+export function SpeakerIcon({ className = 'w-5 h-5' }: { className?: string }) {
+  return (
+    <svg {...svg} className={className} aria-hidden>
+      <path d="M4 9v6h4l5 4V5L8 9H4Z" />
+      <path d="M16.5 8.5a5 5 0 0 1 0 7M18.8 6a8 8 0 0 1 0 12" />
     </svg>
   )
 }
 
 export function CloudIcon({ className = 'w-8 h-8' }: { className?: string }) {
   return (
-    <svg {...iconProps} className={className} aria-hidden>
+    <svg {...svg} className={className} aria-hidden>
       <path d="M6 15 A4 4 0 0 1 7 7.2 A5 5 0 0 1 16.6 8.5 A3.5 3.5 0 0 1 17 15.5 Z" />
       <path d="M8 18.5 l-1 2.2 M12 18.5 l-1 2.2 M16 18.5 l-1 2.2" />
+    </svg>
+  )
+}
+
+export function GearIcon({ className = 'w-5 h-5' }: { className?: string }) {
+  return (
+    <svg {...svg} className={className} aria-hidden>
+      <circle cx="12" cy="12" r="3" />
+      <path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1" />
     </svg>
   )
 }

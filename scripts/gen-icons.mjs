@@ -3,11 +3,11 @@
 import { deflateSync } from 'node:zlib'
 import { mkdirSync, writeFileSync } from 'node:fs'
 
+// "Mansion" palette. Icon is geometric/architectural, not an illustration.
 const PALETTE = {
-  limewash: [0xf6, 0xf4, 0xec],
-  mansion: [0x2e, 0x4f, 0xa3],
-  shutter: [0x0f, 0x7b, 0x6f],
-  brass: [0xc9, 0xa2, 0x27],
+  indigo: [0x2b, 0x4c, 0x9b],
+  plaster: [0xef, 0xe9, 0xda],
+  gold: [0xc8, 0x91, 0x2f],
 }
 
 function crc32(buf) {
@@ -58,15 +58,14 @@ function png(size, pixelFn) {
   ])
 }
 
-// The Bukit icon: limewash sky, brass sun, two hill ridges.
+// Indigo field (the Mansion wall) with a plaster foundation rule and a gold
+// cornerstone — architectural, flat, no illustration.
 function pixel(u, v) {
-  const sun = Math.hypot(u - 0.72, v - 0.26) < 0.11
-  const backHill = v > 0.62 + 0.16 * Math.cos((u - 0.3) * Math.PI * 1.6)
-  const frontHill = v > 0.78 + 0.1 * Math.cos((u - 0.75) * Math.PI * 2.2)
-  if (frontHill) return PALETTE.shutter
-  if (backHill) return PALETTE.mansion
-  if (sun) return PALETTE.brass
-  return PALETTE.limewash
+  const foundation = v > 0.72 && v < 0.78 // plaster horizon rule
+  const cornerstone = u > 0.16 && u < 0.34 && v > 0.5 && v < 0.68 // gold block
+  if (cornerstone) return PALETTE.gold
+  if (foundation) return PALETTE.plaster
+  return PALETTE.indigo
 }
 
 mkdirSync('public/icons', { recursive: true })

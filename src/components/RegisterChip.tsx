@@ -1,49 +1,54 @@
+/** The three-colour register language (P1.4): BAKU jade, COLLOQ oxblood, UTARA gold.
+ *  Mono, uppercase, tiny, flat. */
+
 const STYLES = {
-  baku: 'bg-mansion text-limewash',
-  colloq: 'bg-shutter text-limewash',
-  utara: 'bg-nyonya text-ink',
+  baku: 'bg-jade text-jade-ink',
+  colloq: 'bg-oxblood text-plaster',
+  utara: 'bg-gold text-gold-ink',
 } as const
 
 export function RegisterChip({ kind }: { kind: keyof typeof STYLES }) {
-  return (
-    <span
-      className={`font-mono text-[10px] font-medium tracking-widest uppercase rounded px-1.5 py-0.5 ${STYLES[kind]}`}
-    >
-      {kind}
-    </span>
-  )
+  return <span className={`mono-sm rounded-[2px] px-1.5 py-0.5 ${STYLES[kind]}`}>{kind}</span>
 }
 
-export function VariantRow({
+/** A hairline-ruled ledger of register variants (Review back — the PDR-001 payoff). */
+export function VariantLedger({
   baku,
   colloquial,
   utara,
-  animate = false,
+  exampleBaku,
+  exampleColloq,
 }: {
   baku: string
   colloquial?: string
   utara?: string
-  animate?: boolean
+  exampleBaku?: string
+  exampleColloq?: string
 }) {
-  const cls = animate ? 'shutter flex items-center gap-1.5' : 'flex items-center gap-1.5'
+  const rows: { kind: keyof typeof STYLES; form: string; ctx?: string }[] = [
+    { kind: 'baku', form: baku, ctx: exampleBaku },
+  ]
+  if (colloquial) rows.push({ kind: 'colloq', form: colloquial, ctx: exampleColloq })
+  if (utara) rows.push({ kind: 'utara', form: utara })
   return (
-    <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5">
-      <span className={cls}>
-        <RegisterChip kind="baku" />
-        <span className="font-medium">{baku}</span>
-      </span>
-      {colloquial && (
-        <span className={cls}>
-          <RegisterChip kind="colloq" />
-          <span className="font-medium">{colloquial}</span>
-        </span>
-      )}
-      {utara && (
-        <span className={cls}>
-          <RegisterChip kind="utara" />
-          <span className="font-medium">{utara}</span>
-        </span>
-      )}
+    <div className="border-t border-hairline">
+      {rows.map((r) => (
+        <div key={r.kind} className="flex items-baseline gap-3 py-2 border-b border-hairline">
+          <RegisterChip kind={r.kind} />
+          <span className="font-medium">{r.form}</span>
+          {r.ctx && <span className="text-muted text-sm truncate ml-auto text-right">{r.ctx}</span>}
+        </div>
+      ))}
     </div>
+  )
+}
+
+/** Inline register chips (Words list) — just the chips, no forms. */
+export function VariantChips({ colloquial, utara }: { colloquial?: string; utara?: string }) {
+  return (
+    <>
+      {colloquial && <RegisterChip kind="colloq" />}
+      {utara && <RegisterChip kind="utara" />}
+    </>
   )
 }

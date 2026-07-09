@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { getSettings, saveSettings } from '../db/db'
 import type { Settings as SettingsT } from '../db/types'
 import { exportBackup, importBackup } from '../lib/backup'
+import { Label } from '../components/ui'
 
 export function Settings() {
   const navigate = useNavigate()
@@ -23,7 +24,7 @@ export function Settings() {
     if (!f) return
     try {
       await importBackup(f)
-      setMsg('Import selesai ✓ — all data replaced.')
+      setMsg('Import selesai · all data replaced.')
       setS(await getSettings())
     } catch {
       setMsg('Import failed — not a valid Bukit backup file.')
@@ -33,68 +34,52 @@ export function Settings() {
   if (!s) return null
 
   return (
-    <div className="max-w-md mx-auto px-5 pt-8 pb-28 fade-in">
-      <header className="flex items-center justify-between">
+    <div className="max-w-md mx-auto pb-24">
+      <header className="bg-indigo text-plaster px-5 pt-6 pb-5 flex items-end justify-between">
         <div>
-          <h1 className="font-display font-extrabold text-3xl tracking-tight">Tetapan</h1>
-          <div className="text-xs text-ink/40">settings</div>
+          <Label ms="Tetapan" en="settings" color="indigo-hi" />
+          <div className="display text-plaster mt-1 text-3xl">Tetapan</div>
         </div>
-        <button onClick={() => navigate(-1)} className="text-ink/50 text-sm">
-          tutup ✕ <span className="text-ink/35">close</span>
+        <button onClick={() => navigate(-1)} className="mono text-indigo-hi">
+          tutup · close
         </button>
       </header>
 
-      <section className="mt-6 panel p-5 space-y-5">
-        <div>
-          <label className="font-medium">
-            Kata baru sehari — {s.newWordsPerDay}
-            <span className="block text-xs font-normal text-ink/40">new words per day</span>
-          </label>
+      <div className="px-5 divide-y divide-hairline">
+        <Row label="Kata baru sehari" en="new words per day" value={s.newWordsPerDay}>
           <input
             type="range"
             min={3}
             max={10}
             value={s.newWordsPerDay}
             onChange={(e) => patch({ newWordsPerDay: Number(e.target.value) })}
-            className="w-full mt-2 accent-mansion"
+            className="w-full mt-2 accent-oxblood"
           />
-          <div className="text-xs text-ink/50">
-            The daily quota is shared between scheduled and harvested words; overflow queues for
-            tomorrow.
-          </div>
-        </div>
+          <p className="text-muted text-sm mt-1">
+            Shared between scheduled and harvested words; overflow queues for tomorrow.
+          </p>
+        </Row>
 
-        <div>
-          <label className="font-medium">
-            Rentak mingguan — {s.weeklyTargetDays} hari
-            <span className="block text-xs font-normal text-ink/40">
-              weekly rhythm target (days per week)
-            </span>
-          </label>
+        <Row label="Rentak mingguan" en="weekly rhythm target" value={`${s.weeklyTargetDays} hari`}>
           <input
             type="range"
             min={3}
             max={7}
             value={s.weeklyTargetDays}
             onChange={(e) => patch({ weeklyTargetDays: Number(e.target.value) })}
-            className="w-full mt-2 accent-shutter"
+            className="w-full mt-2 accent-oxblood"
           />
-        </div>
+        </Row>
 
-        <div className="flex items-center justify-between">
-          <label className="font-medium">
-            Register bacaan
-            <span className="block text-xs font-normal text-ink/40">
-              reading register — standard vs everyday Malay
-            </span>
-          </label>
-          <div className="flex rounded-full border border-ink/15 overflow-hidden text-xs font-mono">
+        <div className="py-4 flex items-center justify-between">
+          <Label ms="Register bacaan" en="reading register" color="charcoal" />
+          <div className="flex border-[1.5px] border-charcoal rounded-[4px] overflow-hidden mono">
             {(['baku', 'colloquial'] as const).map((r) => (
               <button
                 key={r}
                 onClick={() => patch({ registerPreference: r })}
                 className={`px-3 py-1.5 ${
-                  s.registerPreference === r ? 'bg-mansion text-limewash' : 'text-ink/60'
+                  s.registerPreference === r ? 'bg-charcoal text-plaster' : 'text-muted'
                 }`}
               >
                 {r === 'baku' ? 'BAKU' : 'COLLOQ'}
@@ -103,93 +88,98 @@ export function Settings() {
           </div>
         </div>
 
-        <div className="flex items-center justify-between">
-          <label className="font-medium">
-            Audio (TTS)
-            <span className="block text-xs font-normal text-ink/40">spoken pronunciation</span>
-          </label>
+        <div className="py-4 flex items-center justify-between">
+          <Label ms="Audio (TTS)" en="spoken pronunciation" color="charcoal" />
           <button
             onClick={() => patch({ ttsEnabled: !s.ttsEnabled })}
-            className={`w-12 h-7 rounded-full transition-colors relative ${
-              s.ttsEnabled ? 'bg-shutter' : 'bg-ink/15'
+            className={`w-12 h-7 relative border-[1.5px] border-charcoal rounded-full ${
+              s.ttsEnabled ? 'bg-jade' : 'bg-transparent'
             }`}
             aria-pressed={s.ttsEnabled}
           >
             <span
-              className={`absolute top-1 w-5 h-5 rounded-full bg-white transition-all ${
-                s.ttsEnabled ? 'left-6' : 'left-1'
+              className={`absolute top-0.5 w-5 h-5 rounded-full bg-charcoal transition-all ${
+                s.ttsEnabled ? 'left-[22px]' : 'left-0.5'
               }`}
             />
           </button>
         </div>
 
-        <div>
-          <label className="font-medium">
-            Konteks anda
-            <span className="block text-xs font-normal text-ink/40">about you</span>
-          </label>
+        <div className="py-4">
+          <Label ms="Konteks anda" en="about you" color="charcoal" />
           <textarea
             value={s.userContext}
             onChange={(e) => setS({ ...s, userContext: e.target.value })}
             onBlur={() => patch({ userContext: s.userContext })}
             rows={3}
-            className="mt-2 w-full rounded-xl border border-ink/15 p-3 text-sm"
+            className="mt-2 w-full border-[1.5px] border-charcoal bg-plaster p-3 text-sm rounded-[4px] focus:border-gold"
           />
-          <div className="text-xs text-ink/50">
-            Used to personalise the topics of your generated reading.
-          </div>
+          <p className="text-muted text-sm">Used to personalise the topics of your generated reading.</p>
         </div>
-      </section>
 
-      <section className="mt-4 panel p-5 space-y-3">
-        <div className="font-mono text-[10px] uppercase tracking-widest text-ink/40">
-          penilaian semula · reassess
+        <div className="py-4">
+          <Label ms="Penilaian semula" en="reassess" color="charcoal" className="block mb-2" />
+          <p className="text-muted text-sm mb-2">
+            Know more Malay than your reviews suggest? Re-run the know / don&rsquo;t-know pass over the
+            backlog.
+          </p>
+          <button
+            onClick={() => navigate('/onboarding?redo=1')}
+            className="w-full py-3 border-[1.5px] border-charcoal text-charcoal rounded-[4px]"
+          >
+            Tanda kata yang anda tahu <span className="mono-sm text-muted">mark words you know</span>
+          </button>
         </div>
-        <div className="text-xs text-ink/50">
-          Know more Malay than your reviews suggest? Re-run the know / don&rsquo;t-know pass over
-          the words still in the backlog.
-        </div>
-        <button
-          onClick={() => navigate('/onboarding?redo=1')}
-          className="w-full py-3 rounded-xl border border-ink/20 text-ink/70 font-medium"
-        >
-          Tanda kata yang anda tahu
-          <span className="block text-xs font-normal text-ink/40">mark words you know</span>
-        </button>
-      </section>
 
-      <section className="mt-4 panel p-5 space-y-3">
-        <div className="font-mono text-[10px] uppercase tracking-widest text-ink/40">
-          sandaran · backup
+        <div className="py-4">
+          <Label ms="Sandaran" en="backup" color="charcoal" className="block mb-2" />
+          <p className="text-muted text-sm mb-2">
+            Your learning data lives in this browser. Export a backup now and then.
+          </p>
+          <button
+            onClick={exportBackup}
+            className="w-full py-3 bg-gold text-gold-ink border-[1.5px] border-charcoal rounded-[4px] font-medium"
+          >
+            Eksport JSON <span className="mono-sm text-gold-ink/70">download a backup</span>
+          </button>
+          <button
+            onClick={() => fileRef.current?.click()}
+            className="mt-2 w-full py-3 border-[1.5px] border-charcoal text-charcoal rounded-[4px]"
+          >
+            Import JSON <span className="mono-sm text-muted">replaces all current data</span>
+          </button>
+          <input
+            ref={fileRef}
+            type="file"
+            accept="application/json"
+            hidden
+            onChange={(e) => onImport(e.target.files?.[0])}
+          />
+          {msg && <div className="text-sm text-muted mt-2">{msg}</div>}
         </div>
-        <div className="text-xs text-ink/50">
-          Your learning data lives in this browser. Export a backup file now and then.
-        </div>
-        <button
-          onClick={exportBackup}
-          className="w-full py-3 rounded-xl bg-mansion text-limewash font-medium"
-        >
-          Eksport JSON
-          <span className="block text-xs font-normal text-limewash/70">download a backup</span>
-        </button>
-        <button
-          onClick={() => fileRef.current?.click()}
-          className="w-full py-3 rounded-xl border border-ink/15 text-ink/70 font-medium"
-        >
-          Import JSON
-          <span className="block text-xs font-normal text-ink/40">
-            restore a backup — replaces all current data
-          </span>
-        </button>
-        <input
-          ref={fileRef}
-          type="file"
-          accept="application/json"
-          hidden
-          onChange={(e) => onImport(e.target.files?.[0])}
-        />
-        {msg && <div className="text-sm text-ink/70">{msg}</div>}
-      </section>
+      </div>
+    </div>
+  )
+}
+
+function Row({
+  label,
+  en,
+  value,
+  children,
+}: {
+  label: string
+  en: string
+  value: string | number
+  children: React.ReactNode
+}) {
+  return (
+    <div className="py-4">
+      <div className="flex items-baseline justify-between">
+        <Label ms={label} en={en} color="charcoal" />
+        <span className="display text-lg text-charcoal">{value}</span>
+      </div>
+      {children}
     </div>
   )
 }

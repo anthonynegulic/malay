@@ -1,51 +1,36 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
-import { db } from '../db/db'
+import { db, getSettings } from '../db/db'
+import type { Word } from '../db/types'
 import { dueCount } from '../lib/fsrs'
 import {
   getOrCreateTodaySession,
-  newWordBudgetRemaining,
-  weekRhythm,
   historyDays,
+  newWordBudgetRemaining,
+  nextMilestone,
+  todayStr,
+  weekRhythm,
+  wordOfTheDay,
   type WeekRhythm,
 } from '../lib/session'
-import { Hill } from '../components/Hill'
-import { CornerMotif } from '../components/ui'
+import { GearIcon, Label, SpeakerIcon } from '../components/ui'
+import { RegisterChip } from '../components/RegisterChip'
+import { speak, ttsAvailable } from '../lib/tts'
 
 const DAY_LABELS = ['I', 'S', 'R', 'K', 'J', 'S', 'A'] // Isnin..Ahad
-
-/** Weekday indicator drawn as a footpath stone, matching the Hill's language (P1.3). */
-function DayStone({ state, label }: { state: boolean | null; label: string }) {
-  return (
-    <span className="flex flex-col items-center gap-0.5">
-      <svg viewBox="0 0 20 14" className="w-6 h-4" aria-hidden>
-        <ellipse
-          cx="10"
-          cy="7"
-          rx="8.5"
-          ry="5.5"
-          fill={state === true ? 'var(--color-shutter)' : 'none'}
-          stroke={state === true ? 'var(--color-shutter)' : 'var(--color-ink)'}
-          strokeOpacity={state === true ? 1 : state === false ? 0.35 : 0.2}
-          strokeWidth="1.4"
-          strokeDasharray={state === false ? '2.5 2.5' : undefined}
-        />
-      </svg>
-      <span className="font-mono text-[9px] text-ink/40">{label}</span>
-    </span>
-  )
-}
 
 export function Today() {
   const navigate = useNavigate()
   const [params] = useSearchParams()
-  const done = params.get('done') // 'full' | 'sikit' | null — plays the Hill's growth moment
+  const done = params.get('done') // 'full' | 'sikit' | null
 
   const [due, setDue] = useState(0)
   const [budget, setBudget] = useState(0)
   const [studied, setStudied] = useState(0)
   const [rhythm, setRhythm] = useState<WeekRhythm | null>(null)
   const [history, setHistory] = useState<boolean[]>([])
+  const [word, setWord] = useState<Word | null>(null)
+  const [tts, setTts] = useState(false)
 
   useEffect(() => {
     ;(async () => {
@@ -55,102 +40,161 @@ export function Today() {
       setStudied(await db.cards.count())
       setRhythm(await weekRhythm())
       setHistory((await historyDays()).slice(-14).map((d) => d.counted))
+      setWord((await wordOfTheDay()) ?? null)
+      const s = await getSettings()
+      setTts(s.ttsEnabled && ttsAvailable())
     })()
   }, [done])
 
-  const today = new Date().toLocaleDateString('ms-MY', {
-    weekday: 'long',
-    day: 'numeric',
-    month: 'long',
-  })
+  const dateLabel = new Date()
+    .toLocaleDateString('ms-MY', { weekday: 'long', day: 'numeric', month: 'long' })
+    .toUpperCase()
+
+  const target = nextMilestone(studied)
+  const pct = Math.min(100, (studied / target) * 100)
 
   return (
-    <div className="max-w-md mx-auto pb-24 fade-in">
-      {/* hill scene anchored full-bleed to the top — no floating */}
-      <div className="relative">
-        <Hill wordCount={studied} history={history} grow={Boolean(done)} />
-        <header className="absolute top-0 inset-x-0 px-5 pt-6 flex items-start justify-between">
-          <div>
-            <div className="text-xs text-ink/55 capitalize">{today}</div>
-            <h1 className="font-display font-extrabold text-2xl tracking-tight text-ink">
-              {done ? 'Siap!' : 'Selamat datang balik'}
-            </h1>
-            <div className="text-[11px] text-ink/40">{done ? 'done!' : 'welcome back'}</div>
-          </div>
-          <Link to="/settings" aria-label="Settings" className="text-ink/45 p-1">
-            <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden>
-              <circle cx="12" cy="12" r="3" />
-              <path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1" />
-            </svg>
+    <div className="max-w-md mx-auto pb-24">
+      {/* ————— indigo header floods the top third ————— */}
+      <header className="bg-indigo text-plaster px-5 pt-6 pb-7">
+        <div className="flex items-start justify-between">
+          <span className="mono text-gold">{dateLabel}</span>
+          <Link to="/settings" aria-label="Tetapan · settings" className="text-indigo-hi">
+            <GearIcon className="w-5 h-5" />
           </Link>
-        </header>
-      </div>
-
-      <div className="px-5">
-        {/* weekday footpath stones */}
-        {rhythm && (
-          <div className="mt-3 flex items-end justify-between">
-            <div className="flex gap-1.5">
-              {rhythm.days.map((d, i) => (
-                <DayStone key={i} state={d} label={DAY_LABELS[i]} />
-              ))}
-            </div>
-            <div className="font-mono text-[10px] text-ink/50 text-right pb-0.5">
-              {rhythm.daysDone}/{rhythm.target} minggu ini
-              <span className="block text-ink/35">days this week</span>
-            </div>
-          </div>
-        )}
-
-        {/* one compact stat strip */}
-        <div className="panel mt-5 grid grid-cols-2 divide-x divide-ink/10">
-          <div className="px-4 py-3">
-            <span className="font-mono text-xl text-mansion">{due}</span>
-            <span className="block font-mono text-[9px] uppercase tracking-widest text-ink/45 mt-0.5">
-              kad diulang · due
-            </span>
-          </div>
-          <div className="px-4 py-3">
-            <span className="font-mono text-xl text-shutter">{budget}</span>
-            <span className="block font-mono text-[9px] uppercase tracking-widest text-ink/45 mt-0.5">
-              kata baru · new left
-            </span>
-          </div>
         </div>
 
         {done ? (
-          <div className="panel-m relative mt-5 px-5 py-6 text-center">
-            <CornerMotif className="absolute top-0 right-0 w-9 h-9" />
-            <div className="text-ink/80 text-sm">
+          <div className="mt-8 mb-2">
+            <div className="display text-plaster" style={{ fontSize: 46 }}>
+              Siap.
+            </div>
+            <p className="text-indigo-hi mt-2">
               {done === 'sikit'
                 ? 'Sikit je pun kira. Jumpa esok.'
-                : 'Sesi penuh selesai. Bukit itu tumbuh sedikit lagi.'}
-            </div>
-            <div className="text-xs text-ink/45 mt-1">
+                : 'Sesi penuh selesai. Sedikit-sedikit.'}
+            </p>
+            <p className="text-indigo-lo text-sm">
               {done === 'sikit'
                 ? 'A little still counts. See you tomorrow.'
-                : 'Full session complete. The hill grew a little.'}
-            </div>
+                : 'Full session complete. Little by little.'}
+            </p>
           </div>
         ) : (
-          <div className="mt-5 space-y-3">
+          word && (
+            <div className="mt-5">
+              <Label ms="Kata hari ini" en="word of the day" color="indigo-hi" />
+              <div className="flex items-end justify-between gap-3 mt-2">
+                <div className="display text-plaster break-words" style={{ fontSize: 'clamp(46px, 15vw, 66px)' }}>
+                  {word.baku}
+                </div>
+                {tts && (
+                  <button
+                    onClick={() => speak(word.example_baku || word.baku)}
+                    aria-label="Main audio"
+                    className="text-gold shrink-0 mb-1"
+                  >
+                    <SpeakerIcon className="w-7 h-7" />
+                  </button>
+                )}
+              </div>
+              <div className="flex items-center gap-2 mt-2">
+                <RegisterChip kind="baku" />
+                <span className="text-indigo-hi">{word.gloss_en}</span>
+              </div>
+              {word.example_baku && (
+                <div className="border-t border-indigo-rl mt-4 pt-3">
+                  <div className="text-plaster">{word.example_baku}</div>
+                </div>
+              )}
+            </div>
+          )
+        )}
+      </header>
+
+      {/* ————— plaster content, separated by rules not cards ————— */}
+      <div className="px-5">
+        {/* progress row */}
+        <div className="pt-5">
+          <div className="flex items-baseline justify-between">
+            <span className="display text-charcoal text-xl">
+              {studied} <span className="text-muted font-body font-normal text-base">/ {target} kata</span>
+            </span>
+            <span className="mono text-muted">
+              next · {target}
+            </span>
+          </div>
+          <div className="mt-2 h-1.5 bg-hairline relative">
+            <div className="absolute inset-y-0 left-0 bg-oxblood" style={{ width: `${pct}%` }} />
+          </div>
+          <div className="mono text-muted mt-1.5">{studied} words learned</div>
+        </div>
+
+        {/* weekday row — practised / today / future, gaps visible */}
+        {rhythm && (
+          <div className="mt-5 flex items-end justify-between">
+            <div className="flex gap-1.5">
+              {rhythm.days.map((d, i) => (
+                <span key={i} className="flex flex-col items-center gap-1">
+                  <span
+                    className={`w-6 h-6 ${
+                      d === true
+                        ? 'bg-indigo'
+                        : i === rhythm.todayIndex
+                          ? 'border-[1.5px] border-oxblood'
+                          : 'border-[1.5px] border-hairline'
+                    }`}
+                  />
+                  <span className="mono-sm text-muted">{DAY_LABELS[i]}</span>
+                </span>
+              ))}
+            </div>
+            <span className="mono text-oxblood text-right">
+              {rhythm.daysDone} / {rhythm.target} hari
+              <span className="block text-muted">days this week</span>
+            </span>
+          </div>
+        )}
+
+        {/* stat ledger between charcoal rules */}
+        <div className="mt-6 border-y-[1.5px] border-charcoal">
+          <div className="grid grid-cols-2 divide-x divide-hairline">
+            <div className="py-3 pr-4">
+              <div className="display text-2xl text-charcoal">{due}</div>
+              <Label ms="kad diulang" en="due" color="muted" />
+            </div>
+            <div className="py-3 pl-4">
+              <div className="display text-2xl text-charcoal">{budget}</div>
+              <Label ms="kata baru" en="new left" color="muted" />
+            </div>
+          </div>
+        </div>
+
+        {/* primary action + secondary sharing its lower edge */}
+        {!done && (
+          <div className="mt-6 border-[1.5px] border-charcoal rounded-[4px] overflow-hidden">
             <button
               onClick={() => navigate('/review?mode=full')}
-              className="w-full py-4 rounded-2xl bg-mansion text-limewash font-display font-extrabold text-xl tracking-tight active:scale-[0.98]"
+              className="w-full bg-gold text-gold-ink py-4 border-b-[1.5px] border-charcoal active:opacity-90"
             >
-              Mula
-              <span className="block font-body font-normal text-xs text-limewash/70 tracking-normal">
-                start today&rsquo;s session
-              </span>
+              <span className="display text-xl">Mula</span>
+              <span className="block mono-sm text-gold-ink/70 mt-0.5">start today&rsquo;s session</span>
             </button>
             <button
               onClick={() => navigate('/review?mode=sikit')}
-              className="w-full py-3 rounded-2xl border border-ink/20 text-ink/70 font-medium active:scale-[0.98]"
+              className="w-full bg-transparent text-charcoal py-3 active:bg-charcoal/5"
             >
-              Sikit je <span className="text-ink/40 text-sm">— reviews only, ~5 min</span>
+              <span className="font-medium">Sikit je</span>
+              <span className="text-muted text-sm"> — reviews only, ~5 min</span>
             </button>
           </div>
         )}
+
+        {/* proverb signature line */}
+        <div className="mt-8 text-center">
+          <div className="text-muted text-sm italic">sedikit-sedikit, lama-lama jadi bukit</div>
+          <div className="mono-sm text-muted/70 mt-1">little by little, it becomes a hill</div>
+        </div>
       </div>
     </div>
   )
