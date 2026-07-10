@@ -52,6 +52,17 @@ signature — keep it that way.** Two hard-won lessons are baked into
 Set the **Production Branch** (Settings → Git) to whichever branch you want live —
 currently `claude/bukit-app-review-3hnowa`, or `main` after this is merged.
 
+> **This setting matters more than it looks.** The project's main URL
+> (e.g. `malay-dusky.vercel.app`) serves ONLY the Production deployment. Pushes
+> to any other branch build as *Preview* deployments, each reachable only at
+> its own per-deployment URL — the main URL never picks them up. If the
+> Production Branch is wrong (Vercel defaults it to `main`), the main URL
+> stays frozen on an old build no matter how many green deploys you ship: the
+> symptom is that fixes "don't take" and the same error persists byte-for-byte
+> across rebuilds. To check what's actually live, open the Deployments tab and
+> see which entry is marked **Production/Current** — and when in doubt, test a
+> deployment's own URL directly (click the deployment to find it).
+
 ## Protecting your API credit
 
 The `/api/generate` and `/api/grade` routes spend your Anthropic credit, and a

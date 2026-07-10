@@ -157,8 +157,8 @@ export function Read() {
               <CloudIcon className="w-9 h-9 text-muted mb-3" />
               <div className="font-medium">Tak boleh jana hari ini — cuba lagi.</div>
               <div className="text-muted text-sm mt-1 max-w-xs">
-                Could not generate today&rsquo;s reading. Check the API server is running and your
-                ANTHROPIC_API_KEY is set in .env (restart npm run dev after editing it).
+                Could not generate today&rsquo;s reading. Check your connection and try again — if
+                it keeps failing, the server&rsquo;s ANTHROPIC_API_KEY may be missing or invalid.
               </div>
               <div className="mt-5 flex gap-3">
                 <button
