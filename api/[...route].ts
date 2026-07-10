@@ -24,7 +24,7 @@
 import type { IncomingMessage, ServerResponse } from 'node:http'
 import app from './_app.generated.js'
 
-function toWebRequest(req: IncomingMessage): Request {
+async function toWebRequest(req: IncomingMessage): Promise<Request> {
   const host = req.headers.host ?? 'localhost'
   const url = `https://${host}${req.url ?? '/'}`
   const headers = new Headers()
@@ -33,16 +33,17 @@ function toWebRequest(req: IncomingMessage): Request {
     headers.set(key, Array.isArray(value) ? value.join(', ') : value)
   }
   const hasBody = req.method !== 'GET' && req.method !== 'HEAD'
-  return new Request(url, {
-    method: req.method ?? 'GET',
-    headers,
-    body: hasBody ? (req as unknown as ReadableStream) : undefined,
-    duplex: hasBody ? 'half' : undefined,
-  })
+  let body: Buffer | undefined
+  if (hasBody) {
+    const chunks: Buffer[] = []
+    for await (const chunk of req) chunks.push(chunk as Buffer)
+    body = Buffer.concat(chunks)
+  }
+  return new Request(url, { method: req.method ?? 'GET', headers, body })
 }
 
 export default async function handler(req: IncomingMessage, res: ServerResponse) {
-  const request = toWebRequest(req)
+  const request = await toWebRequest(req)
   const response = await app.fetch(request)
   res.statusCode = response.status
   response.headers.forEach((value, key) => res.setHeader(key, value))
