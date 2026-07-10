@@ -12,7 +12,6 @@
  * automatically before `vite build`.
  */
 import { handle } from 'hono/vercel'
-// @ts-expect-error — generated file, not present until `npm run build:api`
 import app from './_app.generated.js'
 
 export default handle(app)
