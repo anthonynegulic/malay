@@ -2113,6 +2113,18 @@ function properNouns(rawText) {
   for (const m of midSentenceCaps) result.add(normalise(m[1]));
   return result;
 }
+function noticeFormInPassage(lines, form) {
+  const needle = tokenise(form, []);
+  if (!needle.length) return false;
+  const haystack = tokenise(lines.map((l) => l.text).join("\n"), []);
+  outer: for (let i = 0; i + needle.length <= haystack.length; i++) {
+    for (let j = 0; j < needle.length; j++) {
+      if (haystack[i + j] !== needle[j]) continue outer;
+    }
+    return true;
+  }
+  return false;
+}
 function validatePassage(input) {
   const allowed = /* @__PURE__ */ new Set();
   for (const w of [...input.allowed, ...input.functionWords]) {
@@ -2205,13 +2217,20 @@ The comprehension question language is given as "question_language":
 "english" = ask and answer in English; "bilingual" or "malay" = ask and answer
 in simple Malay using only allowed vocabulary, and also provide "prompt_en".
 
+Include exactly ONE "notice": a single quiet observation about the language,
+drawn from something that actually appears in this passage. Plain language, no
+grammar terminology \u2014 the register of "nak = want to \u2014 you'll hear this
+constantly". "form" must be a word or short phrase copied VERBATIM from your
+passage text; "note" is one sentence about it in plain English.
+
 Respond with STRICT JSON only. No markdown, no preamble. Shape:
 {"format": "dialogue"|"prose",
  "lines": [{"speaker": "A"|"B"|null, "text": "<one Malay line/sentence>",
             "gloss": "<natural English translation of that line>"}],
  "translation": "<English translation of the whole passage>",
  "glossary": [{"word": "...", "gloss": "..."}],
- "question": {"prompt": "...", "prompt_en": "...", "answer": "..."}}`;
+ "question": {"prompt": "...", "prompt_en": "...", "answer": "..."},
+ "notice": {"form": "<verbatim from the passage>", "note": "<one plain sentence>"}}`;
 var GRADE_SYSTEM = `You are a warm, encouraging Malay tutor. The learner is a beginner. Grade for
 COMMUNICATION, not perfection. If the meaning would be understood by a patient
 native speaker, say so first. Return STRICT JSON:
@@ -2279,7 +2298,11 @@ function normaliseGenOut(raw2) {
       prompt: q.prompt ?? "",
       prompt_en: q.prompt_en ?? "",
       answer: q.answer ?? ""
-    }
+    },
+    notice: raw2.notice && typeof raw2.notice.form === "string" && typeof raw2.notice.note === "string" ? {
+      form: String(raw2.notice.form),
+      note: String(raw2.notice.note)
+    } : void 0
   };
 }
 var app = new Hono2().basePath("/api");
@@ -2360,6 +2383,10 @@ app.post("/generate", async (c) => {
           if (!glossed.has(v.toLowerCase())) chosen.glossary.push({ word: v, gloss: "" });
         }
       }
+    }
+    if (chosen.notice && !noticeFormInPassage(chosen.lines, chosen.notice.form)) {
+      console.warn("[generate] notice form not verbatim in passage, dropped:", chosen.notice.form);
+      chosen.notice = void 0;
     }
     return c.json({ ...chosen, containment: check.containmentRatio });
   } catch (e) {

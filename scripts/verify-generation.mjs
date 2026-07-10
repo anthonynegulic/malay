@@ -51,6 +51,10 @@ async function run(studiedN) {
     console.log(`    ${line.speaker ? line.speaker + ': ' : ''}${line.text}`)
     if (line.gloss) console.log(`       ${line.gloss}`)
   }
+  // Grammar whisper: server-side validation strips a non-verbatim notice, so
+  // presence here means it passed; absence is legal but worth eyeballing.
+  if (out.notice) console.log(`  notice: "${out.notice.form}" — ${out.notice.note}`)
+  else console.log('  notice: (absent — model omitted it or it failed verbatim validation)')
   return out.containment >= tier.containment
 }
 

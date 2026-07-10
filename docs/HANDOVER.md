@@ -245,3 +245,59 @@ out of it, all shipped:
    (fill it your way); tier 1 = situation + Malay sentence starter; tiers 2–3 = the
    original open prompts. The grader is told what scaffold the learner saw, so it
    grades against the intended task. Speak reads the tier from card count at runtime.
+
+---
+
+## 12. Pedagogy round 001 (10 Jul 2026) — lesson arc + audio
+
+Built to `docs/PEDAGOGY-RESPONSE-001.md` (the owner's rulings on
+`docs/PEDAGOGY-REVIEW-001.md`; its §7 records the four build rulings). Two of the
+response's three sprints shipped together:
+
+**Sprint 1 — the shape of a lesson:**
+- **Day-0 fast path:** empty queue before any day has ever counted → "Mula" routes
+  straight into the reading (`Review.tsx` + `hasEverCompletedSession()`). Later
+  empty days keep the friendly empty state.
+- **Pre-teach intro cards** (`Read.tsx`): today's new words shown as intro cards
+  during the generation wait (selection is deterministic, so the preview costs
+  nothing and matches the passage). First generation of the day only.
+- **Ungraded recall pass** (`Recall.tsx`, `/recall`, after Speak): front → recall →
+  reveal → next. No grade buttons, no FSRS writes; 60s cap at a card boundary;
+  first-class skip. Logs `recallDone` + `recallMs` only.
+- **Register gating:** the BAKU/TUKAR control hidden below tier 1; tier 0 forces
+  baku regardless of `registerPreference`.
+- **Word-of-day caption:** before any word is studied, the Today poster word is
+  today's first upcoming pick, captioned `KATA PERTAMA ANDA · your first word`.
+- **Grammar whisper:** generation returns one `notice` {form, note}; server strips
+  it unless the form appears verbatim in the passage (`noticeFormInPassage`,
+  unit-tested + route-tested). Rendered as one quiet `PERHATIKAN · notice` line.
+- **Session-time budget (§4.1):** session rows log `reviewMs/readMs/speakMs/recallMs`;
+  Kemajuan shows the recent per-phase average; Today shows a gentle Sikit-je note
+  when the projected session exceeds ~18 min (never blocks).
+- **December checkpoint (§4.2):** `src/lib/checkpoint.ts` — 450 words by
+  1 Dec 2026, trailing-12-week rhythm bars, and the five-item self-test checklist
+  (self-marked, stored in settings) on Kemajuan.
+
+**Sprint 2 — audio:**
+- `tts.ts` rebuilt: voice preference **ms-MY → ms → id** with the kind tracked;
+  session-scoped **senyap** mute (one tap in the Read header); `speak()` end
+  callbacks + `stopSpeaking()`.
+- **Tier-0 tap-to-advance** (ruling R1): "Dengar · listen" starts and plays line 1;
+  each tap reveals + auto-plays the next; transcript accumulates with per-line
+  replay. No voice / muted → full render, no autoplay.
+- **Per-line TTS buttons** on dialogue lines at all tiers; prose keeps a
+  whole-passage play.
+- One-time notices: Indonesian-fallback voice (first playback) and no-voice
+  degradation. Active voice inspectable in Settings.
+
+**Deferred (roadmap):** shadowing (pending a week of real tier-0 audio to
+calibrate the 1.5× pause), listen-first reading mode, EN→MS production cards at
+tier 2, TTS API evaluation.
+
+**Verification:** `tsc -b` + vite build clean; `tests/p0.test.ts` (incl. new
+notice-validator cases) and `tests/generate-route.test.ts` (offline route tests:
+mocked model, containment retry + notice strip/pass paths) all green. **Live
+P0.4 rerun still needs a key** — this environment has no `ANTHROPIC_API_KEY`;
+run `npm run dev:api` + `node scripts/verify-generation.mjs` (now also prints
+the notice) after deploy. The containment validator itself is untouched by this
+round; the only generation-pipeline change is the additive `notice` field.

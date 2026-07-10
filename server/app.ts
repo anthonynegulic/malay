@@ -7,7 +7,7 @@
  * (not module load) so Vercel dashboard vars and the local .env both work.
  */
 import { Hono } from 'hono'
-import { validatePassage, type PassageLine } from './validate.js'
+import { noticeFormInPassage, validatePassage, type PassageLine } from './validate.js'
 import { FUNCTION_WORDS } from '../src/lib/tier.js'
 
 function config() {
@@ -47,13 +47,20 @@ The comprehension question language is given as "question_language":
 "english" = ask and answer in English; "bilingual" or "malay" = ask and answer
 in simple Malay using only allowed vocabulary, and also provide "prompt_en".
 
+Include exactly ONE "notice": a single quiet observation about the language,
+drawn from something that actually appears in this passage. Plain language, no
+grammar terminology — the register of "nak = want to — you'll hear this
+constantly". "form" must be a word or short phrase copied VERBATIM from your
+passage text; "note" is one sentence about it in plain English.
+
 Respond with STRICT JSON only. No markdown, no preamble. Shape:
 {"format": "dialogue"|"prose",
  "lines": [{"speaker": "A"|"B"|null, "text": "<one Malay line/sentence>",
             "gloss": "<natural English translation of that line>"}],
  "translation": "<English translation of the whole passage>",
  "glossary": [{"word": "...", "gloss": "..."}],
- "question": {"prompt": "...", "prompt_en": "...", "answer": "..."}}`
+ "question": {"prompt": "...", "prompt_en": "...", "answer": "..."},
+ "notice": {"form": "<verbatim from the passage>", "note": "<one plain sentence>"}}`
 
 const GRADE_SYSTEM = `You are a warm, encouraging Malay tutor. The learner is a beginner. Grade for
 COMMUNICATION, not perfection. If the meaning would be understood by a patient
@@ -113,6 +120,7 @@ interface GenOut {
   translation: string
   glossary: { word: string; gloss: string }[]
   question: { prompt: string; prompt_en?: string; answer: string }
+  notice?: { form: string; note: string }
 }
 
 function normaliseGenOut(raw: Record<string, unknown>): GenOut {
@@ -139,6 +147,15 @@ function normaliseGenOut(raw: Record<string, unknown>): GenOut {
       prompt_en: q.prompt_en ?? '',
       answer: q.answer ?? '',
     },
+    notice:
+      raw.notice &&
+      typeof (raw.notice as Record<string, unknown>).form === 'string' &&
+      typeof (raw.notice as Record<string, unknown>).note === 'string'
+        ? {
+            form: String((raw.notice as Record<string, string>).form),
+            note: String((raw.notice as Record<string, string>).note),
+          }
+        : undefined,
   }
 }
 
@@ -239,6 +256,13 @@ app.post('/generate', async (c) => {
           if (!glossed.has(v.toLowerCase())) chosen.glossary.push({ word: v, gloss: '' })
         }
       }
+    }
+
+    // Grammar whisper: never ship an unvalidated notice. The check rides the
+    // existing retry — a still-invalid form is stripped, not worth a third call.
+    if (chosen.notice && !noticeFormInPassage(chosen.lines, chosen.notice.form)) {
+      console.warn('[generate] notice form not verbatim in passage, dropped:', chosen.notice.form)
+      chosen.notice = undefined
     }
 
     return c.json({ ...chosen, containment: check.containmentRatio })

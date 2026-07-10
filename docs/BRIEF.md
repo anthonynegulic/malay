@@ -341,6 +341,24 @@ never shrinks. A Sikit-je day counts identically to a full day for the rhythm.
 Acceptance criteria updated accordingly: replace "Sikit-je day renders identically
 to a full day in streak/Hill terms" with "…in weekly-rhythm/Hill terms".
 
+### A4 — The lesson arc brackets the passage (amends A2; decided 2026-07-10)
+Recorded per the owner's response to Pedagogy Review 001 (see
+`docs/PEDAGOGY-RESPONSE-001.md`). A2's core is unchanged — the Review phase stays
+pure retrieval and cards still debut in tomorrow's queue — but the single lesson
+now carries a full arc around the passage:
+
+- **Pre-teach:** before the passage renders, today's new words are shown as
+  simple intro cards (word, gloss, register chip, audio). In practice they render
+  during the generation wait, so the latency becomes teaching time.
+- **Recall pass:** the lesson ends with a short, **ungraded** recall pass over
+  today's new words (scheduled + harvested): front → try to recall → tap to
+  reveal → next. It must not touch the scheduler — no grade buttons, no FSRS
+  writes; only a session-log flag and duration. Hard cap ~60s; skippable, no
+  guilt.
+
+Arc within one lesson: **exposure (intro cards) → context (passage) → retrieval
+(recall pass)** — with the first *graded* test still the next day.
+
 ### Build notes
 - Seed deck shipped larger than the ~250 target (425 entries, same schema and
   accuracy bar) — deeper backlog, same cap-driven pacing.

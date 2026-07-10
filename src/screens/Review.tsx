@@ -1,9 +1,14 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { db, getSettings } from '../db/db'
 import type { Card, Word } from '../db/types'
 import { dueCards, gradeCard, previewIntervals, Rating, type Grade } from '../lib/fsrs'
-import { getOrCreateTodaySession, updateSession } from '../lib/session'
+import {
+  addPhaseMs,
+  getOrCreateTodaySession,
+  hasEverCompletedSession,
+  updateSession,
+} from '../lib/session'
 import { VariantLedger } from '../components/RegisterChip'
 import { Label, SpeakerIcon } from '../components/ui'
 import { speak, ttsAvailable } from '../lib/tts'
@@ -25,6 +30,7 @@ export function Review() {
   const [graded, setGraded] = useState(0)
   const [total, setTotal] = useState(0)
   const [tts, setTts] = useState(false)
+  const startedAt = useRef(Date.now())
 
   useEffect(() => {
     ;(async () => {
@@ -32,6 +38,13 @@ export function Review() {
       const settings = await getSettings()
       setTts(settings.ttsEnabled && ttsAvailable())
       const cards = await dueCards(sikit ? SIKIT_CAP : undefined)
+      // Day-0 fast path (first-run ruling §2.1): an empty queue before any day
+      // has ever counted is a system the user hasn't met — route straight into
+      // the reading. On later days the friendly empty state stays.
+      if (!sikit && cards.length === 0 && !(await hasEverCompletedSession())) {
+        navigate('/read', { replace: true })
+        return
+      }
       const items: QueueItem[] = []
       for (const card of cards) {
         const word = await db.words.get(card.wordId)
@@ -46,6 +59,7 @@ export function Review() {
   const intervals = useMemo(() => (current ? previewIntervals(current.card) : null), [current])
 
   function finish() {
+    void addPhaseMs('reviewMs', Date.now() - startedAt.current)
     if (sikit) navigate('/?done=sikit', { replace: true })
     else navigate('/read', { replace: true })
   }

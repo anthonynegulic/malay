@@ -48,6 +48,79 @@ export async function updateSession(patch: Partial<Session>): Promise<Session> {
   return next
 }
 
+/** Accumulate a per-phase duration on today's session row (§4.1: drift must be
+ *  visible on Kemajuan). Accumulated, not overwritten — phases can be revisited. */
+export async function addPhaseMs(
+  field: 'reviewMs' | 'readMs' | 'speakMs' | 'recallMs',
+  ms: number,
+): Promise<void> {
+  if (ms <= 0) return
+  const s = await getOrCreateTodaySession()
+  await updateSession({ [field]: (s[field] ?? 0) + ms })
+}
+
+/** True once any day has ever counted — gate for the day-0 fast path. */
+export async function hasEverCompletedSession(): Promise<boolean> {
+  const sessions = await db.sessions.toArray()
+  return sessions.some(sessionCounts)
+}
+
+/**
+ * Today's introduced words (scheduled + harvested): their cards exist with zero
+ * reps and a future due date (tomorrow 4am) — yesterday's unreviewed cards are
+ * due in the past, so they can't leak in. Powers the ungraded recall pass.
+ */
+export async function todaysNewWords(): Promise<Word[]> {
+  const now = Date.now()
+  const cards = await db.cards.toArray()
+  const ids = cards.filter((c) => c.reps === 0 && c.due > now).map((c) => c.wordId)
+  return ((await db.words.bulkGet(ids)).filter(Boolean) as Word[]) ?? []
+}
+
+/**
+ * Projected full-session length (§4.1): due count × observed per-card time,
+ * plus observed read/speak time. Trailing averages from logged phase durations;
+ * conservative priors before any data exists. Powers a gentle pre-session note
+ * offering Sikit je — never a block.
+ */
+export async function projectedSessionMs(): Promise<number> {
+  const due = await dueCount()
+  const recent = await db.sessions.orderBy('date').reverse().limit(14).toArray()
+  const reviewed = recent.filter((s) => (s.reviewMs ?? 0) > 0 && s.reviewsDone > 0)
+  const perCardMs = reviewed.length
+    ? reviewed.reduce((a, s) => a + (s.reviewMs ?? 0), 0) /
+      reviewed.reduce((a, s) => a + s.reviewsDone, 0)
+    : 6_000
+  const avg = (field: 'readMs' | 'speakMs', prior: number) => {
+    const logged = recent.map((s) => s[field] ?? 0).filter((v) => v > 0)
+    return logged.length ? logged.reduce((a, v) => a + v, 0) / logged.length : prior
+  }
+  return due * perCardMs + avg('readMs', 5 * 60_000) + avg('speakMs', 3 * 60_000)
+}
+
+/** Days counted per trailing week (oldest first, current week last) — the
+ *  December-checkpoint consistency trend. */
+export async function trailingWeeks(n: number): Promise<number[]> {
+  const now = new Date()
+  const dow = (now.getDay() + 6) % 7 // Monday = 0
+  const monday = new Date(now)
+  monday.setDate(now.getDate() - dow)
+  monday.setHours(0, 0, 0, 0)
+  const sessions = await db.sessions.toArray()
+  const counted = new Set(sessions.filter(sessionCounts).map((s) => s.date))
+  const weeks: number[] = []
+  for (let w = n - 1; w >= 0; w--) {
+    let done = 0
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(monday)
+      d.setDate(monday.getDate() - w * 7 + i)
+      if (counted.has(todayStr(d))) done++
+    }
+    weeks.push(done)
+  }
+  return weeks
+}
+
 /** Words already introduced today (cards created today), counted against the cap. */
 export async function newWordsUsedToday(): Promise<number> {
   const s = await getOrCreateTodaySession()
@@ -216,17 +289,29 @@ export function nextMilestone(count: number): number {
 
 /**
  * Word of the day for the Today header — deterministic by date so it's stable
- * through the day and rotates daily. Prefers studied words (reinforcement);
- * falls back to the seed deck so day-zero users still get a poster word.
+ * through the day and rotates daily. Drawn from studied words (reinforcement).
+ * Before any word is studied, it previews today's first upcoming new word
+ * instead ("caption, don't suppress" — first-run ruling §2.4): pickDiverse is
+ * deterministic and pickNewWords creates no cards, so the preview costs nothing
+ * and matches what the passage will introduce.
  */
-export async function wordOfTheDay(date = todayStr()): Promise<Word | undefined> {
+export async function wordOfTheDay(
+  date = todayStr(),
+): Promise<{ word: Word; first: boolean } | undefined> {
   const cards = await db.cards.toArray()
   const studiedIds = new Set(cards.map((c) => c.wordId))
   const all = await db.words.orderBy('addedAt').toArray()
   const pool = all.filter((w) => studiedIds.has(w.id))
-  const source = pool.length ? pool : all.filter((w) => w.source === 'seed')
-  if (!source.length) return undefined
+  if (!pool.length) {
+    const upcoming = await pickNewWords()
+    if (upcoming.length) return { word: upcoming[0], first: true }
+    const seedPool = all.filter((w) => w.source === 'seed')
+    if (!seedPool.length) return undefined
+    let h = 0
+    for (let i = 0; i < date.length; i++) h = (h * 31 + date.charCodeAt(i)) >>> 0
+    return { word: seedPool[h % seedPool.length], first: false }
+  }
   let h = 0
   for (let i = 0; i < date.length; i++) h = (h * 31 + date.charCodeAt(i)) >>> 0
-  return source[h % source.length]
+  return { word: pool[h % pool.length], first: false }
 }

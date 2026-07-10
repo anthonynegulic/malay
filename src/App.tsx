@@ -8,13 +8,14 @@ import { Today } from './screens/Today'
 import { Review } from './screens/Review'
 import { Read } from './screens/Read'
 import { Speak } from './screens/Speak'
+import { Recall } from './screens/Recall'
 import { Words } from './screens/Words'
 import { Progress } from './screens/Progress'
 import { Settings } from './screens/Settings'
 
 function Shell({ needsOnboarding }: { needsOnboarding: boolean }) {
   const location = useLocation()
-  const inSession = ['/review', '/read', '/speak', '/onboarding'].some((p) =>
+  const inSession = ['/review', '/read', '/speak', '/recall', '/onboarding'].some((p) =>
     location.pathname.startsWith(p),
   )
   if (needsOnboarding && location.pathname !== '/onboarding') {
@@ -36,6 +37,7 @@ function Shell({ needsOnboarding }: { needsOnboarding: boolean }) {
         <Route path="/review" element={<Review />} />
         <Route path="/read" element={<Read />} />
         <Route path="/speak" element={<Speak />} />
+        <Route path="/recall" element={<Recall />} />
         <Route path="/words" element={<Words />} />
         <Route path="/progress" element={<Progress />} />
         <Route path="/settings" element={<Settings />} />

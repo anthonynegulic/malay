@@ -81,6 +81,15 @@ export function SpeakerIcon({ className = 'w-5 h-5' }: { className?: string }) {
   )
 }
 
+export function MuteIcon({ className = 'w-5 h-5' }: { className?: string }) {
+  return (
+    <svg {...svg} className={className} aria-hidden>
+      <path d="M4 9v6h4l5 4V5L8 9H4Z" />
+      <path d="M16.5 9.5l5 5M21.5 9.5l-5 5" />
+    </svg>
+  )
+}
+
 export function CloudIcon({ className = 'w-8 h-8' }: { className?: string }) {
   return (
     <svg {...svg} className={className} aria-hidden>

@@ -8,6 +8,7 @@ import {
   historyDays,
   newWordBudgetRemaining,
   nextMilestone,
+  projectedSessionMs,
   todayStr,
   weekRhythm,
   wordOfTheDay,
@@ -30,6 +31,8 @@ export function Today() {
   const [rhythm, setRhythm] = useState<WeekRhythm | null>(null)
   const [history, setHistory] = useState<boolean[]>([])
   const [word, setWord] = useState<Word | null>(null)
+  const [firstWord, setFirstWord] = useState(false)
+  const [longDay, setLongDay] = useState(false)
   const [tts, setTts] = useState(false)
 
   useEffect(() => {
@@ -40,7 +43,12 @@ export function Today() {
       setStudied(await db.cards.count())
       setRhythm(await weekRhythm())
       setHistory((await historyDays()).slice(-14).map((d) => d.counted))
-      setWord((await wordOfTheDay()) ?? null)
+      const wotd = await wordOfTheDay()
+      setWord(wotd?.word ?? null)
+      setFirstWord(wotd?.first ?? false)
+      // §4.1: a projected long session gets a gentle note offering Sikit je.
+      // Never a block — the buttons are untouched.
+      setLongDay((await projectedSessionMs()) > 18 * 60_000)
       const s = await getSettings()
       setTts(s.ttsEnabled && ttsAvailable())
     })()
@@ -83,7 +91,11 @@ export function Today() {
         ) : (
           word && (
             <div className="mt-5">
-              <Label ms="Kata hari ini" en="word of the day" color="indigo-hi" />
+              {firstWord ? (
+                <Label ms="Kata pertama anda" en="your first word" color="indigo-hi" />
+              ) : (
+                <Label ms="Kata hari ini" en="word of the day" color="indigo-hi" />
+              )}
               <div className="flex items-end justify-between gap-3 mt-2">
                 <div className="display text-plaster break-words" style={{ fontSize: 'clamp(46px, 15vw, 66px)' }}>
                   {word.baku}
@@ -169,6 +181,16 @@ export function Today() {
             </div>
           </div>
         </div>
+
+        {/* gentle long-day note (§4.1) — an offer, never a gate */}
+        {!done && longDay && (
+          <p className="mt-5 text-sm text-muted">
+            Hari ini agak panjang — {due} kad menunggu.{' '}
+            <span className="opacity-80">
+              A longer day than usual. Sikit je counts just the same.
+            </span>
+          </p>
+        )}
 
         {/* primary action + secondary sharing its lower edge */}
         {!done && (

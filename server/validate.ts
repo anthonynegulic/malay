@@ -66,6 +66,25 @@ export function properNouns(rawText: string): Set<string> {
   return result
 }
 
+/**
+ * Grammar-whisper check (pedagogy response §3.4): the noticed form must appear
+ * verbatim in the passage. Token-sequence containment, case/punctuation-
+ * insensitive, so multi-word forms ("lagu mana") and forms adjacent to
+ * punctuation both match honestly.
+ */
+export function noticeFormInPassage(lines: PassageLine[], form: string): boolean {
+  const needle = tokenise(form, [])
+  if (!needle.length) return false
+  const haystack = tokenise(lines.map((l) => l.text).join('\n'), [])
+  outer: for (let i = 0; i + needle.length <= haystack.length; i++) {
+    for (let j = 0; j < needle.length; j++) {
+      if (haystack[i + j] !== needle[j]) continue outer
+    }
+    return true
+  }
+  return false
+}
+
 export function validatePassage(input: ValidationInput): ValidationResult {
   const allowed = new Set<string>()
   for (const w of [...input.allowed, ...input.functionWords]) {

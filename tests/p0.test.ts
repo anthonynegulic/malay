@@ -3,7 +3,7 @@
  * Run: npx tsx tests/p0.test.ts
  */
 import assert from 'node:assert'
-import { validatePassage, tokenise, properNouns } from '../server/validate'
+import { validatePassage, tokenise, properNouns, noticeFormInPassage } from '../server/validate'
 import { pickDiverse, sortBacklog } from '../src/lib/select'
 import { tierFor, FUNCTION_WORDS } from '../src/lib/tier'
 import type { Word } from '../src/db/types'
@@ -64,6 +64,21 @@ import type { Word } from '../src/db/types'
   assert.equal(result.violations.length, 0, `violations: ${result.violations}`)
   assert.equal(result.ok, false, 'panas appears twice, needs 3') // deliberate near-miss
   assert.deepEqual(result.underused, ['panas'])
+}
+
+// ————— grammar whisper: noticed form must appear verbatim in the passage —————
+{
+  const lines = [
+    { speaker: 'A', text: 'Saya nak pergi ke pasar.' },
+    { speaker: 'B', text: 'Lagu mana nak pergi?' },
+  ]
+  assert.ok(noticeFormInPassage(lines, 'nak'), 'single word present')
+  assert.ok(noticeFormInPassage(lines, 'Nak'), 'case-insensitive')
+  assert.ok(noticeFormInPassage(lines, 'lagu mana'), 'multi-word form present')
+  assert.ok(noticeFormInPassage(lines, 'pasar.'), 'punctuation on the form is forgiven')
+  assert.ok(!noticeFormInPassage(lines, 'hendak'), 'absent form rejected')
+  assert.ok(!noticeFormInPassage(lines, 'mana lagu'), 'order matters — not a bag of words')
+  assert.ok(!noticeFormInPassage(lines, ''), 'empty form rejected')
 }
 
 // ————— tier thresholds —————

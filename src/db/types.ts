@@ -69,6 +69,12 @@ export interface Passage {
   glossary: { word: string; gloss: string }[]
   question: { prompt: string; promptEn: string; answer: string }
   newWordIds: string[]
+  /**
+   * Grammar whisper (pedagogy response §3.4): exactly one plain-language
+   * observation drawn from this passage. Absent when the model's notice failed
+   * verbatim-form validation — never rendered unvalidated.
+   */
+  notice?: { form: string; note: string }
 }
 
 export interface Session {
@@ -82,6 +88,14 @@ export interface Session {
   dueAtStart: number
   /** Honest self-mark on the comprehension question (P2 — data only, no gating). */
   comprehension?: 'betul' | 'tak'
+  /** Per-phase durations (pedagogy response §4.1) — session-time drift must be
+   *  visible on Kemajuan, not discovered by resentment. Accumulated per day. */
+  reviewMs?: number
+  readMs?: number
+  speakMs?: number
+  recallMs?: number
+  /** The ungraded end-of-lesson recall pass was completed (no FSRS data). */
+  recallDone?: boolean
 }
 
 export interface Settings {
@@ -93,6 +107,9 @@ export interface Settings {
   /** Weekly rhythm target: days per week that count as "on rhythm". */
   weeklyTargetDays: number
   onboarded: boolean
+  /** December-checkpoint self-test items ticked off (ids from CHECKPOINT.checklist).
+   *  Self-marked in Penang — a list and a date, no gamification. */
+  checkpointDone?: string[]
 }
 
 export const DEFAULT_SETTINGS: Settings = {

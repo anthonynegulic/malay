@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { db } from '../db/db'
 import type { GradeResult } from '../db/types'
 import { gradeResponse, outputPrompt, type SpeakTask } from '../lib/api'
-import { todayStr, updateSession } from '../lib/session'
+import { addPhaseMs, todayStr, updateSession } from '../lib/session'
 import { tierFor } from '../lib/tier'
 import { Label } from '../components/ui'
 
@@ -14,6 +14,7 @@ export function Speak() {
   const [busy, setBusy] = useState(false)
   const [result, setResult] = useState<GradeResult | null>(null)
   const [error, setError] = useState(false)
+  const startedAt = useRef(Date.now())
 
   useEffect(() => {
     ;(async () => {
@@ -44,7 +45,10 @@ export function Speak() {
   }
 
   function finish() {
-    navigate('/?done=full', { replace: true })
+    void addPhaseMs('speakMs', Date.now() - startedAt.current)
+    // The lesson closes with the ungraded recall pass (§1-Q1) — it redirects
+    // straight to done when today introduced no words.
+    navigate('/recall', { replace: true })
   }
 
   return (

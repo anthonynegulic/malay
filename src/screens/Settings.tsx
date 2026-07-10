@@ -3,7 +3,14 @@ import { useNavigate } from 'react-router-dom'
 import { getSettings, saveSettings } from '../db/db'
 import type { Settings as SettingsT } from '../db/types'
 import { exportBackup, importBackup } from '../lib/backup'
+import { activeVoice } from '../lib/tts'
 import { Label } from '../components/ui'
+
+const VOICE_KIND_LABEL = {
+  'ms-MY': 'Bahasa Melayu (Malaysia)',
+  ms: 'Bahasa Melayu',
+  id: 'Bahasa Indonesia (fallback)',
+} as const
 
 export function Settings() {
   const navigate = useNavigate()
@@ -88,21 +95,25 @@ export function Settings() {
           </div>
         </div>
 
-        <div className="py-4 flex items-center justify-between">
-          <Label ms="Audio (TTS)" en="spoken pronunciation" color="charcoal" />
-          <button
-            onClick={() => patch({ ttsEnabled: !s.ttsEnabled })}
-            className={`w-12 h-7 relative border-[1.5px] border-charcoal rounded-full ${
-              s.ttsEnabled ? 'bg-jade' : 'bg-transparent'
-            }`}
-            aria-pressed={s.ttsEnabled}
-          >
-            <span
-              className={`absolute top-0.5 w-5 h-5 rounded-full bg-charcoal transition-all ${
-                s.ttsEnabled ? 'left-[22px]' : 'left-0.5'
+        <div className="py-4">
+          <div className="flex items-center justify-between">
+            <Label ms="Audio (TTS)" en="spoken pronunciation" color="charcoal" />
+            <button
+              onClick={() => patch({ ttsEnabled: !s.ttsEnabled })}
+              className={`w-12 h-7 relative border-[1.5px] border-charcoal rounded-full ${
+                s.ttsEnabled ? 'bg-jade' : 'bg-transparent'
               }`}
-            />
-          </button>
+              aria-pressed={s.ttsEnabled}
+            >
+              <span
+                className={`absolute top-0.5 w-5 h-5 rounded-full bg-charcoal transition-all ${
+                  s.ttsEnabled ? 'left-[22px]' : 'left-0.5'
+                }`}
+              />
+            </button>
+          </div>
+          {/* Voice-fallback ruling Q2: the active voice is inspectable, not mysterious. */}
+          <VoiceLine />
         </div>
 
         <div className="py-4">
@@ -159,6 +170,23 @@ export function Settings() {
         </div>
       </div>
     </div>
+  )
+}
+
+function VoiceLine() {
+  // Voices can load asynchronously — retry briefly after mount so the line
+  // reflects reality rather than the pre-voiceschanged snapshot.
+  const [voice, setVoice] = useState(activeVoice())
+  useEffect(() => {
+    const t = setTimeout(() => setVoice(activeVoice()), 500)
+    return () => clearTimeout(t)
+  }, [])
+  return (
+    <p className="text-muted text-sm mt-1.5">
+      {voice
+        ? `Suara · voice: ${VOICE_KIND_LABEL[voice.kind]} — ${voice.voice.name}`
+        : 'Suara · voice: tiada suara Melayu di peranti ini · none found on this device'}
+    </p>
   )
 }
 
