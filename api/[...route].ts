@@ -10,16 +10,42 @@
  * relative TS import at runtime. Regenerate it with `npm run build:api`
  * whenever server/app.ts (or its imports) change; `npm run build` does this
  * automatically before `vite build`.
+ *
+ * This uses Vercel's original, classic Node.js function signature —
+ * `(req, res)` — deliberately, instead of relying on Vercel auto-detecting a
+ * Fetch API `(Request) => Response` handler (which needs either an Edge
+ * runtime declaration or a specific @vercel/node version's auto-detection to
+ * work, and repeatedly failed here in ways that gave no useful diagnostic
+ * output). This adapter manually builds a standard Request from the incoming
+ * Node request, runs it through the Hono app, and writes the Response back —
+ * the same pattern every non-Fetch-native framework uses on Vercel, with the
+ * longest track record of just working.
  */
-import { handle } from 'hono/vercel'
+import type { IncomingMessage, ServerResponse } from 'node:http'
 import app from './_app.generated.js'
 
-// hono/vercel's handle() produces a pure Fetch API (Request) => Response
-// function. Vercel only invokes a function with that signature if it's
-// explicitly told this is an Edge Function — otherwise it calls the default
-// export as a classic Node (req, res) handler, which crashes immediately on
-// every request since our function ignores its arguments and calls
-// req.headers.get() etc. on a plain Node IncomingMessage.
-export const config = { runtime: 'edge' }
+function toWebRequest(req: IncomingMessage): Request {
+  const host = req.headers.host ?? 'localhost'
+  const url = `https://${host}${req.url ?? '/'}`
+  const headers = new Headers()
+  for (const [key, value] of Object.entries(req.headers)) {
+    if (value === undefined) continue
+    headers.set(key, Array.isArray(value) ? value.join(', ') : value)
+  }
+  const hasBody = req.method !== 'GET' && req.method !== 'HEAD'
+  return new Request(url, {
+    method: req.method ?? 'GET',
+    headers,
+    body: hasBody ? (req as unknown as ReadableStream) : undefined,
+    duplex: hasBody ? 'half' : undefined,
+  })
+}
 
-export default handle(app)
+export default async function handler(req: IncomingMessage, res: ServerResponse) {
+  const request = toWebRequest(req)
+  const response = await app.fetch(request)
+  res.statusCode = response.status
+  response.headers.forEach((value, key) => res.setHeader(key, value))
+  const buf = Buffer.from(await response.arrayBuffer())
+  res.end(buf)
+}
