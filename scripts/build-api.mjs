@@ -10,9 +10,12 @@ await build({
   entryPoints: ['server/app.ts'],
   outfile: 'api/_app.generated.js',
   bundle: true,
-  platform: 'node',
+  // The function runs on Vercel's Edge runtime (a V8 isolate, not real
+  // Node.js) — see the `runtime: 'edge'` config in api/[...route].ts.
+  // 'neutral' avoids esbuild assuming any Node-only globals are present.
+  platform: 'neutral',
   format: 'esm',
-  target: 'node20',
+  target: 'es2022',
   // Bundle everything, including npm deps — the output needs zero further
   // module resolution at runtime.
   external: [],

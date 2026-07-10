@@ -14,4 +14,12 @@
 import { handle } from 'hono/vercel'
 import app from './_app.generated.js'
 
+// hono/vercel's handle() produces a pure Fetch API (Request) => Response
+// function. Vercel only invokes a function with that signature if it's
+// explicitly told this is an Edge Function — otherwise it calls the default
+// export as a classic Node (req, res) handler, which crashes immediately on
+// every request since our function ignores its arguments and calls
+// req.headers.get() etc. on a plain Node IncomingMessage.
+export const config = { runtime: 'edge' }
+
 export default handle(app)
