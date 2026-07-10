@@ -2,32 +2,38 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { db } from '../db/db'
 import type { GradeResult } from '../db/types'
-import { gradeResponse, outputPrompt } from '../lib/api'
+import { gradeResponse, outputPrompt, type SpeakTask } from '../lib/api'
 import { todayStr, updateSession } from '../lib/session'
+import { tierFor } from '../lib/tier'
 import { Label } from '../components/ui'
 
 export function Speak() {
   const navigate = useNavigate()
-  const [prompt, setPrompt] = useState('')
+  const [task, setTask] = useState<SpeakTask | null>(null)
   const [answer, setAnswer] = useState('')
   const [busy, setBusy] = useState(false)
   const [result, setResult] = useState<GradeResult | null>(null)
   const [error, setError] = useState(false)
 
   useEffect(() => {
-    db.passages
-      .where('date')
-      .equals(todayStr())
-      .first()
-      .then((p) => setPrompt(outputPrompt(p?.topic ?? 'pasar')))
+    ;(async () => {
+      const p = await db.passages.where('date').equals(todayStr()).first()
+      const tier = tierFor(await db.cards.count())
+      setTask(outputPrompt(p?.topic ?? 'pasar', tier.id))
+    })()
   }, [])
 
   async function submit() {
-    if (!answer.trim() || busy) return
+    if (!task || !answer.trim() || busy) return
     setBusy(true)
     setError(false)
     try {
-      const r = await gradeResponse(prompt, answer.trim())
+      // Give the grader the scaffold so it judges against the intended task,
+      // not an imagined harder one.
+      const gradePrompt = task.scaffold
+        ? `${task.situation} (The learner was shown this model to adapt: "${task.scaffold}")`
+        : task.situation
+      const r = await gradeResponse(gradePrompt, answer.trim())
       setResult(r)
       await updateSession({ outputAttempted: true })
     } catch {
@@ -53,7 +59,22 @@ export function Speak() {
       <div className="flex-1 px-5 py-5">
         <div className="border-y-[1.5px] border-charcoal py-4">
           <Label ms="situasi" en="the situation" color="muted" className="block mb-2" />
-          <div className="font-medium text-lg">{prompt}</div>
+          <div className="font-medium text-lg">{task?.situation}</div>
+
+          {task?.scaffold && (
+            <div className="mt-4 border-l-2 border-gold pl-3">
+              <Label
+                ms={task.mode === 'pattern' ? 'pola — isi tempat kosong' : 'mula dengan'}
+                en={task.mode === 'pattern' ? 'pattern — fill in the blank' : 'start with'}
+                color="muted"
+                className="block mb-1"
+              />
+              <div className="passage text-charcoal">{task.scaffold}</div>
+              {task.scaffoldGloss && (
+                <div className="text-sm text-muted mt-0.5">{task.scaffoldGloss}</div>
+              )}
+            </div>
+          )}
         </div>
 
         {!result && (
@@ -61,7 +82,11 @@ export function Speak() {
             <textarea
               value={answer}
               onChange={(e) => setAnswer(e.target.value)}
-              placeholder="Jawab dalam Bahasa Melayu… (answer in Malay — imperfect is fine)"
+              placeholder={
+                task?.mode === 'pattern'
+                  ? 'Tulis ayat anda… (write your version of the pattern)'
+                  : 'Jawab dalam Bahasa Melayu… (answer in Malay — imperfect is fine)'
+              }
               rows={4}
               className="mt-4 w-full border-[1.5px] border-charcoal bg-plaster p-4 passage rounded-[4px] focus:border-gold"
             />

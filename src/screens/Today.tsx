@@ -13,7 +13,7 @@ import {
   wordOfTheDay,
   type WeekRhythm,
 } from '../lib/session'
-import { GearIcon, Label, SpeakerIcon } from '../components/ui'
+import { Label, SpeakerIcon } from '../components/ui'
 import { RegisterChip } from '../components/RegisterChip'
 import { speak, ttsAvailable } from '../lib/tts'
 
@@ -59,8 +59,8 @@ export function Today() {
       <header className="bg-indigo text-plaster px-5 pt-6 pb-7">
         <div className="flex items-start justify-between">
           <span className="mono text-gold">{dateLabel}</span>
-          <Link to="/settings" aria-label="Tetapan · settings" className="text-indigo-hi">
-            <GearIcon className="w-5 h-5" />
+          <Link to="/settings" className="mono text-indigo-hi">
+            tetapan · settings
           </Link>
         </div>
 

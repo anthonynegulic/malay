@@ -160,8 +160,128 @@ export async function gradeResponse(prompt: string, response: string): Promise<G
   }
 }
 
-/** Situation prompts for the output micro-task, keyed by passage topic. */
-const OUTPUT_PROMPTS: Record<string, string[]> = {
+/**
+ * The speaking micro-task, tier-ramped (feedback 001: open production on day 0
+ * was far too hard). Tier 0 gives a complete Malay pattern with one blank to
+ * fill; tier 1 gives the situation plus a sentence starter; tiers 2-3 keep the
+ * original open situations.
+ */
+export interface SpeakTask {
+  mode: 'pattern' | 'starter' | 'open'
+  situation: string
+  /** Malay model shown to the learner (pattern: with a ___ blank; starter: an opening). */
+  scaffold?: string
+  scaffoldGloss?: string
+}
+
+const PATTERN_TASKS: Record<string, Omit<SpeakTask, 'mode'>> = {
+  pasar: {
+    situation: 'The mak cik at the pasar asks how many children you have.',
+    scaffold: 'Saya ada ___ orang anak.',
+    scaffoldGloss: 'I have ___ children. (satu, dua, tiga…)',
+  },
+  kopitiam: {
+    situation: 'Order a drink at the kopitiam.',
+    scaffold: 'Bang, ___ satu.',
+    scaffoldGloss: 'One ___, please. (kopi? teh?)',
+  },
+  'teksi-Grab': {
+    situation: 'The Grab driver asks where you are from.',
+    scaffold: 'Saya dari ___.',
+    scaffoldGloss: 'I am from ___.',
+  },
+  masjid: {
+    situation: 'A brother greets you after prayer. Introduce yourself.',
+    scaffold: 'Nama saya ___.',
+    scaffoldGloss: 'My name is ___.',
+  },
+  sekolah: {
+    situation: 'A teacher asks your child’s name.',
+    scaffold: 'Nama anak saya ___.',
+    scaffoldGloss: 'My child’s name is ___.',
+  },
+  cuaca: {
+    situation: 'A neighbour asks about the weather today.',
+    scaffold: 'Hari ini ___.',
+    scaffoldGloss: 'Today is ___. (panas = hot, hujan = raining)',
+  },
+  keluarga: {
+    situation: 'A friend asks where your family lives.',
+    scaffold: 'Kami tinggal di ___.',
+    scaffoldGloss: 'We live in ___.',
+  },
+  makanan: {
+    situation: 'A friend asks what you ate today.',
+    scaffold: 'Saya makan ___.',
+    scaffoldGloss: 'I ate ___.',
+  },
+  kejiranan: {
+    situation: 'A new neighbour asks which house is yours.',
+    scaffold: 'Saya tinggal di rumah nombor ___.',
+    scaffoldGloss: 'I live at house number ___.',
+  },
+  urusan: {
+    situation: 'At the counter, say what you want.',
+    scaffold: 'Saya nak ___.',
+    scaffoldGloss: 'I want ___. (bayar = to pay)',
+  },
+}
+
+const STARTER_TASKS: Record<string, Omit<SpeakTask, 'mode'>> = {
+  pasar: {
+    situation: 'The mak cik at the pasar asks how many children you have. Answer in Malay.',
+    scaffold: 'Saya ada…',
+    scaffoldGloss: 'I have…',
+  },
+  kopitiam: {
+    situation: 'Order a kopi and something to eat at the kopitiam.',
+    scaffold: 'Bang, saya nak…',
+    scaffoldGloss: 'Excuse me (to a man), I want…',
+  },
+  'teksi-Grab': {
+    situation: 'Tell the Grab driver where you want to go.',
+    scaffold: 'Saya nak pergi ke…',
+    scaffoldGloss: 'I want to go to…',
+  },
+  masjid: {
+    situation:
+      'A brother at the masjid greets you after prayer. Return the greeting and introduce yourself.',
+    scaffold: 'Waalaikumsalam. Nama saya…',
+    scaffoldGloss: '…my name is…',
+  },
+  sekolah: {
+    situation: 'A teacher asks about your son. Say his name and age.',
+    scaffold: 'Nama dia… Umur dia…',
+    scaffoldGloss: 'His name is… His age is…',
+  },
+  cuaca: {
+    situation: 'Tell a neighbour the weather is very hot today.',
+    scaffold: 'Hari ini…',
+    scaffoldGloss: 'Today…',
+  },
+  keluarga: {
+    situation: 'A friend asks who is in your family.',
+    scaffold: 'Dalam keluarga saya ada…',
+    scaffoldGloss: 'In my family there is/are…',
+  },
+  makanan: {
+    situation: 'Say what you ate today and whether you liked it.',
+    scaffold: 'Hari ini saya makan…',
+    scaffoldGloss: 'Today I ate…',
+  },
+  kejiranan: {
+    situation: 'Greet a new neighbour and say where you live.',
+    scaffold: 'Selamat pagi! Saya tinggal di…',
+    scaffoldGloss: 'Good morning! I live at…',
+  },
+  urusan: {
+    situation: 'Say you do not understand and ask the officer to repeat slowly.',
+    scaffold: 'Maaf, saya tak faham…',
+    scaffoldGloss: 'Sorry, I don’t understand…',
+  },
+}
+
+const OPEN_TASKS: Record<string, string[]> = {
   pasar: [
     'The mak cik at the pasar asks how many children you have. Answer in Malay.',
     'Ask the trader how much the fish costs, and say it is too expensive.',
@@ -204,7 +324,15 @@ const OUTPUT_PROMPTS: Record<string, string[]> = {
   ],
 }
 
-export function outputPrompt(topic: string): string {
-  const pool = OUTPUT_PROMPTS[topic] ?? OUTPUT_PROMPTS.pasar
-  return pool[Math.floor(Math.random() * pool.length)]
+export function outputPrompt(topic: string, tier: number): SpeakTask {
+  if (tier <= 0) {
+    const t = PATTERN_TASKS[topic] ?? PATTERN_TASKS.pasar
+    return { mode: 'pattern', ...t }
+  }
+  if (tier === 1) {
+    const t = STARTER_TASKS[topic] ?? STARTER_TASKS.pasar
+    return { mode: 'starter', ...t }
+  }
+  const pool = OPEN_TASKS[topic] ?? OPEN_TASKS.pasar
+  return { mode: 'open', situation: pool[Math.floor(Math.random() * pool.length)] }
 }

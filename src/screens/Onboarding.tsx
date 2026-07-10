@@ -5,18 +5,24 @@ import type { Word } from '../db/types'
 import { knownCard } from '../lib/fsrs'
 import { RegisterChip } from '../components/RegisterChip'
 
+const BATCH = 30
+
 /**
- * One-time self-assessment: swipe the seed deck marking words you already know.
- * Known words enter the SRS as studied. Re-runnable from Settings (?redo=1),
+ * Onboarding (feedback 001): complete beginners answer one question and go
+ * straight in at zero words — no 400-card review. People who already know
+ * some Malay get the self-assessment, dealt in batches of 30 with a clear
+ * "that's enough" exit after each batch. Re-runnable from Settings (?redo=1),
  * where it walks only the backlog.
  */
 export function Onboarding() {
   const navigate = useNavigate()
   const [params] = useSearchParams()
   const redo = params.get('redo') === '1'
+  const [phase, setPhase] = useState<'ask' | 'review'>(redo ? 'review' : 'ask')
   const [words, setWords] = useState<Word[] | null>(null)
   const [i, setI] = useState(0)
   const [knownCount, setKnownCount] = useState(0)
+  const [paused, setPaused] = useState(false)
 
   useEffect(() => {
     ;(async () => {
@@ -39,15 +45,104 @@ export function Onboarding() {
       await db.cards.add(knownCard(w.id))
       setKnownCount((c) => c + 1)
     }
-    if (i + 1 >= words.length) await finish()
-    else setI(i + 1)
+    const next = i + 1
+    if (next >= words.length) return finish()
+    if (next % BATCH === 0) setPaused(true)
+    setI(next)
   }
 
   useEffect(() => {
-    if (words && words.length === 0) navigate('/', { replace: true })
-  }, [words, navigate])
+    if (redo && words && words.length === 0) navigate('/', { replace: true })
+  }, [redo, words, navigate])
 
-  if (!words || words.length === 0 || i >= words.length) return null
+  if (!words) return null
+
+  /* ——— first question: brand new, or knows some? ——— */
+  if (phase === 'ask') {
+    return (
+      <div className="min-h-dvh flex flex-col max-w-md mx-auto">
+        <header className="bg-indigo text-plaster px-5 pt-6 pb-6">
+          <div className="mono text-gold">SELAMAT DATANG · WELCOME</div>
+          <h1 className="display text-plaster text-2xl mt-2">Selamat datang ke Bukit</h1>
+          <p className="text-indigo-hi text-sm mt-1">One question before we start.</p>
+        </header>
+
+        <div className="flex-1 flex flex-col justify-center px-5">
+          <div className="display text-charcoal text-2xl text-center">
+            Pernah belajar Bahasa Melayu?
+          </div>
+          <div className="text-muted text-center mt-1">Have you studied Malay before?</div>
+
+          <div className="mt-8 space-y-3">
+            <button
+              onClick={finish}
+              className="w-full bg-gold text-gold-ink py-5 rounded-[4px] border-[1.5px] border-charcoal active:opacity-90"
+            >
+              <span className="display text-xl">Belum — saya baru bermula</span>
+              <span className="mono-sm block text-gold-ink/70 mt-1">
+                no — I&rsquo;m brand new. start from zero
+              </span>
+            </button>
+            <button
+              onClick={() => setPhase('review')}
+              className="w-full py-5 rounded-[4px] border-[1.5px] border-charcoal text-charcoal active:bg-charcoal/5"
+            >
+              <span className="display text-xl">Tahu sikit-sikit</span>
+              <span className="mono-sm block text-muted mt-1">
+                I know some — let me mark the words I know
+              </span>
+            </button>
+          </div>
+
+          <p className="text-muted text-sm text-center mt-6 max-w-xs mx-auto">
+            Brand new is the normal answer — the app introduces everything gradually. You can
+            re-assess any time from Settings.
+          </p>
+        </div>
+      </div>
+    )
+  }
+
+  if (words.length === 0 || i >= words.length) return null
+
+  /* ——— batch pause: keep going or stop here? ——— */
+  if (paused) {
+    return (
+      <div className="min-h-dvh flex flex-col max-w-md mx-auto">
+        <header className="bg-indigo text-plaster px-5 pt-6 pb-6">
+          <div className="mono text-gold">REHAT SEBENTAR · QUICK PAUSE</div>
+          <h1 className="display text-plaster text-2xl mt-2">
+            {i} kata disemak — {knownCount} tahu
+          </h1>
+          <p className="text-indigo-hi text-sm mt-1">
+            {i} words checked, {knownCount} marked known. {words.length - i} remain.
+          </p>
+        </header>
+
+        <div className="flex-1 flex flex-col justify-center px-5">
+          <div className="space-y-3">
+            <button
+              onClick={finish}
+              className="w-full bg-gold text-gold-ink py-5 rounded-[4px] border-[1.5px] border-charcoal active:opacity-90"
+            >
+              <span className="display text-xl">Cukup — mula belajar</span>
+              <span className="mono-sm block text-gold-ink/70 mt-1">
+                that&rsquo;s enough — start learning. the rest goes to the backlog
+              </span>
+            </button>
+            <button
+              onClick={() => setPaused(false)}
+              className="w-full py-5 rounded-[4px] border-[1.5px] border-charcoal text-charcoal active:bg-charcoal/5"
+            >
+              <span className="display text-xl">Teruskan</span>
+              <span className="mono-sm block text-muted mt-1">keep marking — {BATCH} more</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   const w = words[i]
 
   return (
@@ -56,9 +151,7 @@ export function Onboarding() {
         <div className="mono text-gold">
           {redo ? 'PENILAIAN SEMULA · REASSESS' : 'SELAMAT DATANG · WELCOME'}
         </div>
-        <h1 className="display text-plaster text-2xl mt-2">
-          {redo ? 'Tanda kata yang anda tahu' : 'Selamat datang ke Bukit'}
-        </h1>
+        <h1 className="display text-plaster text-2xl mt-2">Tanda kata yang anda tahu</h1>
         <p className="text-indigo-hi text-sm mt-1">
           {redo
             ? 'Mark any backlog words you already know — they join your reviews as studied.'
@@ -120,7 +213,7 @@ export function Onboarding() {
           </button>
         </div>
         <button onClick={finish} className="mt-4 w-full text-muted text-sm">
-          {redo ? 'Selesai · done' : 'Skip the rest — everything else goes to the backlog'}
+          {redo ? 'Selesai · done' : 'Berhenti di sini · stop here — the rest goes to the backlog'}
         </button>
       </div>
     </div>

@@ -32,6 +32,7 @@ export function Read() {
   const [showTranslation, setShowTranslation] = useState(false)
   const [openGlosses, setOpenGlosses] = useState<Set<number>>(new Set())
   const [showAnswer, setShowAnswer] = useState(false)
+  const [typedAnswer, setTypedAnswer] = useState('')
   const [marked, setMarked] = useState<'betul' | 'tak' | null>(null)
   const [newWords, setNewWords] = useState<Word[]>([])
   const [tts, setTts] = useState(false)
@@ -41,6 +42,7 @@ export function Read() {
     setError(false)
     setPopover(null)
     setShowAnswer(false)
+    setTypedAnswer('')
     setMarked(null)
     setOpenGlosses(new Set())
     try {
@@ -180,7 +182,7 @@ export function Read() {
 
         {passage && !loading && !error && (
           <div className="fade-in pb-6">
-            <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center justify-between mb-2">
               <Label ms={passage.topic} en={passage.date} color="muted" />
               {tts && (
                 <button onClick={() => speak(passage.text)} className="flex items-center gap-1.5 text-gold">
@@ -189,6 +191,12 @@ export function Read() {
                 </button>
               )}
             </div>
+
+            <p className="text-sm text-muted mb-3">
+              A short reading written just for you — today&rsquo;s{' '}
+              <span className="mark-new text-charcoal">new words</span> are underlined; everything
+              else uses only words you&rsquo;ve already studied. Tap any word for its meaning.
+            </p>
 
             {/* passage on plaster, framed by charcoal rules */}
             <div className="border-y-[1.5px] border-charcoal py-4">
@@ -277,6 +285,13 @@ export function Read() {
                 {questionSecondary && <div className="text-sm text-muted mt-0.5">{questionSecondary}</div>}
                 {showAnswer ? (
                   <div className="fade-in mt-3">
+                    {typedAnswer.trim() && (
+                      <div className="mb-2">
+                        <Label ms="jawapan anda" en="your answer" color="muted" className="block" />
+                        <div className="text-charcoal">{typedAnswer.trim()}</div>
+                      </div>
+                    )}
+                    <Label ms="jawapan" en="answer" color="muted" className="block" />
                     <div className="text-oxblood font-medium">{question?.answer}</div>
                     {marked ? (
                       <div className="mono-sm text-muted mt-2">
@@ -300,9 +315,28 @@ export function Read() {
                     )}
                   </div>
                 ) : (
-                  <button onClick={() => setShowAnswer(true)} className="mono text-oxblood mt-3">
-                    tunjuk jawapan · show answer
-                  </button>
+                  <div className="mt-3">
+                    <input
+                      type="text"
+                      value={typedAnswer}
+                      onChange={(e) => setTypedAnswer(e.target.value)}
+                      onKeyDown={(e) => e.key === 'Enter' && typedAnswer.trim() && setShowAnswer(true)}
+                      placeholder="Taip jawapan anda… (type your answer, then check)"
+                      className="w-full border-[1.5px] border-charcoal bg-plaster px-3 py-2.5 rounded-[4px] focus:border-gold"
+                    />
+                    <div className="mt-2.5 flex items-center gap-4">
+                      <button
+                        onClick={() => setShowAnswer(true)}
+                        disabled={!typedAnswer.trim()}
+                        className="px-4 py-1.5 rounded-[4px] bg-gold text-gold-ink border-[1.5px] border-charcoal text-sm font-medium disabled:opacity-40"
+                      >
+                        Semak · check
+                      </button>
+                      <button onClick={() => setShowAnswer(true)} className="mono text-oxblood">
+                        tunjuk jawapan · just show it
+                      </button>
+                    </div>
+                  </div>
                 )}
               </div>
             )}

@@ -217,3 +217,31 @@ The offline validator is unit-tested (`tests/p0.test.ts`, incl. the observed lea
 | Commit | What |
 |--------|------|
 | (v1.1) | P0 ramp/validator/selection + Mansion design rebuild (Hill deleted) + P2 |
+
+---
+
+## 11. Feedback round 001 (10 Jul 2026) — first live QA
+
+The owner ran the deployed app (Vercel) as a zero-Malay beginner. Five changes came
+out of it, all shipped:
+
+1. **Onboarding fast-path.** The all-425-word self-assessment was far too long for the
+   target user. First screen is now one question — *Pernah belajar Bahasa Melayu?* —
+   with "brand new" going straight into the app at zero words. "I know some" leads to
+   the old card review, now dealt in batches of 30 with an explicit "cukup — start
+   learning" exit between batches. Reassess-from-Settings (`?redo=1`) unchanged.
+2. **Settings entry relabelled.** The header "gear" icon read as a sun / light-mode
+   toggle (circle with rays — a fair reading). Replaced with an explicit
+   `tetapan · settings` text label per the signage system. `GearIcon` is now unused.
+3. **Reading page explainer.** One muted sentence above the passage: new words are
+   underlined, everything else uses only studied words, tap any word for meaning.
+4. **Typed comprehension answers.** The question block now has a text input: type,
+   `Semak · check` reveals your answer beside the correct one, then the existing
+   betul/tak self-mark (still logged to the session). A "just show it" escape stays
+   for tap-only users. Recall stays honest without an API round-trip.
+5. **Tier-ramped speaking task** (`SpeakTask` in `src/lib/api.ts`). The static English
+   situations demanded open production on day 0 ("The driver asks where you're from —
+   answer in Malay"). Now: tier 0 = full Malay pattern with one `___` blank + gloss
+   (fill it your way); tier 1 = situation + Malay sentence starter; tiers 2–3 = the
+   original open prompts. The grader is told what scaffold the learner saw, so it
+   grades against the intended task. Speak reads the tier from card count at runtime.
