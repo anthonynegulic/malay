@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { HashRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
-import { db, ensureSeeded, getSettings } from './db/db'
+import { db, ensureSeeded, getSettings, migrateSeed } from './db/db'
 import { NavBar } from './components/NavBar'
 import { Onboarding } from './screens/Onboarding'
 import { Today } from './screens/Today'
@@ -55,6 +55,7 @@ export default function App() {
     ;(async () => {
       await ensureSeeded()
       await getSettings() // materialise the settings row
+      await migrateSeed() // patch seed rows in place on upgrades (cards untouched)
       setReady(true)
     })()
   }, [])

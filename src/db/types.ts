@@ -22,6 +22,15 @@ export interface Word {
   arabic_cognate?: string
   example_baku: string
   example_colloq?: string
+  /** English translation of the example block (R2). Same meaning across registers
+   *  unless example_colloq_en says otherwise. Harvested words have no examples. */
+  example_en?: string
+  /** Register of the second example sentence. Defaults to 'colloq'; 'utara' where
+   *  the sentence uses northern forms (Q2 ruling: honest labels). */
+  example_colloq_kind?: 'colloq' | 'utara'
+  /** Own gloss for example_colloq when it is a different sentence, not a
+   *  rendering of example_baku (e.g. duduk: "Sila duduk" vs "Kau duduk mana?"). */
+  example_colloq_en?: string
   tags: string[]
   source: 'seed' | 'harvested'
   addedAt: number
@@ -69,6 +78,10 @@ export interface Passage {
   glossary: { word: string; gloss: string }[]
   question: { prompt: string; promptEn: string; answer: string }
   newWordIds: string[]
+  /** Grammar whisper (pedagogy-response §3.4): one noticed form per passage,
+   *  validator-checked to appear verbatim in the text. Absent when the model
+   *  failed to produce a valid one. */
+  notice?: { form: string; note: string }
 }
 
 export interface Session {
@@ -82,6 +95,14 @@ export interface Session {
   dueAtStart: number
   /** Honest self-mark on the comprehension question (P2 — data only, no gating). */
   comprehension?: 'betul' | 'tak'
+  /** Ungraded end-of-lesson recall pass completed (pedagogy-response §1-Q1). */
+  recallDone?: boolean
+  /** Free-practice sessions run today (R4 — log only, never touches FSRS). */
+  freePracticeRuns?: number
+  /** Per-phase durations in ms (pedagogy-response §4.1 — drift visible, not resented). */
+  reviewMs?: number
+  readMs?: number
+  speakMs?: number
 }
 
 export interface Settings {
@@ -93,6 +114,11 @@ export interface Settings {
   /** Weekly rhythm target: days per week that count as "on rhythm". */
   weeklyTargetDays: number
   onboarded: boolean
+  /** Version of the seed deck applied to this install — bump SEED_VERSION in
+   *  db.ts when seed content changes so existing installs get patched in place. */
+  seedVersion?: number
+  /** December-checkpoint self-test checklist marks (index-aligned with CHECKPOINT.checklist). */
+  checkpointMarks?: boolean[]
 }
 
 export const DEFAULT_SETTINGS: Settings = {
