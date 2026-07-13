@@ -126,6 +126,57 @@ export async function introduceWords(words: Word[]): Promise<void> {
   await updateSession({ newWordsLearned: s.newWordsLearned + words.length })
 }
 
+/**
+ * Log time spent in a lesson phase (pedagogy-response §4.1) — the session-time
+ * budget is a design constraint; drift must be visible on Kemajuan, not
+ * discovered by resentment. Call on leaving the phase with its mount time.
+ */
+export async function addPhaseTime(
+  field: 'reviewMs' | 'readMs' | 'speakMs',
+  startedAt: number,
+): Promise<void> {
+  const elapsed = Date.now() - startedAt
+  if (elapsed <= 0) return
+  const s = await getOrCreateTodaySession()
+  await updateSession({ [field]: (s[field] ?? 0) + elapsed })
+}
+
+/**
+ * Projected full-session minutes: due count × observed per-card time (from
+ * recent sessions, default 8s) + observed read+speak time (default 6 min).
+ * Powers the gentle pre-session note on Today (§4.1) — never blocks.
+ */
+export async function projectedSessionMinutes(): Promise<number> {
+  const due = await dueCount()
+  const recent = await db.sessions.orderBy('date').reverse().limit(14).toArray()
+  const withReviews = recent.filter((s) => (s.reviewMs ?? 0) > 0 && s.reviewsDone > 0)
+  const perCardMs = withReviews.length
+    ? withReviews.reduce((a, s) => a + s.reviewMs! / s.reviewsDone, 0) / withReviews.length
+    : 8000
+  const withRest = recent.filter((s) => (s.readMs ?? 0) > 0)
+  const restMs = withRest.length
+    ? withRest.reduce((a, s) => a + (s.readMs ?? 0) + (s.speakMs ?? 0), 0) / withRest.length
+    : 6 * 60 * 1000
+  return (due * perCardMs + restMs) / 60000
+}
+
+/** Words introduced today (cards created today, still unreviewed) — the recall-pass deck. */
+export async function todaysNewWords(): Promise<Word[]> {
+  const cards = await db.cards.toArray()
+  const todayStart = new Date()
+  todayStart.setHours(0, 0, 0, 0)
+  const ids = cards
+    .filter((c) => c.reps === 0 && c.due > todayStart.getTime())
+    .map((c) => c.wordId)
+  return ((await db.words.bulkGet(ids)).filter(Boolean) as Word[]) ?? []
+}
+
+/** True until the user has ever completed a counted session — powers day-0 routing (§2.1). */
+export async function isFirstEverSession(): Promise<boolean> {
+  const sessions = await db.sessions.toArray()
+  return !sessions.some((s) => sessionCounts(s))
+}
+
 export type HarvestResult = 'added' | 'queued' | 'already'
 
 /**
@@ -202,6 +253,31 @@ export async function weekRhythm(): Promise<WeekRhythm> {
   return { daysDone, target: settings.weeklyTargetDays, days, todayIndex: dow }
 }
 
+/**
+ * Counted days per week for the trailing N weeks (oldest first) — the
+ * December checkpoint's consistency view (§4.2).
+ */
+export async function trailingWeeks(n = 12): Promise<number[]> {
+  const sessions = await db.sessions.toArray()
+  const counted = new Set(sessions.filter(sessionCounts).map((s) => s.date))
+  const now = new Date()
+  const dow = (now.getDay() + 6) % 7 // Monday = 0
+  const monday = new Date(now)
+  monday.setDate(now.getDate() - dow)
+  const weeks: number[] = []
+  for (let w = n - 1; w >= 0; w--) {
+    let days = 0
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(monday)
+      d.setDate(monday.getDate() - w * 7 + i)
+      if (d > now) break
+      if (counted.has(todayStr(d))) days++
+    }
+    weeks.push(days)
+  }
+  return weeks
+}
+
 /** Full session history for the footpath: date → counted. */
 export async function historyDays(): Promise<{ date: string; counted: boolean }[]> {
   const sessions = await db.sessions.orderBy('date').toArray()
@@ -216,17 +292,23 @@ export function nextMilestone(count: number): number {
 
 /**
  * Word of the day for the Today header — deterministic by date so it's stable
- * through the day and rotates daily. Prefers studied words (reinforcement);
- * falls back to the seed deck so day-zero users still get a poster word.
+ * through the day and rotates daily. Prefers studied words (reinforcement).
+ * Before any words are studied it draws the head of the backlog — the first
+ * word the learner will actually meet — and flags it so the UI captions it
+ * KATA PERTAMA ANDA instead (pedagogy-response §2.4: caption, don't suppress).
  */
-export async function wordOfTheDay(date = todayStr()): Promise<Word | undefined> {
+export async function wordOfTheDay(
+  date = todayStr(),
+): Promise<{ word: Word; first: boolean } | undefined> {
   const cards = await db.cards.toArray()
   const studiedIds = new Set(cards.map((c) => c.wordId))
   const all = await db.words.orderBy('addedAt').toArray()
   const pool = all.filter((w) => studiedIds.has(w.id))
-  const source = pool.length ? pool : all.filter((w) => w.source === 'seed')
-  if (!source.length) return undefined
+  if (!pool.length) {
+    const upcoming = all.find((w) => !studiedIds.has(w.id))
+    return upcoming ? { word: upcoming, first: true } : undefined
+  }
   let h = 0
   for (let i = 0; i < date.length; i++) h = (h * 31 + date.charCodeAt(i)) >>> 0
-  return source[h % source.length]
+  return { word: pool[h % pool.length], first: false }
 }

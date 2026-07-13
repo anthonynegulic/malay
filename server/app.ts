@@ -7,7 +7,7 @@
  * (not module load) so Vercel dashboard vars and the local .env both work.
  */
 import { Hono } from 'hono'
-import { validatePassage, type PassageLine } from './validate.js'
+import { noticeValid, validatePassage, type PassageLine } from './validate.js'
 import { FUNCTION_WORDS } from '../src/lib/tier.js'
 
 function config() {
@@ -47,13 +47,19 @@ The comprehension question language is given as "question_language":
 "english" = ask and answer in English; "bilingual" or "malay" = ask and answer
 in simple Malay using only allowed vocabulary, and also provide "prompt_en".
 
+Include exactly ONE "notice" — a grammar whisper: one short observation about a
+form that actually appears in your passage, in plain language with no
+terminology, e.g. {"form": "nak", "note": "nak = want to — you'll hear this
+constantly"}. The "form" must appear verbatim in the passage text.
+
 Respond with STRICT JSON only. No markdown, no preamble. Shape:
 {"format": "dialogue"|"prose",
  "lines": [{"speaker": "A"|"B"|null, "text": "<one Malay line/sentence>",
             "gloss": "<natural English translation of that line>"}],
  "translation": "<English translation of the whole passage>",
  "glossary": [{"word": "...", "gloss": "..."}],
- "question": {"prompt": "...", "prompt_en": "...", "answer": "..."}}`
+ "question": {"prompt": "...", "prompt_en": "...", "answer": "..."},
+ "notice": {"form": "...", "note": "..."}}`
 
 const GRADE_SYSTEM = `You are a warm, encouraging Malay tutor. The learner is a beginner. Grade for
 COMMUNICATION, not perfection. If the meaning would be understood by a patient
@@ -61,7 +67,12 @@ native speaker, say so first. Return STRICT JSON:
 { "understood": true|false, "corrected": "...", "encouragement": "...",
   "notes": ["...", "..."] }
 "notes" has at most 2 entries, each one concrete fix. Never return more than 2
-notes. Never lecture. No markdown, no preamble.`
+notes. Never lecture. No markdown, no preamble.
+Notes prioritise WORD CHOICE, WORD ORDER, and USEFUL PATTERNS the learner can
+reuse (e.g. adding a time marker like "tadi") over capitalisation, punctuation
+or spelling. Never comment on capitalisation, punctuation or spelling unless it
+changes the meaning — and even then at most ONE such note, and only when no
+more useful language-level note exists.`
 
 async function callClaude(system: string, user: string): Promise<string> {
   const { model, apiKey } = config()
@@ -113,6 +124,7 @@ interface GenOut {
   translation: string
   glossary: { word: string; gloss: string }[]
   question: { prompt: string; prompt_en?: string; answer: string }
+  notice?: { form: string; note: string }
 }
 
 function normaliseGenOut(raw: Record<string, unknown>): GenOut {
@@ -121,7 +133,13 @@ function normaliseGenOut(raw: Record<string, unknown>): GenOut {
     : []
   if (!lines.length) throw new Error('Malformed generation output: no lines')
   const q = (raw.question ?? {}) as Record<string, string>
+  const n = raw.notice as { form?: unknown; note?: unknown } | undefined
+  const notice =
+    n && typeof n.form === 'string' && n.form && typeof n.note === 'string' && n.note
+      ? { form: n.form, note: n.note }
+      : undefined
   return {
+    ...(notice ? { notice } : {}),
     format: raw.format === 'dialogue' ? 'dialogue' : 'prose',
     lines: lines.map((l) => ({
       speaker: l.speaker === 'A' || l.speaker === 'B' ? l.speaker : null,
@@ -204,15 +222,20 @@ app.post('/generate', async (c) => {
     )
     let chosen = first
     let check = validate(first)
+    let firstNoticeOk = noticeValid(first.notice, first.lines)
 
-    if (!check.ok) {
+    if (!check.ok || !firstNoticeOk) {
       const feedback = {
         ...payload,
         previous_attempt_rejected: true,
         do_not_use_these_words: check.violations,
         new_words_needing_more_repetition: check.underused,
+        notice_problem: firstNoticeOk
+          ? undefined
+          : 'Your notice was missing or its form does not appear in the passage. ' +
+            'Include exactly one notice whose form appears verbatim in the text.',
         instruction:
-          'Your previous attempt broke the vocabulary constraints. Regenerate. ' +
+          'Your previous attempt broke the constraints. Regenerate. ' +
           'Do NOT use the listed forbidden words. Repeat each listed new word at ' +
           'least the required number of times. Shorter and more repetitive is fine.',
       }
@@ -220,11 +243,15 @@ app.post('/generate', async (c) => {
         (await callAndParse(GENERATE_SYSTEM, JSON.stringify(feedback))) as Record<string, unknown>,
       )
       const secondCheck = validate(second)
-      if (
-        secondCheck.ok ||
-        secondCheck.violations.length + secondCheck.underused.length <
-          check.violations.length + check.underused.length
-      ) {
+      // Vocabulary containment outranks the notice: take the retry only when
+      // it is at least as clean on vocab (strictly better when the first
+      // attempt failed vocab; not worse when we retried for the notice alone).
+      const takeSecond = check.ok
+        ? secondCheck.ok
+        : secondCheck.ok ||
+          secondCheck.violations.length + secondCheck.underused.length <
+            check.violations.length + check.underused.length
+      if (takeSecond) {
         chosen = second
         check = secondCheck
       }
@@ -241,6 +268,12 @@ app.post('/generate', async (c) => {
       }
     }
 
+    // A notice whose form never made it into the text is dropped, not shipped —
+    // the whisper is optional; a wrong whisper is not.
+    if (chosen.notice && !noticeValid(chosen.notice, chosen.lines)) {
+      console.warn('[generate] dropping invalid notice:', chosen.notice)
+      delete chosen.notice
+    }
     return c.json({ ...chosen, containment: check.containmentRatio })
   } catch (e) {
     console.error('[generate]', e)

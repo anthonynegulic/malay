@@ -24,7 +24,7 @@ export function Settings() {
     if (!f) return
     try {
       await importBackup(f)
-      setMsg('Import selesai · all data replaced.')
+      setMsg('Import selesai (all data replaced).')
       setS(await getSettings())
     } catch {
       setMsg('Import failed — not a valid Bukit backup file.')
@@ -127,7 +127,7 @@ export function Settings() {
             onClick={() => navigate('/onboarding?redo=1')}
             className="w-full py-3 border-[1.5px] border-charcoal text-charcoal rounded-[4px]"
           >
-            Tanda kata yang anda tahu <span className="mono-sm text-muted">mark words you know</span>
+            Tanda kata yang anda tahu <span className="mono-sm text-muted">(mark words you know)</span>
           </button>
         </div>
 
@@ -140,13 +140,13 @@ export function Settings() {
             onClick={exportBackup}
             className="w-full py-3 bg-gold text-gold-ink border-[1.5px] border-charcoal rounded-[4px] font-medium"
           >
-            Eksport JSON <span className="mono-sm text-gold-ink/70">download a backup</span>
+            Eksport JSON <span className="mono-sm text-gold-ink/70">(download a backup)</span>
           </button>
           <button
             onClick={() => fileRef.current?.click()}
             className="mt-2 w-full py-3 border-[1.5px] border-charcoal text-charcoal rounded-[4px]"
           >
-            Import JSON <span className="mono-sm text-muted">replaces all current data</span>
+            Import JSON <span className="mono-sm text-muted">(replaces all current data)</span>
           </button>
           <input
             ref={fileRef}
@@ -156,6 +156,13 @@ export function Settings() {
             onChange={(e) => onImport(e.target.files?.[0])}
           />
           {msg && <div className="text-sm text-muted mt-2">{msg}</div>}
+        </div>
+
+        {/* build stamp (Q4): deployment drift visible from the phone */}
+        <div className="py-4 text-center">
+          <span className="mono-sm text-muted/70">
+            binaan · build {__BUILD_COMMIT__} · {__BUILD_DATE__}
+          </span>
         </div>
       </div>
     </div>

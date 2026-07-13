@@ -66,6 +66,22 @@ export function properNouns(rawText: string): Set<string> {
   return result
 }
 
+/**
+ * Grammar-whisper check (pedagogy-response §3.4): the noticed form must appear
+ * verbatim in the passage text (case-insensitive, NFC-normalised, whole-word).
+ */
+export function noticeValid(
+  notice: { form: string; note: string } | undefined,
+  lines: PassageLine[],
+): boolean {
+  if (!notice) return false
+  const text = normalise(lines.map((l) => l.text).join('\n'))
+  const form = normalise(notice.form).trim()
+  if (!form) return false
+  const escaped = form.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  return new RegExp(`(^|[^a-zà-ɏ'-])${escaped}($|[^a-zà-ɏ'-])`, 'i').test(text)
+}
+
 export function validatePassage(input: ValidationInput): ValidationResult {
   const allowed = new Set<string>()
   for (const w of [...input.allowed, ...input.functionWords]) {

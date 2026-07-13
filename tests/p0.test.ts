@@ -3,7 +3,7 @@
  * Run: npx tsx tests/p0.test.ts
  */
 import assert from 'node:assert'
-import { validatePassage, tokenise, properNouns } from '../server/validate'
+import { validatePassage, tokenise, properNouns, noticeValid } from '../server/validate'
 import { pickDiverse, sortBacklog } from '../src/lib/select'
 import { tierFor, FUNCTION_WORDS } from '../src/lib/tier'
 import type { Word } from '../src/db/types'
@@ -127,6 +127,23 @@ function w(baku: string, pos: Word['pos'], tags: string[] = ['survival'], i = 0)
   const backlog = [w('kita', 'pronoun', ['survival'], 0), w('nasi', 'noun', ['food'], 1)]
   const picked = pickDiverse(backlog, 2, 100, [w('kami', 'pronoun')])
   assert.ok(!picked.map((p) => p.baku).includes('kita'))
+}
+
+// ————— grammar whisper (pedagogy-response §3.4) —————
+{
+  const lines = [
+    { speaker: 'A', text: 'Saya nak minum kopi.', gloss: 'I want to drink coffee.' },
+    { speaker: 'B', text: 'Jom!', gloss: "Let's go!" },
+  ]
+  assert.ok(noticeValid({ form: 'nak', note: 'nak = want to' }, lines))
+  assert.ok(noticeValid({ form: 'NAK', note: 'case-insensitive' }, lines))
+  // Substring of another word is not verbatim: "kop" inside "kopi".
+  assert.ok(!noticeValid({ form: 'kop', note: 'no' }, lines))
+  assert.ok(!noticeValid({ form: 'tak', note: 'absent form' }, lines))
+  assert.ok(!noticeValid(undefined, lines))
+  assert.ok(!noticeValid({ form: '  ', note: 'blank' }, lines))
+  // Multi-word forms match verbatim too.
+  assert.ok(noticeValid({ form: 'nak minum', note: 'pattern' }, lines))
 }
 
 console.log('all P0 tests passed ✓')

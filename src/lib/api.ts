@@ -62,6 +62,7 @@ interface GenerateResponse {
   translation: string
   glossary: { word: string; gloss: string }[]
   question: { prompt: string; prompt_en?: string; answer: string }
+  notice?: { form: string; note: string }
 }
 
 /**
@@ -139,6 +140,7 @@ export async function getOrGeneratePassage(register: Register): Promise<Passage>
       answer: out.question?.answer ?? '',
     },
     newWordIds: newWords.map((w) => w.id),
+    ...(out.notice ? { notice: out.notice } : {}),
   }
   await db.passages.add(passage)
 

@@ -245,3 +245,93 @@ out of it, all shipped:
    (fill it your way); tier 1 = situation + Malay sentence starter; tiers 2–3 = the
    original open prompts. The grader is told what scaffold the learner saw, so it
    grades against the intended task. Speak reads the tier from card count at runtime.
+
+## 12. Lesson-arc sprint + feedback round 002 (13 Jul 2026)
+
+Two owner documents landed together and govern this round:
+[`docs/PEDAGOGY-RESPONSE-001.md`](PEDAGOGY-RESPONSE-001.md) (rulings on the pedagogy
+review — built FIRST per the owner) and [`docs/FEEDBACK-002.md`](FEEDBACK-002.md)
+(R1–R8 after several days of live use). Everything below is shipped and
+browser-verified end-to-end (Playwright against the built PWA; generation stubbed —
+still needs one live-API pass).
+
+### Lesson arc (pedagogy-response §5.1–5.2)
+
+- **Day-0 routing:** on the very first session with an empty queue, `Mula` goes
+  straight to the reading (`isFirstEverSession()` in `src/lib/session.ts`); later
+  empty days keep the friendly empty state.
+- **Pre-teach intro cards** (`Read.tsx`): before the passage first renders, today's
+  new words appear one at a time — word, bracketed gloss, register chips, audio,
+  example block. Shown once per day (`localStorage bukit-intro-<date>`).
+- **Ungraded recall pass** (`src/screens/Recall.tsx`, shared `FlipDeck` component):
+  Speak → Recall → Siap. Today's new words, front → try → reveal → next. No grade
+  buttons, zero FSRS writes (verified by diffing the cards table before/after);
+  only `session.recallDone` is written. Skippable, no guilt.
+- **Register toggle** hidden below tier 1. **Word of the day** on day 0 draws the
+  head of the backlog captioned `KATA PERTAMA ANDA · YOUR FIRST WORD`.
+- **Grammar whisper:** generation now returns one `notice` {form, note}; the server
+  validates the form appears verbatim in the passage (`noticeValid`, tested), retries
+  once with feedback, drops an invalid notice rather than shipping it. Rendered under
+  the passage as `PERHATIKAN · NOTICE`.
+- **Audio now:** per-line TTS buttons at every tier; tier 0 reveals lines one at a
+  time (tap to advance), auto-plays each exactly once, tap the line's speaker to
+  replay; global mute toggle in the reading header (persists to settings); no-ms-voice
+  devices degrade gracefully with a one-time notice.
+- **Session-time budget (§4.1):** sessions log `reviewMs/readMs/speakMs`; Kemajuan
+  shows the recent per-phase average; Today shows a gentle "may run long — Sikit je
+  also counts" note when the projection exceeds 18 min. Never blocks.
+- **December checkpoint (§4.2):** `src/lib/checkpoint.ts` (target 450 words by
+  1 Dec 2026 — owner-adjustable constant), trailing 12-week rhythm bars, and the
+  5-item function self-test checklist (self-marked, stored in settings) on Kemajuan.
+- Shadowing (§1-Q3) is **not** in this round — sequenced third by the owner, after
+  audio. On the roadmap ledger with listen-first mode and EN→MS cards.
+
+### Feedback-002 rulings
+
+- **R1/R2/R3:** shared `ExampleBlock` (`RegisterChip.tsx`) labels example sentences
+  with register chips, bolds a one-word difference in both sentences, never renders
+  duplicates, and prints the English gloss bracketed/roman/muted beneath. All 425
+  seed rows carry an authored `example_en`; three divergent-meaning colloquial
+  sentences (sekejap/duduk/guru) carry their own `example_colloq_en`; 14 sentences
+  using northern forms are chip-labelled `UTARA` (Q2 ruling). `Bi` in `ui.tsx` is the
+  app-wide R3 primitive; every screen swept (mono `MALAY · ENGLISH` signage kept).
+  **Owner review path:** `npm run verify:glosses` (needs `ANTHROPIC_API_KEY`)
+  round-trips gloss → back-translation → divergence judge and writes
+  `scripts/gloss-verification-report.json`; review flagged rows only.
+- **Seed migration (Q1):** `SEED_VERSION`/`migrateSeed()` in `src/db/db.ts` patch
+  `seed-*` rows in place on upgrade — cards/FSRS untouched, patched rows logged.
+  Bump `SEED_VERSION` whenever `seed.json` content changes.
+- **R4:** `Ulangkaji bebas` on Kata (honours active tag/status filters), shuffled,
+  flip-only via the same `FlipDeck`; zero FSRS writes verified; logs
+  `session.freePracticeRuns`.
+- **R5:** `GRADE_SYSTEM` (`server/app.ts` — note: app.ts, not index.ts) now
+  prioritises word choice/order/patterns; capitalisation-punctuation-spelling notes
+  only when meaning changes, max one, and only when nothing more useful exists.
+  Not yet exercised against a live key — test with "Saya Makan Asam laksa".
+- **R6 verdict: not a bug.** `Okey · 10M` on a first-day card is correct
+  mid-learning-step behaviour. ts-fsrs v5 defaults: learning steps 1m → 10m; the
+  session re-queues sub-10-minute learning cards, and the second Good graduates to
+  ~2 days (audit table: `node scripts/fsrs-audit.mjs`; progression documented in
+  `src/lib/fsrs.ts`). Fresh card: Again 1m / Hard 6m / Good 10m / Easy 8d. Good-path:
+  10m → 2d → 11d → 46d. No config change made or needed.
+- **R7:** chips already render iff the field is non-empty in both list and card
+  backs; `npm run check:seed` sweeps the data (empty-string fields, duplicate
+  examples, mislabelled utara) — currently zero findings. The owner's observed
+  chip-without-row was almost certainly **stale on-device seed data**, which the Q1
+  migration now fixes.
+- **R8:** corrected Cakap sentences have an audio button. The Hantar disabled state
+  **already shipped in commit 9fbaa64** (Feedback 001) — the live PWA predates it.
+- **Q4 deployment drift:** Settings now footers `binaan · build <sha> · <date>`
+  (`__BUILD_COMMIT__` via Vite define; Vercel uses `VERCEL_GIT_COMMIT_SHA`).
+  **Owner action:** redeploy, then check the stamp on the phone matches the latest
+  commit before re-testing R7/R8a. Vercel's dashboard couldn't be checked from this
+  environment.
+
+### Verification done this round
+
+`tsc -b`, `npm run build`, `npx tsx tests/p0.test.ts` (incl. new `noticeValid`
+tests), `npm run check:seed`, `node scripts/fsrs-audit.mjs`, and a Playwright
+end-to-end drive of the built PWA: onboarding → day-0 routing → intro cards →
+tier-0 tap-to-advance → grammar whisper → Hantar disabled/enabled → recall pass
+(zero-write diff) → free practice (zero-write diff) → utara chips on *mereka* →
+in-place seed migration of a regressed row → Settings build stamp.

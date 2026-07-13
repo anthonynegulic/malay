@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { db } from '../db/db'
 import type { CardState, Word } from '../db/types'
-import { RegisterChip, VariantChips } from '../components/RegisterChip'
-import { Label, SpeakerIcon } from '../components/ui'
+import { ExampleBlock, RegisterChip, VariantChips } from '../components/RegisterChip'
+import { Bi, Label, SpeakerIcon } from '../components/ui'
 import { speak, ttsAvailable } from '../lib/tts'
 
 /** Study-state chip (P1.5): BARU = backlog, BELAJAR = in learning, MATANG = mature. */
@@ -19,6 +20,7 @@ function StatusChip({ state }: { state: CardState | undefined }) {
 const TAG_FILTERS = ['survival', 'food', 'market', 'masjid', 'family', 'numbers', 'time', 'transport', 'school']
 
 export function Words() {
+  const navigate = useNavigate()
   const [words, setWords] = useState<Word[]>([])
   const [cardStates, setCardStates] = useState<Map<string, CardState>>(new Map())
   const [q, setQ] = useState('')
@@ -60,12 +62,12 @@ export function Words() {
           {words.length}
         </div>
         <div className="text-indigo-hi text-sm">
-          {cardStates.size} sedang dipelajari · being studied
+          <Bi ms={`${cardStates.size} sedang dipelajari`} en="being studied" enClass="text-indigo-lo" />
         </div>
         <input
           value={q}
           onChange={(e) => setQ(e.target.value)}
-          placeholder="Cari… · search"
+          placeholder="Cari… (search)"
           className="mt-4 w-full border-[1.5px] border-indigo-rl bg-indigo text-plaster placeholder:text-indigo-lo px-4 py-2.5 rounded-[4px] focus:border-gold"
         />
       </header>
@@ -105,6 +107,23 @@ export function Words() {
             </button>
           ))}
         </div>
+
+        {/* R4: free practice over the deck the filters currently show — never touches FSRS */}
+        {cardStates.size > 0 && (
+          <button
+            onClick={() =>
+              navigate(
+                `/practice?${new URLSearchParams({
+                  ...(tag ? { tag } : {}),
+                  ...(filter !== 'all' ? { filter } : {}),
+                })}`,
+              )
+            }
+            className="w-full py-3 border-[1.5px] border-charcoal text-charcoal rounded-[4px]"
+          >
+            <Bi ms="Ulangkaji bebas" en="free practice" className="font-medium" />
+          </button>
+        )}
 
         <ul className="mt-2 divide-y divide-hairline border-y border-hairline">
           {shown.map((w) => (
@@ -157,10 +176,7 @@ export function Words() {
                     </div>
                   )}
                   {w.example_baku && (
-                    <div className="italic text-sm text-muted border-l-2 border-hairline pl-3">
-                      {w.example_baku}
-                      {w.example_colloq && <div className="not-italic mt-1">{w.example_colloq}</div>}
-                    </div>
+                    <ExampleBlock word={w} className="text-sm border-l-2 border-hairline pl-3" />
                   )}
                 </div>
               )}
@@ -168,7 +184,7 @@ export function Words() {
           ))}
           {shown.length === 0 && (
             <li className="text-center text-muted py-10">
-              Tiada padanan · no matches — try another search.
+              <Bi ms="Tiada padanan" en="no matches — try another search" />
             </li>
           )}
         </ul>

@@ -80,7 +80,7 @@ export function Onboarding() {
             >
               <span className="display text-xl">Belum — saya baru bermula</span>
               <span className="mono-sm block text-gold-ink/70 mt-1">
-                no — I&rsquo;m brand new. start from zero
+                (no — I&rsquo;m brand new. start from zero)
               </span>
             </button>
             <button
@@ -89,7 +89,7 @@ export function Onboarding() {
             >
               <span className="display text-xl">Tahu sikit-sikit</span>
               <span className="mono-sm block text-muted mt-1">
-                I know some — let me mark the words I know
+                (I know some — let me mark the words I know)
               </span>
             </button>
           </div>
@@ -127,7 +127,7 @@ export function Onboarding() {
             >
               <span className="display text-xl">Cukup — mula belajar</span>
               <span className="mono-sm block text-gold-ink/70 mt-1">
-                that&rsquo;s enough — start learning. the rest goes to the backlog
+                (that&rsquo;s enough — start learning. the rest goes to the backlog)
               </span>
             </button>
             <button
@@ -135,7 +135,7 @@ export function Onboarding() {
               className="w-full py-5 rounded-[4px] border-[1.5px] border-charcoal text-charcoal active:bg-charcoal/5"
             >
               <span className="display text-xl">Teruskan</span>
-              <span className="mono-sm block text-muted mt-1">keep marking — {BATCH} more</span>
+              <span className="mono-sm block text-muted mt-1">(keep marking — {BATCH} more)</span>
             </button>
           </div>
         </div>
@@ -174,7 +174,7 @@ export function Onboarding() {
             {w.arabic_cognate}
           </div>
         )}
-        <div className="text-muted mt-3">{w.gloss_en}</div>
+        <div className="text-muted mt-3">({w.gloss_en})</div>
         <div className="mt-4 flex flex-wrap justify-center items-center gap-x-3 gap-y-2">
           <span className="flex items-center gap-1.5">
             <RegisterChip kind="baku" />
@@ -202,18 +202,18 @@ export function Onboarding() {
             className="py-4 bg-transparent text-charcoal border-r-[1.5px] border-charcoal active:bg-charcoal/5"
           >
             <span className="font-semibold">Belum</span>
-            <span className="mono-sm block text-muted mt-0.5">not yet</span>
+            <span className="mono-sm block text-muted mt-0.5">(not yet)</span>
           </button>
           <button
             onClick={() => mark(true)}
             className="py-4 bg-jade text-jade-ink active:opacity-90"
           >
             <span className="font-semibold">Tahu</span>
-            <span className="mono-sm block text-jade-ink/70 mt-0.5">I know this</span>
+            <span className="mono-sm block text-jade-ink/70 mt-0.5">(I know this)</span>
           </button>
         </div>
         <button onClick={finish} className="mt-4 w-full text-muted text-sm">
-          {redo ? 'Selesai · done' : 'Berhenti di sini · stop here — the rest goes to the backlog'}
+          {redo ? 'Selesai (done)' : 'Berhenti di sini (stop here — the rest goes to the backlog)'}
         </button>
       </div>
     </div>

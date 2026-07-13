@@ -6,15 +6,17 @@ import { dueCount } from '../lib/fsrs'
 import {
   getOrCreateTodaySession,
   historyDays,
+  isFirstEverSession,
   newWordBudgetRemaining,
   nextMilestone,
+  projectedSessionMinutes,
   todayStr,
   weekRhythm,
   wordOfTheDay,
   type WeekRhythm,
 } from '../lib/session'
-import { Label, SpeakerIcon } from '../components/ui'
-import { RegisterChip } from '../components/RegisterChip'
+import { Bi, Label, SpeakerIcon } from '../components/ui'
+import { ExampleBlock, RegisterChip } from '../components/RegisterChip'
 import { speak, ttsAvailable } from '../lib/tts'
 
 const DAY_LABELS = ['I', 'S', 'R', 'K', 'J', 'S', 'A'] // Isnin..Ahad
@@ -30,21 +32,37 @@ export function Today() {
   const [rhythm, setRhythm] = useState<WeekRhythm | null>(null)
   const [history, setHistory] = useState<boolean[]>([])
   const [word, setWord] = useState<Word | null>(null)
+  const [firstWord, setFirstWord] = useState(false)
   const [tts, setTts] = useState(false)
+  const [firstEver, setFirstEver] = useState(false)
+  const [projected, setProjected] = useState(0)
 
   useEffect(() => {
     ;(async () => {
       await getOrCreateTodaySession()
-      setDue(await dueCount())
+      const dueNow = await dueCount()
+      setDue(dueNow)
       setBudget(await newWordBudgetRemaining())
       setStudied(await db.cards.count())
       setRhythm(await weekRhythm())
       setHistory((await historyDays()).slice(-14).map((d) => d.counted))
-      setWord((await wordOfTheDay()) ?? null)
+      const wotd = await wordOfTheDay()
+      setWord(wotd?.word ?? null)
+      setFirstWord(wotd?.first ?? false)
+      setFirstEver(await isFirstEverSession())
+      setProjected(await projectedSessionMinutes())
       const s = await getSettings()
       setTts(s.ttsEnabled && ttsAvailable())
     })()
   }, [done])
+
+  /** Day-0 routing (pedagogy-response §2.1): an empty queue on the very first
+   *  session must not open with an empty state — go straight to the reading.
+   *  On later days the friendly empty state in Review stays. */
+  function start() {
+    if (due === 0 && firstEver) navigate('/read')
+    else navigate('/review?mode=full')
+  }
 
   const dateLabel = new Date()
     .toLocaleDateString('ms-MY', { weekday: 'long', day: 'numeric', month: 'long' })
@@ -76,14 +94,19 @@ export function Today() {
             </p>
             <p className="text-indigo-lo text-sm">
               {done === 'sikit'
-                ? 'A little still counts. See you tomorrow.'
-                : 'Full session complete. Little by little.'}
+                ? '(A little still counts. See you tomorrow.)'
+                : '(Full session complete. Little by little.)'}
             </p>
           </div>
         ) : (
           word && (
             <div className="mt-5">
-              <Label ms="Kata hari ini" en="word of the day" color="indigo-hi" />
+              {/* day 0: caption, don't suppress (pedagogy-response §2.4) */}
+              {firstWord ? (
+                <Label ms="Kata pertama anda" en="your first word" color="indigo-hi" />
+              ) : (
+                <Label ms="Kata hari ini" en="word of the day" color="indigo-hi" />
+              )}
               <div className="flex items-end justify-between gap-3 mt-2">
                 <div className="display text-plaster break-words" style={{ fontSize: 'clamp(46px, 15vw, 66px)' }}>
                   {word.baku}
@@ -100,11 +123,11 @@ export function Today() {
               </div>
               <div className="flex items-center gap-2 mt-2">
                 <RegisterChip kind="baku" />
-                <span className="text-indigo-hi">{word.gloss_en}</span>
+                <span className="text-indigo-hi">({word.gloss_en})</span>
               </div>
               {word.example_baku && (
                 <div className="border-t border-indigo-rl mt-4 pt-3">
-                  <div className="text-plaster">{word.example_baku}</div>
+                  <ExampleBlock word={word} tone="indigo" />
                 </div>
               )}
             </div>
@@ -172,28 +195,39 @@ export function Today() {
 
         {/* primary action + secondary sharing its lower edge */}
         {!done && (
-          <div className="mt-6 border-[1.5px] border-charcoal rounded-[4px] overflow-hidden">
-            <button
-              onClick={() => navigate('/review?mode=full')}
-              className="w-full bg-gold text-gold-ink py-4 border-b-[1.5px] border-charcoal active:opacity-90"
-            >
-              <span className="display text-xl">Mula</span>
-              <span className="block mono-sm text-gold-ink/70 mt-0.5">start today&rsquo;s session</span>
-            </button>
-            <button
-              onClick={() => navigate('/review?mode=sikit')}
-              className="w-full bg-transparent text-charcoal py-3 active:bg-charcoal/5"
-            >
-              <span className="font-medium">Sikit je</span>
-              <span className="text-muted text-sm"> — reviews only, ~5 min</span>
-            </button>
-          </div>
+          <>
+            {/* gentle pre-session note when the full session projects long (§4.1) — never blocks */}
+            {projected > 18 && (
+              <p className="mt-6 text-sm text-muted">
+                <Bi
+                  ms={`Sesi penuh mungkin ~${Math.round(projected)} minit hari ini`}
+                  en="a full session may run long today — Sikit je also counts"
+                />
+              </p>
+            )}
+            <div className={`${projected > 18 ? 'mt-3' : 'mt-6'} border-[1.5px] border-charcoal rounded-[4px] overflow-hidden`}>
+              <button
+                onClick={start}
+                className="w-full bg-gold text-gold-ink py-4 border-b-[1.5px] border-charcoal active:opacity-90"
+              >
+                <span className="display text-xl">Mula</span>
+                <span className="block mono-sm text-gold-ink/70 mt-0.5">(start today&rsquo;s session)</span>
+              </button>
+              <button
+                onClick={() => navigate('/review?mode=sikit')}
+                className="w-full bg-transparent text-charcoal py-3 active:bg-charcoal/5"
+              >
+                <span className="font-medium">Sikit je</span>
+                <span className="text-muted text-sm"> (reviews only, ~5 min)</span>
+              </button>
+            </div>
+          </>
         )}
 
         {/* proverb signature line */}
         <div className="mt-8 text-center">
           <div className="text-muted text-sm italic">sedikit-sedikit, lama-lama jadi bukit</div>
-          <div className="mono-sm text-muted/70 mt-1">little by little, it becomes a hill</div>
+          <div className="text-muted/70 text-sm mt-1">(little by little, it becomes a hill)</div>
         </div>
       </div>
     </div>

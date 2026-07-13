@@ -2113,6 +2113,14 @@ function properNouns(rawText) {
   for (const m of midSentenceCaps) result.add(normalise(m[1]));
   return result;
 }
+function noticeValid(notice, lines) {
+  if (!notice) return false;
+  const text = normalise(lines.map((l) => l.text).join("\n"));
+  const form = normalise(notice.form).trim();
+  if (!form) return false;
+  const escaped = form.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp(`(^|[^a-z\xE0-\u024F'-])${escaped}($|[^a-z\xE0-\u024F'-])`, "i").test(text);
+}
 function validatePassage(input) {
   const allowed = /* @__PURE__ */ new Set();
   for (const w of [...input.allowed, ...input.functionWords]) {
@@ -2205,20 +2213,31 @@ The comprehension question language is given as "question_language":
 "english" = ask and answer in English; "bilingual" or "malay" = ask and answer
 in simple Malay using only allowed vocabulary, and also provide "prompt_en".
 
+Include exactly ONE "notice" \u2014 a grammar whisper: one short observation about a
+form that actually appears in your passage, in plain language with no
+terminology, e.g. {"form": "nak", "note": "nak = want to \u2014 you'll hear this
+constantly"}. The "form" must appear verbatim in the passage text.
+
 Respond with STRICT JSON only. No markdown, no preamble. Shape:
 {"format": "dialogue"|"prose",
  "lines": [{"speaker": "A"|"B"|null, "text": "<one Malay line/sentence>",
             "gloss": "<natural English translation of that line>"}],
  "translation": "<English translation of the whole passage>",
  "glossary": [{"word": "...", "gloss": "..."}],
- "question": {"prompt": "...", "prompt_en": "...", "answer": "..."}}`;
+ "question": {"prompt": "...", "prompt_en": "...", "answer": "..."},
+ "notice": {"form": "...", "note": "..."}}`;
 var GRADE_SYSTEM = `You are a warm, encouraging Malay tutor. The learner is a beginner. Grade for
 COMMUNICATION, not perfection. If the meaning would be understood by a patient
 native speaker, say so first. Return STRICT JSON:
 { "understood": true|false, "corrected": "...", "encouragement": "...",
   "notes": ["...", "..."] }
 "notes" has at most 2 entries, each one concrete fix. Never return more than 2
-notes. Never lecture. No markdown, no preamble.`;
+notes. Never lecture. No markdown, no preamble.
+Notes prioritise WORD CHOICE, WORD ORDER, and USEFUL PATTERNS the learner can
+reuse (e.g. adding a time marker like "tadi") over capitalisation, punctuation
+or spelling. Never comment on capitalisation, punctuation or spelling unless it
+changes the meaning \u2014 and even then at most ONE such note, and only when no
+more useful language-level note exists.`;
 async function callClaude(system, user) {
   const { model, apiKey } = config();
   const res = await fetch("https://api.anthropic.com/v1/messages", {
@@ -2264,7 +2283,10 @@ function normaliseGenOut(raw2) {
   const lines = Array.isArray(raw2.lines) ? raw2.lines.filter((l) => l && typeof l.text === "string") : [];
   if (!lines.length) throw new Error("Malformed generation output: no lines");
   const q = raw2.question ?? {};
+  const n = raw2.notice;
+  const notice = n && typeof n.form === "string" && n.form && typeof n.note === "string" && n.note ? { form: n.form, note: n.note } : void 0;
   return {
+    ...notice ? { notice } : {},
     format: raw2.format === "dialogue" ? "dialogue" : "prose",
     lines: lines.map((l) => ({
       speaker: l.speaker === "A" || l.speaker === "B" ? l.speaker : null,
@@ -2333,19 +2355,22 @@ app.post("/generate", async (c) => {
     );
     let chosen = first;
     let check = validate(first);
-    if (!check.ok) {
+    let firstNoticeOk = noticeValid(first.notice, first.lines);
+    if (!check.ok || !firstNoticeOk) {
       const feedback = {
         ...payload,
         previous_attempt_rejected: true,
         do_not_use_these_words: check.violations,
         new_words_needing_more_repetition: check.underused,
-        instruction: "Your previous attempt broke the vocabulary constraints. Regenerate. Do NOT use the listed forbidden words. Repeat each listed new word at least the required number of times. Shorter and more repetitive is fine."
+        notice_problem: firstNoticeOk ? void 0 : "Your notice was missing or its form does not appear in the passage. Include exactly one notice whose form appears verbatim in the text.",
+        instruction: "Your previous attempt broke the constraints. Regenerate. Do NOT use the listed forbidden words. Repeat each listed new word at least the required number of times. Shorter and more repetitive is fine."
       };
       const second = normaliseGenOut(
         await callAndParse(GENERATE_SYSTEM, JSON.stringify(feedback))
       );
       const secondCheck = validate(second);
-      if (secondCheck.ok || secondCheck.violations.length + secondCheck.underused.length < check.violations.length + check.underused.length) {
+      const takeSecond = check.ok ? secondCheck.ok : secondCheck.ok || secondCheck.violations.length + secondCheck.underused.length < check.violations.length + check.underused.length;
+      if (takeSecond) {
         chosen = second;
         check = secondCheck;
       }
@@ -2360,6 +2385,10 @@ app.post("/generate", async (c) => {
           if (!glossed.has(v.toLowerCase())) chosen.glossary.push({ word: v, gloss: "" });
         }
       }
+    }
+    if (chosen.notice && !noticeValid(chosen.notice, chosen.lines)) {
+      console.warn("[generate] dropping invalid notice:", chosen.notice);
+      delete chosen.notice;
     }
     return c.json({ ...chosen, containment: check.containmentRatio });
   } catch (e) {

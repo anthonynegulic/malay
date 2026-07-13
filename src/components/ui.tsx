@@ -31,6 +31,38 @@ export function Label({
   )
 }
 
+/**
+ * R3 global bilingual rule: Malay carries the styling; English is always
+ * roman, smaller, muted, and bracketed when it follows Malay inline or on the
+ * next line. (Mono signage labels keep their `MALAY · ENGLISH` pattern — use
+ * Label for those, Bi for everything else.)
+ */
+export function Bi({
+  ms,
+  en,
+  enClass = 'text-muted',
+  block = false,
+  className = '',
+}: {
+  ms: React.ReactNode
+  en?: string
+  /** Colour of the bracketed English — override on dark grounds (e.g. 'text-indigo-lo'). */
+  enClass?: string
+  /** Render the English on its own line beneath the Malay. */
+  block?: boolean
+  className?: string
+}) {
+  const enSpan = en ? (
+    <span className={`${enClass} not-italic font-normal text-[0.85em]`}>({en})</span>
+  ) : null
+  return (
+    <span className={className}>
+      {ms}
+      {enSpan && (block ? <span className="block mt-0.5">{enSpan}</span> : <> {enSpan}</>)}
+    </span>
+  )
+}
+
 /* ————— Line icons (P1: no emoji). Inherit colour via currentColor. ————— */
 
 const svg = {
@@ -77,6 +109,15 @@ export function SpeakerIcon({ className = 'w-5 h-5' }: { className?: string }) {
     <svg {...svg} className={className} aria-hidden>
       <path d="M4 9v6h4l5 4V5L8 9H4Z" />
       <path d="M16.5 8.5a5 5 0 0 1 0 7M18.8 6a8 8 0 0 1 0 12" />
+    </svg>
+  )
+}
+
+export function MuteIcon({ className = 'w-5 h-5' }: { className?: string }) {
+  return (
+    <svg {...svg} className={className} aria-hidden>
+      <path d="M4 9v6h4l5 4V5L8 9H4Z" />
+      <path d="M16.5 9.5l5 5M21.5 9.5l-5 5" />
     </svg>
   )
 }

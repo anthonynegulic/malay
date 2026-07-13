@@ -1,11 +1,11 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { db, getSettings } from '../db/db'
 import type { Card, Word } from '../db/types'
 import { dueCards, gradeCard, previewIntervals, Rating, type Grade } from '../lib/fsrs'
-import { getOrCreateTodaySession, updateSession } from '../lib/session'
-import { VariantLedger } from '../components/RegisterChip'
-import { Label, SpeakerIcon } from '../components/ui'
+import { addPhaseTime, getOrCreateTodaySession, updateSession } from '../lib/session'
+import { ExampleBlock, VariantLedger } from '../components/RegisterChip'
+import { Bi, Label, SpeakerIcon } from '../components/ui'
 import { speak, ttsAvailable } from '../lib/tts'
 
 const SIKIT_CAP = 20
@@ -25,6 +25,7 @@ export function Review() {
   const [graded, setGraded] = useState(0)
   const [total, setTotal] = useState(0)
   const [tts, setTts] = useState(false)
+  const startedAt = useRef(Date.now())
 
   useEffect(() => {
     ;(async () => {
@@ -46,8 +47,14 @@ export function Review() {
   const intervals = useMemo(() => (current ? previewIntervals(current.card) : null), [current])
 
   function finish() {
+    void addPhaseTime('reviewMs', startedAt.current)
     if (sikit) navigate('/?done=sikit', { replace: true })
     else navigate('/read', { replace: true })
+  }
+
+  function exit() {
+    void addPhaseTime('reviewMs', startedAt.current)
+    navigate('/')
   }
 
   async function grade(rating: Grade) {
@@ -73,14 +80,16 @@ export function Review() {
     return (
       <div className="min-h-dvh flex flex-col bg-indigo text-plaster">
         <div className="px-5 pt-6">
-          <button onClick={() => navigate('/')} className="mono text-indigo-hi">
+          <button onClick={exit} className="mono text-indigo-hi">
             ← keluar · exit
           </button>
         </div>
         <div className="flex-1 grid place-items-center text-center px-6">
           <div>
             <Label ms="ulangkaji" en="review" color="indigo-lo" />
-            <p className="text-indigo-hi mt-3">Tiada kad hari ini — the queue is clear.</p>
+            <p className="text-indigo-hi mt-3">
+              <Bi ms="Tiada kad hari ini" en="the queue is clear" enClass="text-indigo-lo" />
+            </p>
           </div>
         </div>
         <div className="p-5">
@@ -88,7 +97,11 @@ export function Review() {
             onClick={finish}
             className="w-full border-[1.5px] border-plaster/50 text-plaster py-4 rounded-[4px]"
           >
-            {sikit ? 'Selesai · finish' : 'Teruskan ke bacaan · continue to reading'}
+            {sikit ? (
+              <Bi ms="Selesai" en="finish" enClass="text-plaster/70" />
+            ) : (
+              <Bi ms="Teruskan ke bacaan" en="continue to reading" enClass="text-plaster/70" />
+            )}
           </button>
         </div>
       </div>
@@ -102,7 +115,7 @@ export function Review() {
     return (
       <div className="min-h-dvh flex flex-col bg-indigo text-plaster">
         <div className="px-5 pt-6 flex items-center justify-between">
-          <button onClick={() => navigate('/')} className="mono text-indigo-hi">
+          <button onClick={exit} className="mono text-indigo-hi">
             ← keluar · exit
           </button>
           <span className="mono text-gold">
@@ -137,7 +150,7 @@ export function Review() {
             className="w-full bg-plaster text-charcoal py-4 rounded-[4px] border-[1.5px] border-charcoal active:opacity-90"
           >
             <span className="font-medium">Tunjuk</span>
-            <span className="mono-sm text-muted block mt-0.5">tap to reveal</span>
+            <span className="mono-sm text-muted block mt-0.5">(tap to reveal)</span>
           </button>
         </div>
       </div>
@@ -149,7 +162,7 @@ export function Review() {
     <div className="min-h-dvh flex flex-col bg-plaster">
       <div className="bg-indigo text-plaster px-5 pt-6 pb-5">
         <div className="flex items-center justify-between mb-3">
-          <button onClick={() => navigate('/')} className="mono text-indigo-hi">
+          <button onClick={exit} className="mono text-indigo-hi">
             ← keluar · exit
           </button>
           <span className="mono text-gold">
@@ -176,8 +189,7 @@ export function Review() {
                 </button>
               )}
             </div>
-            <div className="mt-1.5 italic">{word.example_baku}</div>
-            {word.example_colloq && <div className="text-muted text-sm mt-0.5">{word.example_colloq}</div>}
+            <ExampleBlock word={word} className="mt-1.5" />
           </div>
         )}
 
@@ -237,7 +249,7 @@ function GradeBtn({
     <button onClick={onClick} className={`py-3 rounded-[4px] active:opacity-90 ${cls}`}>
       <span className="font-medium">{label}</span>
       <span className="mono-sm block mt-0.5 opacity-70">
-        {en} · {sub}
+        ({en}) · {sub}
       </span>
     </button>
   )

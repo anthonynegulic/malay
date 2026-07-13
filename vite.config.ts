@@ -1,9 +1,27 @@
+import { execSync } from 'node:child_process'
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa'
 
+// Build-commit stamp (feedback-002 Q4): shown at the bottom of Settings so
+// deployment drift is visible from the phone. Vercel exposes the SHA in env;
+// local builds ask git; fall back to "dev".
+function buildCommit(): string {
+  const fromEnv = process.env.VERCEL_GIT_COMMIT_SHA
+  if (fromEnv) return fromEnv.slice(0, 7)
+  try {
+    return execSync('git rev-parse --short HEAD', { encoding: 'utf8' }).trim()
+  } catch {
+    return 'dev'
+  }
+}
+
 export default defineConfig({
+  define: {
+    __BUILD_COMMIT__: JSON.stringify(buildCommit()),
+    __BUILD_DATE__: JSON.stringify(new Date().toISOString().slice(0, 10)),
+  },
   plugins: [
     react(),
     tailwindcss(),

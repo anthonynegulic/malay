@@ -10,6 +10,17 @@ import {
 import type { Card, CardState } from '../db/types'
 import { db, uid } from '../db/db'
 
+/**
+ * Learning-steps configuration (R6 audit, 13 Jul 2026 — see scripts/fsrs-audit.mjs):
+ * ts-fsrs v5 defaults apply: learning_steps ["1m","10m"], relearning_steps ["10m"].
+ * Intended progression for a NEW card at request_retention 0.90:
+ *   new —Good→ 10m (learning, second step) —Good→ ~2d (review; graduated)
+ * So `Okey · 10m` on a first-day card is correct mid-learning-step behaviour,
+ * not a stall: the Review screen re-queues sub-10-minute learning cards within
+ * the same session, and the SECOND Good graduates the card past one day.
+ * Easy graduates immediately (~8d). Review-state cards never regress to minutes
+ * except through Again (relearning, 10m).
+ */
 const scheduler = fsrs(generatorParameters({ request_retention: 0.9, enable_fuzz: true }))
 
 export { Rating }
