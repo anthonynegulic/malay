@@ -5,7 +5,7 @@ import type { Passage, PassageLine, Register, Word } from '../db/types'
 import { getOrGeneratePassage } from '../lib/api'
 import { addPhaseTime, harvestWord, todayStr, updateSession, type HarvestResult } from '../lib/session'
 import { ExampleBlock, RegisterChip } from '../components/RegisterChip'
-import { Bi, CloudIcon, Label, MuteIcon, SpeakerIcon } from '../components/ui'
+import { Bi, CloudIcon, Headword, Label, MuteIcon, SpeakerIcon } from '../components/ui'
 import { speak, ttsAvailable } from '../lib/tts'
 
 function cleanToken(t: string): string {
@@ -197,9 +197,7 @@ export function Read() {
         <div key={w.id} className="fade-in flex-1 flex flex-col justify-center px-6">
           <Label ms="kata baru hari ini" en="today's new word" color="indigo-hi" />
           <div className="flex items-end justify-between gap-3 mt-2">
-            <div className="display text-plaster break-words" style={{ fontSize: 'clamp(44px, 14vw, 60px)' }}>
-              {w.baku}
-            </div>
+            <Headword text={w.baku} maxPx={60} className="display text-plaster" />
             {tts && (
               <button
                 onClick={() => speak(w.baku)}

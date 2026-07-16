@@ -5,7 +5,7 @@ import type { Card, Word } from '../db/types'
 import { dueCards, gradeCard, previewIntervals, Rating, type Grade } from '../lib/fsrs'
 import { addPhaseTime, getOrCreateTodaySession, updateSession } from '../lib/session'
 import { ExampleBlock, VariantLedger } from '../components/RegisterChip'
-import { Bi, Label, SpeakerIcon } from '../components/ui'
+import { Bi, Headword, Label, SpeakerIcon } from '../components/ui'
 import { speak, ttsAvailable } from '../lib/tts'
 
 const SIKIT_CAP = 20
@@ -124,13 +124,10 @@ export function Review() {
           </span>
         </div>
 
-        <div className="flex-1 grid place-items-center px-5">
-          <div className="text-center">
-            <button
-              onClick={() => setFlipped(true)}
-              className="headword text-plaster break-words block"
-            >
-              {word.baku}
+        <div className="flex-1 grid place-items-center px-5 w-full">
+          <div className="text-center w-full min-w-0">
+            <button onClick={() => setFlipped(true)} className="block w-full">
+              <Headword text={word.baku} maxPx={96} className="headword text-plaster" />
             </button>
             {tts && (
               <button
@@ -169,9 +166,7 @@ export function Review() {
             {graded + 1} / {total}
           </span>
         </div>
-        <div className="reveal-head display text-plaster" style={{ fontSize: 44 }}>
-          {word.baku}
-        </div>
+        <Headword text={word.baku} maxPx={44} className="reveal-head display text-plaster" />
         <div className="flex items-center gap-3 mt-1">
           <span className="text-indigo-hi">{word.gloss_en}</span>
           <span className="mono text-indigo-lo">{word.pos}</span>

@@ -4,6 +4,7 @@ import { db, saveSettings } from '../db/db'
 import type { Word } from '../db/types'
 import { knownCard } from '../lib/fsrs'
 import { RegisterChip } from '../components/RegisterChip'
+import { Headword } from '../components/ui'
 
 const BATCH = 30
 
@@ -166,9 +167,7 @@ export function Onboarding() {
       </header>
 
       <div key={w.id} className="fade-in flex-1 flex flex-col justify-center text-center px-6 py-8">
-        <div className="display text-indigo" style={{ fontSize: 'clamp(44px, 15vw, 68px)' }}>
-          {w.baku}
-        </div>
+        <Headword text={w.baku} maxPx={68} className="display text-indigo mx-auto" />
         {w.arabic_cognate && (
           <div className="text-gold text-2xl mt-2" dir="rtl">
             {w.arabic_cognate}

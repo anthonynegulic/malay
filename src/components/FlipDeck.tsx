@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import type { Word } from '../db/types'
 import { ExampleBlock, VariantLedger } from './RegisterChip'
-import { Bi, Label, SpeakerIcon } from './ui'
+import { Bi, Headword, Label, SpeakerIcon } from './ui'
 import { speak } from '../lib/tts'
 
 /**
@@ -49,13 +49,10 @@ export function FlipDeck({
             {i + 1} / {words.length} · {headerMs.toUpperCase()}
           </span>
         </div>
-        <div className="flex-1 grid place-items-center px-5">
-          <div className="text-center">
-            <button
-              onClick={() => setFlipped(true)}
-              className="headword text-plaster break-words block"
-            >
-              {word.baku}
+        <div className="flex-1 grid place-items-center px-5 w-full">
+          <div className="text-center w-full min-w-0">
+            <button onClick={() => setFlipped(true)} className="block w-full">
+              <Headword text={word.baku} maxPx={96} className="headword text-plaster" />
             </button>
             {tts && (
               <button
@@ -92,9 +89,7 @@ export function FlipDeck({
             {i + 1} / {words.length}
           </span>
         </div>
-        <div className="reveal-head display text-plaster" style={{ fontSize: 44 }}>
-          {word.baku}
-        </div>
+        <Headword text={word.baku} maxPx={44} className="reveal-head display text-plaster" />
         <div className="flex items-center gap-3 mt-1">
           <span className="text-indigo-hi">{word.gloss_en}</span>
           <span className="mono text-indigo-lo">{word.pos}</span>

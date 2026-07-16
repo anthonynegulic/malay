@@ -15,7 +15,7 @@ import {
   wordOfTheDay,
   type WeekRhythm,
 } from '../lib/session'
-import { Bi, Label, SpeakerIcon } from '../components/ui'
+import { Bi, Headword, Label, SpeakerIcon } from '../components/ui'
 import { ExampleBlock, RegisterChip } from '../components/RegisterChip'
 import { speak, ttsAvailable } from '../lib/tts'
 
@@ -108,9 +108,7 @@ export function Today() {
                 <Label ms="Kata hari ini" en="word of the day" color="indigo-hi" />
               )}
               <div className="flex items-end justify-between gap-3 mt-2">
-                <div className="display text-plaster break-words" style={{ fontSize: 'clamp(46px, 15vw, 66px)' }}>
-                  {word.baku}
-                </div>
+                <Headword text={word.baku} maxPx={66} className="display text-plaster" />
                 {tts && (
                   <button
                     onClick={() => speak(word.example_baku || word.baku)}

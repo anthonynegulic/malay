@@ -63,6 +63,39 @@ export function Bi({
   )
 }
 
+/**
+ * Poster headword sized to fit: long words (waalaikumussalam) were running off
+ * the page because the fixed clamp() ignores word length and content-sized
+ * flex/grid parents never force a wrap. Scales the font so the longest token
+ * fits the max-w-md column, capped at the surface's design size.
+ */
+export function Headword({
+  text,
+  maxPx,
+  className = '',
+  style,
+}: {
+  text: string
+  /** Design cap for this surface (e.g. 96 review front, 44 card back). */
+  maxPx: number
+  className?: string
+  style?: React.CSSProperties
+}) {
+  const longest = Math.max(1, ...text.split(/\s+/).map((t) => t.length))
+  // ~0.6em average glyph width in the display face; fit inside 92vw on
+  // phones and the 448px max-w-md column (minus padding) on anything wider.
+  const fitVw = (92 / (0.6 * longest)).toFixed(1)
+  const fitPx = Math.round(408 / (0.6 * longest))
+  return (
+    <span
+      className={`block break-words min-w-0 ${className}`}
+      style={{ fontSize: `min(${maxPx}px, ${fitVw}vw, ${fitPx}px)`, ...style }}
+    >
+      {text}
+    </span>
+  )
+}
+
 /* ————— Line icons (P1: no emoji). Inherit colour via currentColor. ————— */
 
 const svg = {
