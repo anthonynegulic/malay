@@ -1,0 +1,205 @@
+@import 'tailwindcss';
+
+/* ————— "Mansion" tokens (v1.1 P1.1) — replace the Rumah Api set entirely —————
+   Cheong Fatt Tze Blue Mansion. Indigo is a WALL, not a button. Actions are
+   gold and oxblood. No other colours. */
+@theme {
+  --color-indigo: #2b4c9b; /* field colour — headers, card fronts. NEVER a button. */
+  --color-indigo-lo: #b8c4e4; /* muted text on indigo — ≥4.5:1 (UX-REVIEW-001 H3) */
+  --color-indigo-hi: #d5dcef; /* brighter text on indigo — ≥4.5:1 */
+  --color-indigo-rl: #4c69ae; /* rule lines on indigo */
+  --color-plaster: #efe9da; /* page background, text on indigo */
+  --color-charcoal: #221f1c; /* text, borders, rules */
+  --color-muted: #655f52; /* secondary text — ≥4.5:1 on plaster (H3) */
+  --color-hairline: #c9c2b0; /* internal rules on plaster */
+  --color-gold: #c8912f; /* THE action colour. Also audio icons, milestones. */
+  --color-gold-hi: #e6bb6a; /* gold TEXT/icons on indigo — plain gold is 2.9:1 there (H3) */
+  --color-gold-ink: #3d2b09; /* text on gold */
+  --color-oxblood: #8c2f26; /* progress, "today", the Lagi grade, COLLOQ chip */
+  --color-jade: #8fbba6; /* BAKU chip, Senang grade */
+  --color-jade-ink: #173a30; /* text on jade */
+
+  --font-display: 'Bricolage Grotesque Variable', 'Bricolage Grotesque', sans-serif;
+  --font-body: 'Instrument Sans Variable', 'Instrument Sans', sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+}
+
+:root {
+  color-scheme: light;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  @apply bg-plaster text-charcoal font-body antialiased;
+  overscroll-behavior-y: none;
+}
+
+/* Signage mono utility: uppercase, wide tracking, small (P1.2).
+   11/10px — the 10/9.5px originals sat under the legibility floor for
+   controls that use these classes (UX-REVIEW-001 H3). */
+.mono {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 11px;
+  line-height: 1.3;
+}
+.mono-sm {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 10px;
+  line-height: 1.2;
+}
+
+/* Poster headword — the review front is a Georgetown shop sign (P1.5) */
+.headword {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  font-size: clamp(64px, 20vw, 96px);
+  line-height: 1;
+}
+
+/* Display numerals / word-of-the-day */
+.display {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+/* The display scale — stat numerals share three sizes instead of per-screen
+   magic numbers (UI-REVIEW-001 §2). */
+.display-lg {
+  font-size: 64px;
+}
+.display-md {
+  font-size: 40px;
+}
+.display-sm {
+  font-size: 24px;
+}
+
+/* Tap-target helper: grows the hit area of small text/icon controls without
+   moving the layout (UX-REVIEW-001 H4). */
+.hit {
+  padding: 12px;
+  margin: -12px;
+}
+
+/* Horizontal-scroll rows fade at the trailing edge to hint scrollability
+   (UI-REVIEW-001 §5.6). */
+.fade-x {
+  mask-image: linear-gradient(to right, black 0, black calc(100% - 28px), transparent);
+}
+
+/* Tappable glossed words in the passage carry their own affordance
+   (UI-REVIEW-001 §4 Read). New words keep the gold mark instead. */
+.tap-hint {
+  text-decoration: underline dotted;
+  text-decoration-color: color-mix(in srgb, var(--color-charcoal) 35%, transparent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+
+/* Ranges drawn in-system instead of stock browser chrome (UI-REVIEW-001 §3.3) */
+input[type='range'] {
+  appearance: none;
+  -webkit-appearance: none;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--color-hairline);
+}
+input[type='range']::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 9999px;
+  background: var(--color-oxblood);
+  border: 1.5px solid var(--color-charcoal);
+}
+input[type='range']::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 9999px;
+  background: var(--color-oxblood);
+  border: 1.5px solid var(--color-charcoal);
+}
+
+/* Reading passage measure (kept from v1 — the best thing in the build) */
+.passage {
+  font-size: 20px;
+  line-height: 1.7;
+}
+
+/* New-word marker in passages: 2px gold underline, not a block (P1.5) */
+.mark-new {
+  background: linear-gradient(transparent 82%, var(--color-gold) 82%, var(--color-gold) 94%, transparent 94%);
+}
+
+/* ————— Review reveal: 300ms, reduced-motion → instant (P1.5) ————— */
+.reveal-head {
+  transition: font-size 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.reveal-body {
+  animation: reveal-in 300ms ease-out both;
+}
+@keyframes reveal-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.fade-in {
+  animation: fade-in 180ms ease-out both;
+}
+
+.spinner {
+  width: 22px;
+  height: 22px;
+  border-radius: 9999px;
+  border: 2.5px solid color-mix(in srgb, var(--color-charcoal) 20%, transparent);
+  border-top-color: var(--color-gold);
+  animation: spin 900ms linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-head,
+  .reveal-body,
+  .fade-in,
+  .spinner {
+    animation: none;
+    transition: none;
+  }
+}
+
+/* Visible keyboard focus */
+:focus-visible {
+  outline: 2.5px solid var(--color-gold);
+  outline-offset: 2px;
+}

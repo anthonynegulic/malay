@@ -1,0 +1,5035 @@
+[
+ {
+  "baku": "saya",
+  "colloquial": "aku",
+  "utara": "cek",
+  "pos": "pronoun",
+  "gloss_en": "I / me",
+  "example_baku": "Saya tinggal di Pulau Pinang.",
+  "example_colloq": "Aku tinggal kat Penang.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "I live in Penang."
+ },
+ {
+  "baku": "awak",
+  "colloquial": "kau",
+  "utara": "hang",
+  "pos": "pronoun",
+  "gloss_en": "you (singular)",
+  "example_baku": "Awak hendak pergi ke mana?",
+  "example_colloq": "Hang nak pi mana?",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Where do you want to go?",
+  "example_colloq_kind": "utara"
+ },
+ {
+  "baku": "kamu semua",
+  "colloquial": "korang",
+  "utara": "hangpa",
+  "pos": "pronoun",
+  "gloss_en": "you (plural)",
+  "example_baku": "Kamu semua tinggal di mana?",
+  "example_colloq": "Korang tinggal kat mana?",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Where do you all live?"
+ },
+ {
+  "baku": "dia",
+  "pos": "pronoun",
+  "gloss_en": "he / she",
+  "example_baku": "Dia kawan saya.",
+  "example_colloq": "Dia member aku.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "He's my friend."
+ },
+ {
+  "baku": "mereka",
+  "colloquial": "diorang",
+  "utara": "depa",
+  "pos": "pronoun",
+  "gloss_en": "they",
+  "example_baku": "Mereka datang dari Kedah.",
+  "example_colloq": "Depa mai dari Kedah.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "They come from Kedah.",
+  "example_colloq_kind": "utara"
+ },
+ {
+  "baku": "kami",
+  "pos": "pronoun",
+  "gloss_en": "we (not including you)",
+  "example_baku": "Kami baru sampai.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "We just arrived."
+ },
+ {
+  "baku": "kita",
+  "pos": "pronoun",
+  "gloss_en": "we (including you)",
+  "example_baku": "Kita jumpa esok.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "We'll meet tomorrow."
+ },
+ {
+  "baku": "mari",
+  "colloquial": "jom",
+  "pos": "particle",
+  "gloss_en": "come on / let's",
+  "example_baku": "Mari kita pergi.",
+  "example_colloq": "Jom kita pi.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Let's go.",
+  "example_colloq_kind": "utara"
+ },
+ {
+  "baku": "ini",
+  "colloquial": "ni",
+  "pos": "pronoun",
+  "gloss_en": "this",
+  "example_baku": "Ini rumah saya.",
+  "example_colloq": "Ni rumah aku.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "This is my house."
+ },
+ {
+  "baku": "itu",
+  "colloquial": "tu",
+  "pos": "pronoun",
+  "gloss_en": "that",
+  "example_baku": "Itu kereta siapa?",
+  "example_colloq": "Tu keta sapa?",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Whose car is that?"
+ },
+ {
+  "baku": "ada",
+  "pos": "verb",
+  "gloss_en": "to have / there is",
+  "example_baku": "Ada air sejuk?",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Is there any cold water?"
+ },
+ {
+  "baku": "tidak",
+  "colloquial": "tak",
+  "pos": "adv",
+  "gloss_en": "no / not (with verbs and adjectives)",
+  "example_baku": "Saya tidak tahu.",
+  "example_colloq": "Aku tak tau.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "I don't know."
+ },
+ {
+  "baku": "bukan",
+  "pos": "adv",
+  "gloss_en": "not (with nouns)",
+  "example_baku": "Ini bukan beg saya.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "This is not my bag."
+ },
+ {
+  "baku": "sudah",
+  "colloquial": "dah",
+  "pos": "adv",
+  "gloss_en": "already",
+  "example_baku": "Saya sudah makan.",
+  "example_colloq": "Aku dah makan.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "I have already eaten."
+ },
+ {
+  "baku": "belum",
+  "pos": "adv",
+  "gloss_en": "not yet",
+  "example_baku": "Dia belum sampai.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "He hasn't arrived yet."
+ },
+ {
+  "baku": "hendak",
+  "colloquial": "nak",
+  "pos": "verb",
+  "gloss_en": "to want (to)",
+  "example_baku": "Saya hendak minum kopi.",
+  "example_colloq": "Aku nak minum kopi.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "I want to drink coffee."
+ },
+ {
+  "baku": "boleh",
+  "pos": "verb",
+  "gloss_en": "can / may",
+  "example_baku": "Boleh saya tanya?",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "May I ask?"
+ },
+ {
+  "baku": "kena",
+  "pos": "verb",
+  "gloss_en": "to have to / must",
+  "example_baku": "Saya kena pergi sekarang.",
+  "example_colloq": "Aku kena pergi sekarang.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "I have to go now."
+ },
+ {
+  "baku": "dengan",
+  "colloquial": "ngan",
+  "pos": "preposition",
+  "gloss_en": "with",
+  "example_baku": "Saya pergi dengan isteri saya.",
+  "example_colloq": "Aku pi ngan bini aku.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "I'm going with my wife.",
+  "example_colloq_kind": "utara"
+ },
+ {
+  "baku": "dan",
+  "pos": "conjunction",
+  "gloss_en": "and",
+  "example_baku": "Saya suka kopi dan teh.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "I like coffee and tea."
+ },
+ {
+  "baku": "atau",
+  "pos": "conjunction",
+  "gloss_en": "or",
+  "example_baku": "Awak mahu teh atau kopi?",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Do you want tea or coffee?"
+ },
+ {
+  "baku": "tetapi",
+  "colloquial": "tapi",
+  "pos": "conjunction",
+  "gloss_en": "but",
+  "example_baku": "Saya suka, tetapi mahal.",
+  "example_colloq": "Aku suka, tapi mahal.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "I like it, but it's expensive."
+ },
+ {
+  "baku": "kalau",
+  "pos": "conjunction",
+  "gloss_en": "if",
+  "example_baku": "Kalau hujan, kita duduk di rumah.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "If it rains, we'll stay at home."
+ },
+ {
+  "baku": "kerana",
+  "colloquial": "sebab",
+  "pos": "conjunction",
+  "gloss_en": "because",
+  "example_baku": "Dia tidak datang kerana sakit.",
+  "example_colloq": "Dia tak datang sebab sakit.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "He didn't come because he's sick."
+ },
+ {
+  "baku": "juga",
+  "colloquial": "jugak",
+  "pos": "adv",
+  "gloss_en": "also / too",
+  "example_baku": "Saya juga suka.",
+  "example_colloq": "Aku suka jugak.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "I like it too."
+ },
+ {
+  "baku": "lagi",
+  "pos": "adv",
+  "gloss_en": "more / again / still",
+  "example_baku": "Mahu tambah lagi?",
+  "example_colloq": "Nak tambah lagi?",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Want to add more?"
+ },
+ {
+  "baku": "sangat",
+  "pos": "adv",
+  "gloss_en": "very",
+  "example_baku": "Sedap sangat!",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "So delicious!"
+ },
+ {
+  "baku": "macam",
+  "pos": "preposition",
+  "gloss_en": "like / as",
+  "example_baku": "Rasanya macam gula.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "It tastes like sugar."
+ },
+ {
+  "baku": "sahaja",
+  "colloquial": "je",
+  "pos": "adv",
+  "gloss_en": "only / just",
+  "example_baku": "Tengok sahaja.",
+  "example_colloq": "Tengok je.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Just looking."
+ },
+ {
+  "baku": "pun",
+  "pos": "particle",
+  "gloss_en": "also / even",
+  "example_baku": "Saya pun tidak tahu.",
+  "example_colloq": "Aku pun tak tau.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "I don't know either."
+ },
+ {
+  "baku": "lah",
+  "pos": "particle",
+  "gloss_en": "softening / emphasis particle",
+  "example_baku": "Baiklah.",
+  "example_colloq": "Okey lah!",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "All right, then."
+ },
+ {
+  "baku": "kan",
+  "pos": "particle",
+  "gloss_en": "right? / is it not",
+  "example_baku": "Sedap, kan?",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Delicious, isn't it?"
+ },
+ {
+  "baku": "sedang",
+  "colloquial": "tengah",
+  "pos": "adv",
+  "gloss_en": "in the middle of (doing)",
+  "example_baku": "Dia sedang makan.",
+  "example_colloq": "Dia tengah makan.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "He is eating."
+ },
+ {
+  "baku": "punya",
+  "pos": "verb",
+  "gloss_en": "to own / possessive marker",
+  "example_baku": "Ini saya punya.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "This is mine."
+ },
+ {
+  "baku": "apa",
+  "pos": "pronoun",
+  "gloss_en": "what",
+  "example_baku": "Apa ini?",
+  "example_colloq": "Apa ni?",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "What is this?"
+ },
+ {
+  "baku": "siapa",
+  "colloquial": "sapa",
+  "pos": "pronoun",
+  "gloss_en": "who",
+  "example_baku": "Siapa nama awak?",
+  "example_colloq": "Sapa nama kau?",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "What's your name?"
+ },
+ {
+  "baku": "di mana",
+  "colloquial": "kat mana",
+  "pos": "phrase",
+  "gloss_en": "where",
+  "example_baku": "Tandas di mana?",
+  "example_colloq": "Tandas kat mana?",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Where is the toilet?"
+ },
+ {
+  "baku": "bila",
+  "pos": "pronoun",
+  "gloss_en": "when",
+  "example_baku": "Bila awak sampai?",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "When did you arrive?"
+ },
+ {
+  "baku": "kenapa",
+  "utara": "awat",
+  "pos": "pronoun",
+  "gloss_en": "why",
+  "example_baku": "Kenapa lambat?",
+  "example_colloq": "Kenapa kau lambat?",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Why are you late?"
+ },
+ {
+  "baku": "bagaimana",
+  "colloquial": "macam mana",
+  "utara": "lagu mana",
+  "pos": "pronoun",
+  "gloss_en": "how",
+  "example_baku": "Bagaimana hendak ke sana?",
+  "example_colloq": "Macam mana nak pi sana?",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "How do I get there?",
+  "example_colloq_kind": "utara"
+ },
+ {
+  "baku": "berapa",
+  "pos": "pronoun",
+  "gloss_en": "how much / how many",
+  "example_baku": "Berapa harga ini?",
+  "example_colloq": "Berapa harga ni?",
+  "tags": [
+   "market",
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "How much is this?"
+ },
+ {
+  "baku": "yang",
+  "pos": "particle",
+  "gloss_en": "which / that (relative marker)",
+  "example_baku": "Saya mahu yang besar.",
+  "example_colloq": "Aku nak yang besar.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "I want the big one."
+ },
+ {
+  "baku": "selamat",
+  "pos": "adj",
+  "gloss_en": "safe / greeting word",
+  "arabic_cognate": "سلامة",
+  "example_baku": "Selamat datang ke Pulau Pinang.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Welcome to Penang."
+ },
+ {
+  "baku": "selamat pagi",
+  "pos": "phrase",
+  "gloss_en": "good morning",
+  "example_baku": "Selamat pagi, cikgu!",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Good morning, teacher!"
+ },
+ {
+  "baku": "selamat petang",
+  "pos": "phrase",
+  "gloss_en": "good afternoon / evening",
+  "example_baku": "Selamat petang, pak cik.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Good afternoon, uncle."
+ },
+ {
+  "baku": "selamat malam",
+  "pos": "phrase",
+  "gloss_en": "good night",
+  "example_baku": "Selamat malam, jumpa esok.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Good night, see you tomorrow."
+ },
+ {
+  "baku": "selamat tinggal",
+  "pos": "phrase",
+  "gloss_en": "goodbye (said by the one leaving)",
+  "example_baku": "Selamat tinggal, jaga diri.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Goodbye, take care."
+ },
+ {
+  "baku": "selamat jalan",
+  "pos": "phrase",
+  "gloss_en": "safe journey (said to the one leaving)",
+  "example_baku": "Selamat jalan, hati-hati.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Safe journey, take care."
+ },
+ {
+  "baku": "assalamualaikum",
+  "pos": "phrase",
+  "gloss_en": "peace be upon you",
+  "arabic_cognate": "السلام عليكم",
+  "example_baku": "Assalamualaikum, apa khabar?",
+  "tags": [
+   "masjid",
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Peace be upon you — how are you?"
+ },
+ {
+  "baku": "waalaikumussalam",
+  "pos": "phrase",
+  "gloss_en": "and upon you be peace",
+  "arabic_cognate": "وعليكم السلام",
+  "example_baku": "Waalaikumussalam, khabar baik.",
+  "tags": [
+   "masjid",
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "And upon you peace — I'm well."
+ },
+ {
+  "baku": "apa khabar",
+  "utara": "apa habaq",
+  "pos": "phrase",
+  "gloss_en": "how are you",
+  "example_baku": "Apa khabar semua?",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "How is everyone?"
+ },
+ {
+  "baku": "khabar",
+  "utara": "habaq",
+  "pos": "noun",
+  "gloss_en": "news",
+  "arabic_cognate": "خبر",
+  "example_baku": "Khabar baik, alhamdulillah.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "I'm well, praise God."
+ },
+ {
+  "baku": "terima kasih",
+  "pos": "phrase",
+  "gloss_en": "thank you",
+  "example_baku": "Terima kasih banyak-banyak.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Thank you very much."
+ },
+ {
+  "baku": "sama-sama",
+  "pos": "phrase",
+  "gloss_en": "you are welcome",
+  "example_baku": "Sama-sama.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "You're welcome."
+ },
+ {
+  "baku": "maaf",
+  "pos": "noun",
+  "gloss_en": "sorry / pardon",
+  "arabic_cognate": "معاف",
+  "example_baku": "Minta maaf, saya lambat.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Sorry, I'm late."
+ },
+ {
+  "baku": "tolong",
+  "pos": "verb",
+  "gloss_en": "please / to help",
+  "example_baku": "Tolong cakap perlahan-lahan.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Please speak slowly."
+ },
+ {
+  "baku": "sila",
+  "pos": "verb",
+  "gloss_en": "please (inviting)",
+  "example_baku": "Sila duduk.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Please, have a seat."
+ },
+ {
+  "baku": "minta",
+  "pos": "verb",
+  "gloss_en": "to ask for / may I have",
+  "example_baku": "Minta satu teh tarik.",
+  "tags": [
+   "survival",
+   "food"
+  ],
+  "source": "seed",
+  "example_en": "One teh tarik, please."
+ },
+ {
+  "baku": "tumpang tanya",
+  "pos": "phrase",
+  "gloss_en": "excuse me, may I ask",
+  "example_baku": "Tumpang tanya, pasar di mana?",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Excuse me, where is the market?"
+ },
+ {
+  "baku": "jumpa",
+  "pos": "verb",
+  "gloss_en": "to meet",
+  "example_baku": "Jumpa lagi esok.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "See you again tomorrow."
+ },
+ {
+  "baku": "baik",
+  "pos": "adj",
+  "gloss_en": "good / kind / fine",
+  "example_baku": "Baiklah, saya faham.",
+  "example_colloq": "Okey lah, aku faham.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "All right, I understand."
+ },
+ {
+  "baku": "ya",
+  "pos": "particle",
+  "gloss_en": "yes",
+  "example_baku": "Ya, betul.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Yes, that's right."
+ },
+ {
+  "baku": "tidak mengapa",
+  "colloquial": "tak apa",
+  "pos": "phrase",
+  "gloss_en": "it is okay / never mind",
+  "example_baku": "Tidak mengapa, lain kali.",
+  "example_colloq": "Tak apa, lain kali.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "It's okay — next time."
+ },
+ {
+  "baku": "jaga",
+  "pos": "verb",
+  "gloss_en": "to look after / take care",
+  "example_baku": "Jaga diri baik-baik.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Take good care of yourself."
+ },
+ {
+  "baku": "satu",
+  "pos": "number",
+  "gloss_en": "one",
+  "example_baku": "Minta satu lagi.",
+  "tags": [
+   "numbers"
+  ],
+  "source": "seed",
+  "example_en": "One more, please."
+ },
+ {
+  "baku": "dua",
+  "pos": "number",
+  "gloss_en": "two",
+  "example_baku": "Saya ada dua orang anak.",
+  "tags": [
+   "numbers",
+   "family"
+  ],
+  "source": "seed",
+  "example_en": "I have two children."
+ },
+ {
+  "baku": "tiga",
+  "pos": "number",
+  "gloss_en": "three",
+  "example_baku": "Dia ada tiga adik.",
+  "tags": [
+   "numbers"
+  ],
+  "source": "seed",
+  "example_en": "He has three younger siblings."
+ },
+ {
+  "baku": "empat",
+  "pos": "number",
+  "gloss_en": "four",
+  "example_baku": "Pukul empat petang.",
+  "tags": [
+   "numbers",
+   "time"
+  ],
+  "source": "seed",
+  "example_en": "Four o'clock in the afternoon."
+ },
+ {
+  "baku": "lima",
+  "pos": "number",
+  "gloss_en": "five",
+  "example_baku": "Lima ringgit sahaja.",
+  "example_colloq": "Lima ringgit je.",
+  "tags": [
+   "numbers",
+   "market"
+  ],
+  "source": "seed",
+  "example_en": "Just five ringgit."
+ },
+ {
+  "baku": "enam",
+  "pos": "number",
+  "gloss_en": "six",
+  "example_baku": "Bas nombor enam.",
+  "tags": [
+   "numbers",
+   "transport"
+  ],
+  "source": "seed",
+  "example_en": "Bus number six."
+ },
+ {
+  "baku": "tujuh",
+  "pos": "number",
+  "gloss_en": "seven",
+  "example_baku": "Kedai buka pukul tujuh.",
+  "tags": [
+   "numbers",
+   "market"
+  ],
+  "source": "seed",
+  "example_en": "The shop opens at seven."
+ },
+ {
+  "baku": "lapan",
+  "pos": "number",
+  "gloss_en": "eight",
+  "example_baku": "Lapan puluh sen.",
+  "tags": [
+   "numbers",
+   "market"
+  ],
+  "source": "seed",
+  "example_en": "Eighty sen."
+ },
+ {
+  "baku": "sembilan",
+  "pos": "number",
+  "gloss_en": "nine",
+  "example_baku": "Sembilan bulan.",
+  "tags": [
+   "numbers",
+   "time"
+  ],
+  "source": "seed",
+  "example_en": "Nine months."
+ },
+ {
+  "baku": "sepuluh",
+  "pos": "number",
+  "gloss_en": "ten",
+  "example_baku": "Sepuluh minit lagi.",
+  "tags": [
+   "numbers",
+   "time"
+  ],
+  "source": "seed",
+  "example_en": "Ten more minutes."
+ },
+ {
+  "baku": "sebelas",
+  "pos": "number",
+  "gloss_en": "eleven",
+  "example_baku": "Anak dia sebelas tahun.",
+  "tags": [
+   "numbers"
+  ],
+  "source": "seed",
+  "example_en": "Her child is eleven years old."
+ },
+ {
+  "baku": "dua belas",
+  "pos": "number",
+  "gloss_en": "twelve",
+  "example_baku": "Pukul dua belas tengah hari.",
+  "tags": [
+   "numbers",
+   "time"
+  ],
+  "source": "seed",
+  "example_en": "Twelve o'clock midday."
+ },
+ {
+  "baku": "dua puluh",
+  "pos": "number",
+  "gloss_en": "twenty",
+  "example_baku": "Dua puluh ringgit.",
+  "tags": [
+   "numbers",
+   "market"
+  ],
+  "source": "seed",
+  "example_en": "Twenty ringgit."
+ },
+ {
+  "baku": "seratus",
+  "pos": "number",
+  "gloss_en": "one hundred",
+  "example_baku": "Seratus tahun.",
+  "tags": [
+   "numbers"
+  ],
+  "source": "seed",
+  "example_en": "A hundred years."
+ },
+ {
+  "baku": "seribu",
+  "pos": "number",
+  "gloss_en": "one thousand",
+  "example_baku": "Harga seribu ringgit.",
+  "tags": [
+   "numbers",
+   "market"
+  ],
+  "source": "seed",
+  "example_en": "The price is a thousand ringgit."
+ },
+ {
+  "baku": "setengah",
+  "pos": "number",
+  "gloss_en": "half",
+  "example_baku": "Pukul tiga setengah.",
+  "tags": [
+   "numbers",
+   "time"
+  ],
+  "source": "seed",
+  "example_en": "Half past three."
+ },
+ {
+  "baku": "ringgit",
+  "pos": "noun",
+  "gloss_en": "ringgit (currency)",
+  "example_baku": "Lima ringgit sekilo.",
+  "tags": [
+   "market",
+   "numbers"
+  ],
+  "source": "seed",
+  "example_en": "Five ringgit a kilo."
+ },
+ {
+  "baku": "sen",
+  "pos": "noun",
+  "gloss_en": "cent",
+  "example_baku": "Lima puluh sen.",
+  "tags": [
+   "market",
+   "numbers"
+  ],
+  "source": "seed",
+  "example_en": "Fifty sen."
+ },
+ {
+  "baku": "nombor",
+  "pos": "noun",
+  "gloss_en": "number",
+  "example_baku": "Nombor telefon awak berapa?",
+  "tags": [
+   "numbers",
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "What is your phone number?"
+ },
+ {
+  "baku": "waktu",
+  "pos": "noun",
+  "gloss_en": "time (period / prayer time)",
+  "arabic_cognate": "وقت",
+  "example_baku": "Sudah masuk waktu maghrib.",
+  "example_colloq": "Dah masuk waktu maghrib.",
+  "tags": [
+   "masjid",
+   "time"
+  ],
+  "source": "seed",
+  "example_en": "It's maghrib time already."
+ },
+ {
+  "baku": "masa",
+  "pos": "noun",
+  "gloss_en": "time",
+  "example_baku": "Tiada masa hari ini.",
+  "tags": [
+   "time"
+  ],
+  "source": "seed",
+  "example_en": "No time today."
+ },
+ {
+  "baku": "hari",
+  "pos": "noun",
+  "gloss_en": "day",
+  "example_baku": "Hari ini hari Jumaat.",
+  "tags": [
+   "time"
+  ],
+  "source": "seed",
+  "example_en": "Today is Friday."
+ },
+ {
+  "baku": "minggu",
+  "pos": "noun",
+  "gloss_en": "week",
+  "example_baku": "Minggu depan kami pindah.",
+  "tags": [
+   "time"
+  ],
+  "source": "seed",
+  "example_en": "Next week we move."
+ },
+ {
+  "baku": "bulan",
+  "pos": "noun",
+  "gloss_en": "month / moon",
+  "example_baku": "Bulan depan bulan puasa.",
+  "tags": [
+   "time"
+  ],
+  "source": "seed",
+  "example_en": "Next month is the fasting month."
+ },
+ {
+  "baku": "tahun",
+  "pos": "noun",
+  "gloss_en": "year",
+  "example_baku": "Anak saya berumur dua tahun.",
+  "tags": [
+   "time",
+   "family"
+  ],
+  "source": "seed",
+  "example_en": "My child is two years old."
+ },
+ {
+  "baku": "pagi",
+  "pos": "noun",
+  "gloss_en": "morning",
+  "example_baku": "Pagi esok kita pergi pasar.",
+  "example_colloq": "Esok pagi kita pi pasar.",
+  "tags": [
+   "time"
+  ],
+  "source": "seed",
+  "example_en": "Tomorrow morning we're going to the market.",
+  "example_colloq_kind": "utara"
+ },
+ {
+  "baku": "tengah hari",
+  "pos": "noun",
+  "gloss_en": "midday",
+  "example_baku": "Makan tengah hari sudah siap.",
+  "tags": [
+   "time",
+   "food"
+  ],
+  "source": "seed",
+  "example_en": "Lunch is ready."
+ },
+ {
+  "baku": "petang",
+  "pos": "noun",
+  "gloss_en": "late afternoon / early evening",
+  "example_baku": "Petang ini hujan.",
+  "tags": [
+   "time"
+  ],
+  "source": "seed",
+  "example_en": "It's going to rain this afternoon."
+ },
+ {
+  "baku": "malam",
+  "pos": "noun",
+  "gloss_en": "night",
+  "example_baku": "Malam ini kita makan di luar.",
+  "tags": [
+   "time"
+  ],
+  "source": "seed",
+  "example_en": "Tonight we're eating out."
+ },
+ {
+  "baku": "hari ini",
+  "colloquial": "hari ni",
+  "pos": "phrase",
+  "gloss_en": "today",
+  "example_baku": "Hari ini panas.",
+  "example_colloq": "Hari ni panas sangat.",
+  "tags": [
+   "time"
+  ],
+  "source": "seed",
+  "example_en": "Today is hot."
+ },
+ {
+  "baku": "esok",
+  "pos": "noun",
+  "gloss_en": "tomorrow",
+  "example_baku": "Jumpa esok, insya-Allah.",
+  "tags": [
+   "time"
+  ],
+  "source": "seed",
+  "example_en": "See you tomorrow, God willing."
+ },
+ {
+  "baku": "semalam",
+  "pos": "noun",
+  "gloss_en": "yesterday",
+  "example_baku": "Semalam kami ke pasar malam.",
+  "tags": [
+   "time"
+  ],
+  "source": "seed",
+  "example_en": "Yesterday we went to the night market."
+ },
+ {
+  "baku": "lusa",
+  "pos": "noun",
+  "gloss_en": "the day after tomorrow",
+  "example_baku": "Lusa hari Ahad.",
+  "tags": [
+   "time"
+  ],
+  "source": "seed",
+  "example_en": "The day after tomorrow is Sunday."
+ },
+ {
+  "baku": "sekarang",
+  "utara": "la ni",
+  "pos": "adv",
+  "gloss_en": "now",
+  "example_baku": "Kita pergi sekarang.",
+  "example_colloq": "Kita gerak sekarang.",
+  "tags": [
+   "time"
+  ],
+  "source": "seed",
+  "example_en": "We're going now."
+ },
+ {
+  "baku": "jam",
+  "pos": "noun",
+  "gloss_en": "hour / clock",
+  "example_baku": "Perjalanan itu dua jam.",
+  "tags": [
+   "time"
+  ],
+  "source": "seed",
+  "example_en": "The journey is two hours."
+ },
+ {
+  "baku": "pukul",
+  "pos": "noun",
+  "gloss_en": "o'clock",
+  "example_baku": "Sekarang pukul lima.",
+  "tags": [
+   "time"
+  ],
+  "source": "seed",
+  "example_en": "It's five o'clock now."
+ },
+ {
+  "baku": "minit",
+  "pos": "noun",
+  "gloss_en": "minute",
+  "example_baku": "Tunggu lima minit.",
+  "tags": [
+   "time"
+  ],
+  "source": "seed",
+  "example_en": "Wait five minutes."
+ },
+ {
+  "baku": "sekejap",
+  "colloquial": "kejap",
+  "pos": "noun",
+  "gloss_en": "a moment",
+  "example_baku": "Tunggu sekejap.",
+  "example_colloq": "Kejap, aku datang.",
+  "tags": [
+   "time"
+  ],
+  "source": "seed",
+  "example_en": "Wait a moment.",
+  "example_colloq_en": "Hang on — I'm coming."
+ },
+ {
+  "baku": "lambat",
+  "pos": "adj",
+  "gloss_en": "late / slow",
+  "example_baku": "Maaf, saya lambat.",
+  "tags": [
+   "time"
+  ],
+  "source": "seed",
+  "example_en": "Sorry, I'm late."
+ },
+ {
+  "baku": "cepat",
+  "pos": "adj",
+  "gloss_en": "fast / quick",
+  "example_baku": "Cepat sedikit, bas sudah sampai.",
+  "example_colloq": "Cepat sikit, bas dah sampai.",
+  "tags": [
+   "time"
+  ],
+  "source": "seed",
+  "example_en": "Hurry up a little — the bus has arrived."
+ },
+ {
+  "baku": "awal",
+  "pos": "adj",
+  "gloss_en": "early",
+  "example_baku": "Kami sampai awal.",
+  "tags": [
+   "time"
+  ],
+  "source": "seed",
+  "example_en": "We arrived early."
+ },
+ {
+  "baku": "nanti",
+  "pos": "adv",
+  "gloss_en": "later",
+  "example_baku": "Nanti saya telefon awak.",
+  "tags": [
+   "time"
+  ],
+  "source": "seed",
+  "example_en": "I'll phone you later."
+ },
+ {
+  "baku": "dulu",
+  "pos": "adv",
+  "gloss_en": "first / previously",
+  "example_baku": "Makan dulu.",
+  "tags": [
+   "time",
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Eat first."
+ },
+ {
+  "baku": "pergi",
+  "colloquial": "pegi",
+  "utara": "pi",
+  "pos": "verb",
+  "gloss_en": "to go",
+  "example_baku": "Saya hendak pergi ke pasar.",
+  "example_colloq": "Aku nak pi pasar.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "I want to go to the market.",
+  "example_colloq_kind": "utara"
+ },
+ {
+  "baku": "datang",
+  "utara": "mai",
+  "pos": "verb",
+  "gloss_en": "to come",
+  "example_baku": "Datang rumah kami esok.",
+  "example_colloq": "Mai rumah kami esok.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Come to our house tomorrow.",
+  "example_colloq_kind": "utara"
+ },
+ {
+  "baku": "makan",
+  "pos": "verb",
+  "gloss_en": "to eat",
+  "example_baku": "Sudah makan?",
+  "example_colloq": "Dah makan ke belum?",
+  "tags": [
+   "survival",
+   "food"
+  ],
+  "source": "seed",
+  "example_en": "Have you eaten?"
+ },
+ {
+  "baku": "minum",
+  "pos": "verb",
+  "gloss_en": "to drink",
+  "example_baku": "Saya minum kopi setiap pagi.",
+  "tags": [
+   "survival",
+   "food"
+  ],
+  "source": "seed",
+  "example_en": "I drink coffee every morning."
+ },
+ {
+  "baku": "tidur",
+  "pos": "verb",
+  "gloss_en": "to sleep",
+  "example_baku": "Anak-anak sudah tidur.",
+  "example_colloq": "Budak-budak dah tidur.",
+  "tags": [
+   "survival",
+   "family"
+  ],
+  "source": "seed",
+  "example_en": "The children are already asleep."
+ },
+ {
+  "baku": "bangun",
+  "pos": "verb",
+  "gloss_en": "to wake up / get up",
+  "example_baku": "Saya bangun sebelum subuh.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "I wake up before dawn."
+ },
+ {
+  "baku": "mandi",
+  "pos": "verb",
+  "gloss_en": "to bathe / shower",
+  "example_baku": "Pergi mandi dulu.",
+  "example_colloq": "Pi mandi dulu.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Go bathe first.",
+  "example_colloq_kind": "utara"
+ },
+ {
+  "baku": "buat",
+  "pos": "verb",
+  "gloss_en": "to do / to make",
+  "example_baku": "Apa yang awak buat?",
+  "example_colloq": "Buat apa tu?",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "What are you doing?"
+ },
+ {
+  "baku": "kerja",
+  "pos": "noun",
+  "gloss_en": "work / to work",
+  "example_baku": "Saya kerja dari rumah.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "I work from home."
+ },
+ {
+  "baku": "beli",
+  "pos": "verb",
+  "gloss_en": "to buy",
+  "example_baku": "Kami beli sayur di pasar.",
+  "example_colloq": "Kami beli sayur kat pasar.",
+  "tags": [
+   "market",
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "We buy vegetables at the market."
+ },
+ {
+  "baku": "jual",
+  "pos": "verb",
+  "gloss_en": "to sell",
+  "example_baku": "Mak cik itu jual nasi lemak.",
+  "tags": [
+   "market"
+  ],
+  "source": "seed",
+  "example_en": "That auntie sells nasi lemak."
+ },
+ {
+  "baku": "bayar",
+  "pos": "verb",
+  "gloss_en": "to pay",
+  "example_baku": "Boleh bayar dengan tunai?",
+  "tags": [
+   "market",
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Can I pay with cash?"
+ },
+ {
+  "baku": "lihat",
+  "colloquial": "tengok",
+  "pos": "verb",
+  "gloss_en": "to see / to look",
+  "example_baku": "Lihat itu!",
+  "example_colloq": "Tengok tu!",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Look at that!"
+ },
+ {
+  "baku": "dengar",
+  "pos": "verb",
+  "gloss_en": "to hear / to listen",
+  "example_baku": "Dengar baik-baik.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Listen carefully."
+ },
+ {
+  "baku": "bercakap",
+  "colloquial": "cakap",
+  "pos": "verb",
+  "gloss_en": "to speak / to talk",
+  "example_baku": "Dia bercakap dengan jiran.",
+  "example_colloq": "Dia cakap ngan jiran.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "He's talking with the neighbour."
+ },
+ {
+  "baku": "tahu",
+  "colloquial": "tau",
+  "pos": "verb",
+  "gloss_en": "to know",
+  "example_baku": "Saya tidak tahu jalan.",
+  "example_colloq": "Aku tak tau jalan.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "I don't know the way."
+ },
+ {
+  "baku": "faham",
+  "pos": "verb",
+  "gloss_en": "to understand",
+  "arabic_cognate": "فهم",
+  "example_baku": "Saya faham sedikit sahaja.",
+  "example_colloq": "Aku faham sikit je.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "I only understand a little."
+ },
+ {
+  "baku": "suka",
+  "pos": "verb",
+  "gloss_en": "to like",
+  "example_baku": "Kami suka makanan pedas.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "We like spicy food."
+ },
+ {
+  "baku": "belajar",
+  "pos": "verb",
+  "gloss_en": "to learn / to study",
+  "example_baku": "Saya belajar bahasa Melayu setiap hari.",
+  "tags": [
+   "school",
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "I study Malay every day."
+ },
+ {
+  "baku": "ajar",
+  "pos": "verb",
+  "gloss_en": "to teach",
+  "example_baku": "Cikgu ajar kami membaca.",
+  "tags": [
+   "school"
+  ],
+  "source": "seed",
+  "example_en": "The teacher teaches us to read."
+ },
+ {
+  "baku": "baca",
+  "pos": "verb",
+  "gloss_en": "to read",
+  "example_baku": "Dia baca buku sebelum tidur.",
+  "tags": [
+   "school",
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "He reads a book before bed."
+ },
+ {
+  "baku": "tulis",
+  "pos": "verb",
+  "gloss_en": "to write",
+  "example_baku": "Tulis nama di sini.",
+  "tags": [
+   "school"
+  ],
+  "source": "seed",
+  "example_en": "Write your name here."
+ },
+ {
+  "baku": "tunggu",
+  "pos": "verb",
+  "gloss_en": "to wait",
+  "example_baku": "Tunggu di sini sekejap.",
+  "example_colloq": "Tunggu kat sini kejap.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Wait here a moment."
+ },
+ {
+  "baku": "beri",
+  "colloquial": "bagi",
+  "pos": "verb",
+  "gloss_en": "to give",
+  "example_baku": "Beri saya satu, ya.",
+  "example_colloq": "Bagi aku satu.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Give me one, please."
+ },
+ {
+  "baku": "ambil",
+  "pos": "verb",
+  "gloss_en": "to take",
+  "example_baku": "Ambil beg awak.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Take your bag."
+ },
+ {
+  "baku": "letak",
+  "pos": "verb",
+  "gloss_en": "to put",
+  "example_baku": "Letak di atas meja.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Put it on the table."
+ },
+ {
+  "baku": "buka",
+  "pos": "verb",
+  "gloss_en": "to open",
+  "example_baku": "Kedai buka pukul lapan.",
+  "tags": [
+   "survival",
+   "market"
+  ],
+  "source": "seed",
+  "example_en": "The shop opens at eight."
+ },
+ {
+  "baku": "tutup",
+  "pos": "verb",
+  "gloss_en": "to close",
+  "example_baku": "Kedai tutup hari Isnin.",
+  "tags": [
+   "survival",
+   "market"
+  ],
+  "source": "seed",
+  "example_en": "The shop is closed on Mondays."
+ },
+ {
+  "baku": "masuk",
+  "pos": "verb",
+  "gloss_en": "to enter",
+  "example_baku": "Sila masuk.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Please come in."
+ },
+ {
+  "baku": "keluar",
+  "pos": "verb",
+  "gloss_en": "to go out / exit",
+  "example_baku": "Kami keluar makan malam ini.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "We're going out for dinner tonight."
+ },
+ {
+  "baku": "pulang",
+  "colloquial": "balik",
+  "pos": "verb",
+  "gloss_en": "to return home",
+  "example_baku": "Saya pulang pukul enam.",
+  "example_colloq": "Aku balik pukul enam.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "I get home at six."
+ },
+ {
+  "baku": "sampai",
+  "pos": "verb",
+  "gloss_en": "to arrive / until",
+  "example_baku": "Bila awak sampai?",
+  "tags": [
+   "survival",
+   "transport"
+  ],
+  "source": "seed",
+  "example_en": "When did you arrive?"
+ },
+ {
+  "baku": "mula",
+  "pos": "verb",
+  "gloss_en": "to start",
+  "example_baku": "Kelas mula pukul sembilan.",
+  "tags": [
+   "survival",
+   "school"
+  ],
+  "source": "seed",
+  "example_en": "Class starts at nine."
+ },
+ {
+  "baku": "habis",
+  "pos": "verb",
+  "gloss_en": "finished / used up",
+  "example_baku": "Nasi sudah habis.",
+  "example_colloq": "Nasi dah habis.",
+  "tags": [
+   "survival",
+   "food"
+  ],
+  "source": "seed",
+  "example_en": "The rice is finished."
+ },
+ {
+  "baku": "berhenti",
+  "pos": "verb",
+  "gloss_en": "to stop",
+  "example_baku": "Berhenti di sini, bang.",
+  "tags": [
+   "transport",
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Stop here, please."
+ },
+ {
+  "baku": "jalan",
+  "pos": "noun",
+  "gloss_en": "road / to walk",
+  "example_baku": "Kami jalan ke pasar.",
+  "tags": [
+   "survival",
+   "transport"
+  ],
+  "source": "seed",
+  "example_en": "We walk to the market."
+ },
+ {
+  "baku": "duduk",
+  "pos": "verb",
+  "gloss_en": "to sit / to live (colloquial)",
+  "example_baku": "Sila duduk.",
+  "example_colloq": "Kau duduk mana?",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Please sit down.",
+  "example_colloq_en": "Where do you live?"
+ },
+ {
+  "baku": "tinggal",
+  "pos": "verb",
+  "gloss_en": "to live / to stay",
+  "example_baku": "Kami tinggal dekat masjid.",
+  "example_colloq": "Kami duduk dekat masjid.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "We live near the mosque."
+ },
+ {
+  "baku": "cari",
+  "pos": "verb",
+  "gloss_en": "to look for",
+  "example_baku": "Saya cari rumah di Pulau Pinang.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "I'm looking for a house in Penang."
+ },
+ {
+  "baku": "guna",
+  "pos": "verb",
+  "gloss_en": "to use",
+  "example_baku": "Boleh guna tandas?",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "May I use the toilet?"
+ },
+ {
+  "baku": "main",
+  "pos": "verb",
+  "gloss_en": "to play",
+  "example_baku": "Anak-anak main di luar.",
+  "example_colloq": "Budak-budak main kat luar.",
+  "tags": [
+   "family"
+  ],
+  "source": "seed",
+  "example_en": "The children are playing outside."
+ },
+ {
+  "baku": "bawa",
+  "pos": "verb",
+  "gloss_en": "to bring / to carry",
+  "example_baku": "Bawa payung, nanti hujan.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Bring an umbrella — it'll rain later."
+ },
+ {
+  "baku": "hantar",
+  "pos": "verb",
+  "gloss_en": "to send / to drop off",
+  "example_baku": "Saya hantar anak ke sekolah.",
+  "tags": [
+   "school",
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "I take my child to school."
+ },
+ {
+  "baku": "tanya",
+  "pos": "verb",
+  "gloss_en": "to ask",
+  "example_baku": "Tanya pak cik itu.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Ask that uncle."
+ },
+ {
+  "baku": "jawab",
+  "pos": "verb",
+  "gloss_en": "to answer",
+  "arabic_cognate": "جواب",
+  "example_baku": "Dia jawab dengan senyum.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "He answered with a smile."
+ },
+ {
+  "baku": "ingat",
+  "pos": "verb",
+  "gloss_en": "to remember",
+  "example_baku": "Saya ingat jalan ini.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "I remember this road."
+ },
+ {
+  "baku": "lupa",
+  "pos": "verb",
+  "gloss_en": "to forget",
+  "example_baku": "Jangan lupa kunci.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Don't forget the keys."
+ },
+ {
+  "baku": "jangan",
+  "pos": "adv",
+  "gloss_en": "do not",
+  "example_baku": "Jangan risau.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Don't worry."
+ },
+ {
+  "baku": "naik",
+  "pos": "verb",
+  "gloss_en": "to ride / to go up",
+  "example_baku": "Kami naik bas ke Georgetown.",
+  "tags": [
+   "transport"
+  ],
+  "source": "seed",
+  "example_en": "We take the bus to Georgetown."
+ },
+ {
+  "baku": "turun",
+  "pos": "verb",
+  "gloss_en": "to get off / to go down",
+  "example_baku": "Turun di simpang depan.",
+  "tags": [
+   "transport"
+  ],
+  "source": "seed",
+  "example_en": "Get off at the junction ahead."
+ },
+ {
+  "baku": "tukar",
+  "pos": "verb",
+  "gloss_en": "to change / to exchange",
+  "example_baku": "Boleh tukar duit kecil?",
+  "tags": [
+   "market",
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Can you break this into small change?"
+ },
+ {
+  "baku": "masak",
+  "pos": "verb",
+  "gloss_en": "to cook",
+  "example_baku": "Siapa masak malam ini?",
+  "tags": [
+   "food",
+   "family"
+  ],
+  "source": "seed",
+  "example_en": "Who's cooking tonight?"
+ },
+ {
+  "baku": "panggil",
+  "pos": "verb",
+  "gloss_en": "to call (someone)",
+  "example_baku": "Panggil saya Ante sahaja.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Just call me Ante."
+ },
+ {
+  "baku": "senyum",
+  "pos": "verb",
+  "gloss_en": "to smile",
+  "example_baku": "Dia senyum kepada kami.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "She smiled at us."
+ },
+ {
+  "baku": "harap",
+  "pos": "verb",
+  "gloss_en": "to hope",
+  "example_baku": "Saya harap awak sihat.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "I hope you're well."
+ },
+ {
+  "baku": "fikir",
+  "pos": "verb",
+  "gloss_en": "to think",
+  "arabic_cognate": "فكر",
+  "example_baku": "Saya fikir dulu, ya.",
+  "example_colloq": "Aku fikir dulu la.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "I'll think about it first, okay?"
+ },
+ {
+  "baku": "besar",
+  "utara": "besaq",
+  "pos": "adj",
+  "gloss_en": "big",
+  "example_baku": "Rumah itu besar.",
+  "example_colloq": "Besaq betui rumah tu.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "That house is really big.",
+  "example_colloq_kind": "utara"
+ },
+ {
+  "baku": "kecil",
+  "colloquial": "kecik",
+  "pos": "adj",
+  "gloss_en": "small",
+  "example_baku": "Kedai kecil itu jual kopi sedap.",
+  "example_colloq": "Kedai kecik tu jual kopi sedap.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "That little shop sells good coffee."
+ },
+ {
+  "baku": "banyak",
+  "pos": "adj",
+  "gloss_en": "many / much",
+  "example_baku": "Banyak orang di pasar.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Lots of people at the market."
+ },
+ {
+  "baku": "sedikit",
+  "colloquial": "sikit",
+  "pos": "adj",
+  "gloss_en": "a little / a few",
+  "example_baku": "Saya faham sedikit.",
+  "example_colloq": "Aku faham sikit.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "I understand a little."
+ },
+ {
+  "baku": "cantik",
+  "colloquial": "lawa",
+  "pos": "adj",
+  "gloss_en": "pretty / beautiful",
+  "example_baku": "Pantai itu cantik.",
+  "example_colloq": "Lawa pantai tu.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "That beach is beautiful."
+ },
+ {
+  "baku": "panas",
+  "pos": "adj",
+  "gloss_en": "hot",
+  "example_baku": "Hari ini panas sangat.",
+  "tags": [
+   "weather",
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "It's very hot today."
+ },
+ {
+  "baku": "sejuk",
+  "pos": "adj",
+  "gloss_en": "cold",
+  "example_baku": "Minta air sejuk satu.",
+  "tags": [
+   "food",
+   "weather"
+  ],
+  "source": "seed",
+  "example_en": "One cold water, please."
+ },
+ {
+  "baku": "baru",
+  "pos": "adj",
+  "gloss_en": "new / just (recently)",
+  "example_baku": "Kami baru pindah ke sini.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "We just moved here."
+ },
+ {
+  "baku": "lama",
+  "pos": "adj",
+  "gloss_en": "old (things) / a long time",
+  "example_baku": "Sudah lama tunggu?",
+  "example_colloq": "Dah lama tunggu?",
+  "tags": [
+   "survival",
+   "time"
+  ],
+  "source": "seed",
+  "example_en": "Have you been waiting long?"
+ },
+ {
+  "baku": "mahal",
+  "pos": "adj",
+  "gloss_en": "expensive",
+  "example_baku": "Wah, mahal sangat!",
+  "tags": [
+   "market"
+  ],
+  "source": "seed",
+  "example_en": "Wow, so expensive!"
+ },
+ {
+  "baku": "murah",
+  "pos": "adj",
+  "gloss_en": "cheap",
+  "example_baku": "Di pasar lebih murah.",
+  "example_colloq": "Kat pasar lagi murah.",
+  "tags": [
+   "market"
+  ],
+  "source": "seed",
+  "example_en": "It's cheaper at the market."
+ },
+ {
+  "baku": "sedap",
+  "pos": "adj",
+  "gloss_en": "delicious",
+  "example_baku": "Laksa Pulau Pinang memang sedap.",
+  "tags": [
+   "food"
+  ],
+  "source": "seed",
+  "example_en": "Penang laksa is truly delicious."
+ },
+ {
+  "baku": "pedas",
+  "pos": "adj",
+  "gloss_en": "spicy",
+  "example_baku": "Kurang pedas, boleh?",
+  "tags": [
+   "food"
+  ],
+  "source": "seed",
+  "example_en": "Less spicy, please?"
+ },
+ {
+  "baku": "manis",
+  "pos": "adj",
+  "gloss_en": "sweet",
+  "example_baku": "Teh ini terlalu manis.",
+  "example_colloq": "Teh ni manis sangat.",
+  "tags": [
+   "food"
+  ],
+  "source": "seed",
+  "example_en": "This tea is too sweet."
+ },
+ {
+  "baku": "masin",
+  "pos": "adj",
+  "gloss_en": "salty",
+  "example_baku": "Ikan ini masin sedikit.",
+  "tags": [
+   "food"
+  ],
+  "source": "seed",
+  "example_en": "This fish is a little salty."
+ },
+ {
+  "baku": "penat",
+  "pos": "adj",
+  "gloss_en": "tired",
+  "example_baku": "Saya sangat penat hari ini.",
+  "example_colloq": "Penat gila aku hari ni.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "I'm very tired today."
+ },
+ {
+  "baku": "lapar",
+  "pos": "adj",
+  "gloss_en": "hungry",
+  "example_baku": "Anak-anak sudah lapar.",
+  "tags": [
+   "food",
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "The children are hungry."
+ },
+ {
+  "baku": "haus",
+  "pos": "adj",
+  "gloss_en": "thirsty",
+  "example_baku": "Saya haus, minta air.",
+  "tags": [
+   "food",
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "I'm thirsty — some water, please."
+ },
+ {
+  "baku": "sihat",
+  "pos": "adj",
+  "gloss_en": "healthy",
+  "arabic_cognate": "صحة",
+  "example_baku": "Alhamdulillah, semua sihat.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Praise God, everyone is healthy."
+ },
+ {
+  "baku": "sakit",
+  "pos": "adj",
+  "gloss_en": "sick / painful",
+  "example_baku": "Perut saya sakit.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "My stomach hurts."
+ },
+ {
+  "baku": "senang",
+  "pos": "adj",
+  "gloss_en": "easy / at ease",
+  "example_baku": "Jalan ke sana senang sahaja.",
+  "example_colloq": "Jalan pi sana senang je.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Getting there is easy.",
+  "example_colloq_kind": "utara"
+ },
+ {
+  "baku": "susah",
+  "pos": "adj",
+  "gloss_en": "difficult",
+  "example_baku": "Susah sedikit, tetapi boleh.",
+  "example_colloq": "Susah sikit, tapi boleh.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "A little difficult, but doable."
+ },
+ {
+  "baku": "betul",
+  "utara": "betui",
+  "pos": "adj",
+  "gloss_en": "correct / true",
+  "example_baku": "Jawapan awak betul.",
+  "example_colloq": "Betul lah tu.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Your answer is correct."
+ },
+ {
+  "baku": "salah",
+  "pos": "adj",
+  "gloss_en": "wrong",
+  "example_baku": "Maaf, saya salah jalan.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Sorry, I went the wrong way."
+ },
+ {
+  "baku": "penuh",
+  "pos": "adj",
+  "gloss_en": "full",
+  "example_baku": "Bas sudah penuh.",
+  "example_colloq": "Bas dah penuh.",
+  "tags": [
+   "transport",
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "The bus is already full."
+ },
+ {
+  "baku": "kosong",
+  "pos": "adj",
+  "gloss_en": "empty / zero / plain (drink)",
+  "example_baku": "Cawan sudah kosong.",
+  "tags": [
+   "survival",
+   "food"
+  ],
+  "source": "seed",
+  "example_en": "The cup is empty."
+ },
+ {
+  "baku": "dekat",
+  "colloquial": "kat",
+  "pos": "preposition",
+  "gloss_en": "near / at (colloquial)",
+  "example_baku": "Rumah kami dekat dengan masjid.",
+  "example_colloq": "Rumah kami kat sebelah masjid.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Our house is close to the mosque."
+ },
+ {
+  "baku": "jauh",
+  "pos": "adj",
+  "gloss_en": "far",
+  "example_baku": "Sekolah tidak jauh dari sini.",
+  "example_colloq": "Sekolah tak jauh dari sini.",
+  "tags": [
+   "survival",
+   "school"
+  ],
+  "source": "seed",
+  "example_en": "The school isn't far from here."
+ },
+ {
+  "baku": "panjang",
+  "pos": "adj",
+  "gloss_en": "long",
+  "example_baku": "Hari ini hari yang panjang.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Today has been a long day."
+ },
+ {
+  "baku": "pendek",
+  "pos": "adj",
+  "gloss_en": "short",
+  "example_baku": "Jalan ini lebih pendek.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "This road is shorter."
+ },
+ {
+  "baku": "tinggi",
+  "pos": "adj",
+  "gloss_en": "tall / high",
+  "example_baku": "Bukit itu tinggi.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "That hill is high."
+ },
+ {
+  "baku": "bersih",
+  "pos": "adj",
+  "gloss_en": "clean",
+  "example_baku": "Tandas itu bersih.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "That toilet is clean."
+ },
+ {
+  "baku": "kotor",
+  "pos": "adj",
+  "gloss_en": "dirty",
+  "example_baku": "Baju anak kotor lagi.",
+  "tags": [
+   "survival",
+   "family"
+  ],
+  "source": "seed",
+  "example_en": "The child's clothes are dirty again."
+ },
+ {
+  "baku": "muda",
+  "pos": "adj",
+  "gloss_en": "young",
+  "example_baku": "Cikgu itu masih muda.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "That teacher is still young."
+ },
+ {
+  "baku": "tua",
+  "pos": "adj",
+  "gloss_en": "old (people)",
+  "example_baku": "Datuk sudah tua.",
+  "tags": [
+   "family"
+  ],
+  "source": "seed",
+  "example_en": "Grandfather is old now."
+ },
+ {
+  "baku": "gembira",
+  "pos": "adj",
+  "gloss_en": "happy",
+  "example_baku": "Kami gembira di sini.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "We're happy here."
+ },
+ {
+  "baku": "sedih",
+  "pos": "adj",
+  "gloss_en": "sad",
+  "example_baku": "Jangan sedih, ada esok.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Don't be sad — there's always tomorrow."
+ },
+ {
+  "baku": "takut",
+  "pos": "adj",
+  "gloss_en": "afraid",
+  "example_baku": "Jangan takut.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Don't be afraid."
+ },
+ {
+  "baku": "marah",
+  "pos": "adj",
+  "gloss_en": "angry",
+  "example_baku": "Jangan marah, dia kecil lagi.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Don't be angry — he's still little."
+ },
+ {
+  "baku": "risau",
+  "pos": "adj",
+  "gloss_en": "worried",
+  "example_baku": "Jangan risau, semuanya baik.",
+  "example_colloq": "Jangan risau, semua okey.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Don't worry, everything is fine."
+ },
+ {
+  "baku": "penting",
+  "pos": "adj",
+  "gloss_en": "important",
+  "example_baku": "Ini sangat penting.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "This is very important."
+ },
+ {
+  "baku": "nasi",
+  "pos": "noun",
+  "gloss_en": "cooked rice",
+  "example_baku": "Nasi ayam satu, bang.",
+  "tags": [
+   "food"
+  ],
+  "source": "seed",
+  "example_en": "One chicken rice, please."
+ },
+ {
+  "baku": "ayam",
+  "pos": "noun",
+  "gloss_en": "chicken",
+  "example_baku": "Ayam goreng ini sedap.",
+  "example_colloq": "Ayam goreng ni sedap.",
+  "tags": [
+   "food"
+  ],
+  "source": "seed",
+  "example_en": "This fried chicken is delicious."
+ },
+ {
+  "baku": "ikan",
+  "pos": "noun",
+  "gloss_en": "fish",
+  "example_baku": "Ikan segar dari pasar.",
+  "tags": [
+   "food",
+   "market"
+  ],
+  "source": "seed",
+  "example_en": "Fresh fish from the market."
+ },
+ {
+  "baku": "daging",
+  "pos": "noun",
+  "gloss_en": "meat / beef",
+  "example_baku": "Daging ini halal?",
+  "tags": [
+   "food"
+  ],
+  "source": "seed",
+  "example_en": "Is this meat halal?"
+ },
+ {
+  "baku": "sayur",
+  "pos": "noun",
+  "gloss_en": "vegetables",
+  "example_baku": "Tambah sayur sedikit.",
+  "example_colloq": "Tambah sayur sikit.",
+  "tags": [
+   "food",
+   "market"
+  ],
+  "source": "seed",
+  "example_en": "A little more vegetables, please."
+ },
+ {
+  "baku": "buah",
+  "pos": "noun",
+  "gloss_en": "fruit",
+  "example_baku": "Buah apa yang manis?",
+  "tags": [
+   "food",
+   "market"
+  ],
+  "source": "seed",
+  "example_en": "Which fruit is sweet?"
+ },
+ {
+  "baku": "telur",
+  "pos": "noun",
+  "gloss_en": "egg",
+  "example_baku": "Roti telur satu.",
+  "tags": [
+   "food"
+  ],
+  "source": "seed",
+  "example_en": "One roti telur, please."
+ },
+ {
+  "baku": "roti",
+  "pos": "noun",
+  "gloss_en": "bread",
+  "example_baku": "Roti canai dua, ya.",
+  "tags": [
+   "food"
+  ],
+  "source": "seed",
+  "example_en": "Two roti canai, please."
+ },
+ {
+  "baku": "mi",
+  "colloquial": "mee",
+  "pos": "noun",
+  "gloss_en": "noodles",
+  "example_baku": "Mi goreng untuk anak saya.",
+  "tags": [
+   "food"
+  ],
+  "source": "seed",
+  "example_en": "Fried noodles for my child."
+ },
+ {
+  "baku": "air",
+  "utara": "ayaq",
+  "pos": "noun",
+  "gloss_en": "water / a drink",
+  "example_baku": "Air kosong satu.",
+  "example_colloq": "Ayaq kosong satu.",
+  "tags": [
+   "food",
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "One plain water, please.",
+  "example_colloq_kind": "utara"
+ },
+ {
+  "baku": "kopi",
+  "pos": "noun",
+  "gloss_en": "coffee",
+  "example_baku": "Kopi satu, kurang manis.",
+  "tags": [
+   "food"
+  ],
+  "source": "seed",
+  "example_en": "One coffee, less sweet."
+ },
+ {
+  "baku": "teh",
+  "pos": "noun",
+  "gloss_en": "tea",
+  "example_baku": "Teh o ais satu.",
+  "tags": [
+   "food"
+  ],
+  "source": "seed",
+  "example_en": "One teh o ais, please."
+ },
+ {
+  "baku": "teh tarik",
+  "pos": "phrase",
+  "gloss_en": "pulled milk tea",
+  "example_baku": "Teh tarik panas satu.",
+  "tags": [
+   "food"
+  ],
+  "source": "seed",
+  "example_en": "One hot teh tarik, please."
+ },
+ {
+  "baku": "susu",
+  "pos": "noun",
+  "gloss_en": "milk",
+  "example_baku": "Anak saya minum susu.",
+  "tags": [
+   "food",
+   "family"
+  ],
+  "source": "seed",
+  "example_en": "My child drinks milk."
+ },
+ {
+  "baku": "gula",
+  "pos": "noun",
+  "gloss_en": "sugar",
+  "example_baku": "Kurang gula, ya.",
+  "tags": [
+   "food"
+  ],
+  "source": "seed",
+  "example_en": "Less sugar, please."
+ },
+ {
+  "baku": "garam",
+  "pos": "noun",
+  "gloss_en": "salt",
+  "example_baku": "Tambah garam sedikit.",
+  "tags": [
+   "food"
+  ],
+  "source": "seed",
+  "example_en": "Add a little salt."
+ },
+ {
+  "baku": "goreng",
+  "pos": "verb",
+  "gloss_en": "fried / to fry",
+  "example_baku": "Nasi goreng ayam satu.",
+  "tags": [
+   "food"
+  ],
+  "source": "seed",
+  "example_en": "One chicken fried rice, please."
+ },
+ {
+  "baku": "bungkus",
+  "pos": "verb",
+  "gloss_en": "wrapped / takeaway",
+  "example_baku": "Bungkus, ya. Makan di rumah.",
+  "tags": [
+   "food"
+  ],
+  "source": "seed",
+  "example_en": "Takeaway, please — we'll eat at home."
+ },
+ {
+  "baku": "pesan",
+  "pos": "verb",
+  "gloss_en": "to order",
+  "example_baku": "Sudah pesan makanan?",
+  "example_colloq": "Dah pesan makanan?",
+  "tags": [
+   "food"
+  ],
+  "source": "seed",
+  "example_en": "Have you ordered the food?"
+ },
+ {
+  "baku": "bil",
+  "pos": "noun",
+  "gloss_en": "the bill",
+  "example_baku": "Boleh minta bil?",
+  "tags": [
+   "food",
+   "market"
+  ],
+  "source": "seed",
+  "example_en": "May I have the bill?"
+ },
+ {
+  "baku": "kedai",
+  "pos": "noun",
+  "gloss_en": "shop",
+  "example_baku": "Kedai runcit di simpang.",
+  "tags": [
+   "market",
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "The grocery shop is at the junction."
+ },
+ {
+  "baku": "kedai kopi",
+  "colloquial": "kopitiam",
+  "pos": "noun",
+  "gloss_en": "coffee shop",
+  "example_baku": "Kami sarapan di kedai kopi.",
+  "example_colloq": "Kami lepak kat kopitiam.",
+  "tags": [
+   "food"
+  ],
+  "source": "seed",
+  "example_en": "We have breakfast at the coffee shop."
+ },
+ {
+  "baku": "makanan",
+  "pos": "noun",
+  "gloss_en": "food",
+  "example_baku": "Makanan di sini murah dan sedap.",
+  "tags": [
+   "food"
+  ],
+  "source": "seed",
+  "example_en": "The food here is cheap and tasty."
+ },
+ {
+  "baku": "minuman",
+  "pos": "noun",
+  "gloss_en": "a drink / beverage",
+  "example_baku": "Minuman apa yang ada?",
+  "tags": [
+   "food"
+  ],
+  "source": "seed",
+  "example_en": "What drinks are there?"
+ },
+ {
+  "baku": "sarapan",
+  "pos": "noun",
+  "gloss_en": "breakfast",
+  "example_baku": "Sarapan sebelum pergi kerja.",
+  "tags": [
+   "food",
+   "time"
+  ],
+  "source": "seed",
+  "example_en": "Breakfast before going to work."
+ },
+ {
+  "baku": "pasar",
+  "pos": "noun",
+  "gloss_en": "market",
+  "example_baku": "Pasar pagi buka hari Ahad.",
+  "tags": [
+   "market"
+  ],
+  "source": "seed",
+  "example_en": "The morning market opens on Sundays."
+ },
+ {
+  "baku": "pasar malam",
+  "pos": "phrase",
+  "gloss_en": "night market",
+  "example_baku": "Malam ini ada pasar malam.",
+  "tags": [
+   "market"
+  ],
+  "source": "seed",
+  "example_en": "There's a night market tonight."
+ },
+ {
+  "baku": "harga",
+  "pos": "noun",
+  "gloss_en": "price",
+  "example_baku": "Harga naik lagi bulan ini.",
+  "tags": [
+   "market"
+  ],
+  "source": "seed",
+  "example_en": "Prices went up again this month."
+ },
+ {
+  "baku": "wang",
+  "colloquial": "duit",
+  "pos": "noun",
+  "gloss_en": "money",
+  "example_baku": "Saya tidak bawa wang tunai.",
+  "example_colloq": "Aku tak bawa duit.",
+  "tags": [
+   "market",
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "I didn't bring cash."
+ },
+ {
+  "baku": "kurang",
+  "pos": "adv",
+  "gloss_en": "less",
+  "example_baku": "Kurang manis, ya.",
+  "tags": [
+   "market",
+   "food"
+  ],
+  "source": "seed",
+  "example_en": "Less sweet, please."
+ },
+ {
+  "baku": "tambah",
+  "pos": "verb",
+  "gloss_en": "to add",
+  "example_baku": "Tambah satu lagi.",
+  "tags": [
+   "market",
+   "food"
+  ],
+  "source": "seed",
+  "example_en": "Add one more."
+ },
+ {
+  "baku": "tunai",
+  "pos": "noun",
+  "gloss_en": "cash",
+  "example_baku": "Bayar tunai sahaja di sini.",
+  "example_colloq": "Bayar cash je kat sini.",
+  "tags": [
+   "market"
+  ],
+  "source": "seed",
+  "example_en": "Cash only here."
+ },
+ {
+  "baku": "baki",
+  "pos": "noun",
+  "gloss_en": "change / balance (money)",
+  "example_baku": "Baki dua ringgit.",
+  "tags": [
+   "market"
+  ],
+  "source": "seed",
+  "example_en": "Two ringgit change."
+ },
+ {
+  "baku": "tawar",
+  "pos": "verb",
+  "gloss_en": "to bargain / bland",
+  "example_baku": "Boleh tawar sedikit?",
+  "example_colloq": "Boleh tawar sikit?",
+  "tags": [
+   "market"
+  ],
+  "source": "seed",
+  "example_en": "Can we bargain a little?"
+ },
+ {
+  "baku": "cukup",
+  "pos": "adj",
+  "gloss_en": "enough",
+  "example_baku": "Sudah cukup, terima kasih.",
+  "example_colloq": "Dah cukup, terima kasih.",
+  "tags": [
+   "market",
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "That's enough, thank you."
+ },
+ {
+  "baku": "percuma",
+  "pos": "adj",
+  "gloss_en": "free (no cost)",
+  "example_baku": "Yang ini percuma.",
+  "tags": [
+   "market"
+  ],
+  "source": "seed",
+  "example_en": "This one is free."
+ },
+ {
+  "baku": "semua",
+  "pos": "pronoun",
+  "gloss_en": "all / everything",
+  "example_baku": "Semua sekali berapa?",
+  "tags": [
+   "market",
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "How much for everything?"
+ },
+ {
+  "baku": "kiri",
+  "pos": "noun",
+  "gloss_en": "left",
+  "example_baku": "Belok kiri di simpang.",
+  "tags": [
+   "transport"
+  ],
+  "source": "seed",
+  "example_en": "Turn left at the junction."
+ },
+ {
+  "baku": "kanan",
+  "pos": "noun",
+  "gloss_en": "right",
+  "example_baku": "Masjid di sebelah kanan.",
+  "tags": [
+   "transport"
+  ],
+  "source": "seed",
+  "example_en": "The mosque is on the right."
+ },
+ {
+  "baku": "depan",
+  "pos": "noun",
+  "gloss_en": "front / in front",
+  "example_baku": "Berhenti di depan kedai.",
+  "tags": [
+   "transport"
+  ],
+  "source": "seed",
+  "example_en": "Stop in front of the shop."
+ },
+ {
+  "baku": "belakang",
+  "pos": "noun",
+  "gloss_en": "back / behind",
+  "example_baku": "Tandas di belakang.",
+  "tags": [
+   "transport",
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "The toilet is at the back."
+ },
+ {
+  "baku": "atas",
+  "pos": "preposition",
+  "gloss_en": "on top / above",
+  "example_baku": "Letak di atas meja.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Put it on the table."
+ },
+ {
+  "baku": "bawah",
+  "pos": "preposition",
+  "gloss_en": "below / under",
+  "example_baku": "Kasut di bawah kerusi.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "The shoes are under the chair."
+ },
+ {
+  "baku": "dalam",
+  "pos": "preposition",
+  "gloss_en": "inside / in",
+  "example_baku": "Anak-anak ada di dalam rumah.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "The children are inside the house."
+ },
+ {
+  "baku": "luar",
+  "pos": "noun",
+  "gloss_en": "outside",
+  "example_baku": "Tunggu di luar sekejap.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Wait outside for a moment."
+ },
+ {
+  "baku": "sini",
+  "pos": "noun",
+  "gloss_en": "here",
+  "example_baku": "Kami baru di sini.",
+  "example_colloq": "Kami baru kat sini.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "We're new here."
+ },
+ {
+  "baku": "sana",
+  "pos": "noun",
+  "gloss_en": "there (far)",
+  "example_baku": "Pasar di sana.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "The market is over there."
+ },
+ {
+  "baku": "sebelah",
+  "pos": "noun",
+  "gloss_en": "beside / next to",
+  "example_baku": "Kedai itu sebelah bank.",
+  "tags": [
+   "survival",
+   "transport"
+  ],
+  "source": "seed",
+  "example_en": "That shop is next to the bank."
+ },
+ {
+  "baku": "simpang",
+  "pos": "noun",
+  "gloss_en": "junction / turn-off",
+  "example_baku": "Rumah kami selepas simpang itu.",
+  "tags": [
+   "transport"
+  ],
+  "source": "seed",
+  "example_en": "Our house is after that junction."
+ },
+ {
+  "baku": "belok",
+  "pos": "verb",
+  "gloss_en": "to turn",
+  "example_baku": "Belok kanan selepas jambatan.",
+  "tags": [
+   "transport"
+  ],
+  "source": "seed",
+  "example_en": "Turn right after the bridge."
+ },
+ {
+  "baku": "lurus",
+  "pos": "adj",
+  "gloss_en": "straight",
+  "example_baku": "Jalan lurus sahaja.",
+  "example_colloq": "Jalan lurus je.",
+  "tags": [
+   "transport"
+  ],
+  "source": "seed",
+  "example_en": "Just go straight."
+ },
+ {
+  "baku": "kereta",
+  "utara": "keta",
+  "pos": "noun",
+  "gloss_en": "car",
+  "example_baku": "Kereta kami kecil.",
+  "example_colloq": "Keta kami kecik.",
+  "tags": [
+   "transport"
+  ],
+  "source": "seed",
+  "example_en": "Our car is small."
+ },
+ {
+  "baku": "bas",
+  "pos": "noun",
+  "gloss_en": "bus",
+  "example_baku": "Bas ke Georgetown nombor mana?",
+  "tags": [
+   "transport"
+  ],
+  "source": "seed",
+  "example_en": "Which number bus goes to Georgetown?"
+ },
+ {
+  "baku": "teksi",
+  "pos": "noun",
+  "gloss_en": "taxi",
+  "example_baku": "Naik teksi lebih cepat.",
+  "tags": [
+   "transport"
+  ],
+  "source": "seed",
+  "example_en": "Taking a taxi is faster."
+ },
+ {
+  "baku": "motosikal",
+  "colloquial": "moto",
+  "pos": "noun",
+  "gloss_en": "motorbike",
+  "example_baku": "Ramai orang naik motosikal di sini.",
+  "example_colloq": "Ramai orang naik moto kat sini.",
+  "tags": [
+   "transport"
+  ],
+  "source": "seed",
+  "example_en": "Many people ride motorbikes here."
+ },
+ {
+  "baku": "feri",
+  "pos": "noun",
+  "gloss_en": "ferry",
+  "example_baku": "Feri ke Butterworth murah.",
+  "tags": [
+   "transport"
+  ],
+  "source": "seed",
+  "example_en": "The ferry to Butterworth is cheap."
+ },
+ {
+  "baku": "jambatan",
+  "pos": "noun",
+  "gloss_en": "bridge",
+  "example_baku": "Jambatan Pulau Pinang panjang.",
+  "tags": [
+   "transport"
+  ],
+  "source": "seed",
+  "example_en": "The Penang Bridge is long."
+ },
+ {
+  "baku": "tiket",
+  "pos": "noun",
+  "gloss_en": "ticket",
+  "example_baku": "Dua tiket feri, ya.",
+  "tags": [
+   "transport"
+  ],
+  "source": "seed",
+  "example_en": "Two ferry tickets, please."
+ },
+ {
+  "baku": "keluarga",
+  "pos": "noun",
+  "gloss_en": "family",
+  "example_baku": "Keluarga kami pindah ke Pulau Pinang.",
+  "tags": [
+   "family"
+  ],
+  "source": "seed",
+  "example_en": "Our family is moving to Penang."
+ },
+ {
+  "baku": "suami",
+  "pos": "noun",
+  "gloss_en": "husband",
+  "example_baku": "Suami dia kerja di bank.",
+  "tags": [
+   "family"
+  ],
+  "source": "seed",
+  "example_en": "Her husband works at a bank."
+ },
+ {
+  "baku": "isteri",
+  "colloquial": "bini",
+  "pos": "noun",
+  "gloss_en": "wife",
+  "example_baku": "Isteri saya suka memasak.",
+  "example_colloq": "Bini aku suka masak.",
+  "tags": [
+   "family"
+  ],
+  "source": "seed",
+  "example_en": "My wife loves cooking."
+ },
+ {
+  "baku": "anak",
+  "pos": "noun",
+  "gloss_en": "child (one's own)",
+  "example_baku": "Anak kami masih kecil.",
+  "tags": [
+   "family"
+  ],
+  "source": "seed",
+  "example_en": "Our children are still small."
+ },
+ {
+  "baku": "lelaki",
+  "pos": "noun",
+  "gloss_en": "male / boy",
+  "example_baku": "Dua orang anak lelaki.",
+  "tags": [
+   "family"
+  ],
+  "source": "seed",
+  "example_en": "Two sons."
+ },
+ {
+  "baku": "perempuan",
+  "pos": "noun",
+  "gloss_en": "female / girl",
+  "example_baku": "Cikgu perempuan itu baik.",
+  "tags": [
+   "family",
+   "school"
+  ],
+  "source": "seed",
+  "example_en": "That female teacher is kind."
+ },
+ {
+  "baku": "bapa",
+  "colloquial": "ayah",
+  "pos": "noun",
+  "gloss_en": "father",
+  "example_baku": "Bapa saya sudah tua.",
+  "example_colloq": "Ayah aku dah tua.",
+  "tags": [
+   "family"
+  ],
+  "source": "seed",
+  "example_en": "My father is old now."
+ },
+ {
+  "baku": "ibu",
+  "colloquial": "mak",
+  "pos": "noun",
+  "gloss_en": "mother",
+  "example_baku": "Ibu masak nasi goreng.",
+  "example_colloq": "Mak masak nasi goreng.",
+  "tags": [
+   "family"
+  ],
+  "source": "seed",
+  "example_en": "Mum is cooking fried rice."
+ },
+ {
+  "baku": "abang",
+  "pos": "noun",
+  "gloss_en": "older brother / friendly address for a man",
+  "example_baku": "Abang, semua sekali berapa?",
+  "tags": [
+   "family",
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Bang, how much altogether?"
+ },
+ {
+  "baku": "kakak",
+  "pos": "noun",
+  "gloss_en": "older sister / friendly address for a woman",
+  "example_baku": "Kakak saya tinggal di Kuala Lumpur.",
+  "tags": [
+   "family"
+  ],
+  "source": "seed",
+  "example_en": "My older sister lives in Kuala Lumpur."
+ },
+ {
+  "baku": "adik",
+  "pos": "noun",
+  "gloss_en": "younger sibling",
+  "example_baku": "Adik dia baru dua tahun.",
+  "tags": [
+   "family"
+  ],
+  "source": "seed",
+  "example_en": "Her younger sibling is only two."
+ },
+ {
+  "baku": "datuk",
+  "pos": "noun",
+  "gloss_en": "grandfather",
+  "example_baku": "Datuk mereka dari Kedah.",
+  "example_colloq": "Tok depa dari Kedah.",
+  "tags": [
+   "family"
+  ],
+  "source": "seed",
+  "example_en": "Their grandfather is from Kedah.",
+  "example_colloq_kind": "utara"
+ },
+ {
+  "baku": "nenek",
+  "pos": "noun",
+  "gloss_en": "grandmother",
+  "example_baku": "Nenek tinggal dengan kami.",
+  "tags": [
+   "family"
+  ],
+  "source": "seed",
+  "example_en": "Grandma lives with us."
+ },
+ {
+  "baku": "pak cik",
+  "pos": "noun",
+  "gloss_en": "uncle / older man (address)",
+  "example_baku": "Pak cik itu jual buah.",
+  "tags": [
+   "family",
+   "market"
+  ],
+  "source": "seed",
+  "example_en": "That uncle sells fruit."
+ },
+ {
+  "baku": "mak cik",
+  "pos": "noun",
+  "gloss_en": "aunt / older woman (address)",
+  "example_baku": "Mak cik, nasi lemak satu.",
+  "tags": [
+   "family",
+   "market"
+  ],
+  "source": "seed",
+  "example_en": "Auntie, one nasi lemak, please."
+ },
+ {
+  "baku": "kawan",
+  "colloquial": "member",
+  "pos": "noun",
+  "gloss_en": "friend",
+  "example_baku": "Dia kawan baik saya.",
+  "example_colloq": "Dia member baik aku.",
+  "tags": [
+   "family",
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "He's my good friend."
+ },
+ {
+  "baku": "jiran",
+  "pos": "noun",
+  "gloss_en": "neighbour",
+  "arabic_cognate": "جيران",
+  "example_baku": "Jiran kami sangat baik.",
+  "tags": [
+   "family",
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Our neighbours are very kind."
+ },
+ {
+  "baku": "orang",
+  "pos": "noun",
+  "gloss_en": "person / people",
+  "example_baku": "Orang Pulau Pinang ramah.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Penang people are friendly."
+ },
+ {
+  "baku": "ramai",
+  "pos": "adj",
+  "gloss_en": "many (people) / crowded",
+  "example_baku": "Ramai orang di masjid malam ini.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Many people at the mosque tonight."
+ },
+ {
+  "baku": "kanak-kanak",
+  "colloquial": "budak",
+  "pos": "noun",
+  "gloss_en": "child / kid",
+  "example_baku": "Kanak-kanak bermain di luar.",
+  "example_colloq": "Budak-budak main kat luar.",
+  "tags": [
+   "family"
+  ],
+  "source": "seed",
+  "example_en": "The children are playing outside."
+ },
+ {
+  "baku": "sulung",
+  "pos": "adj",
+  "gloss_en": "eldest (child)",
+  "example_baku": "Anak sulung kami lelaki.",
+  "tags": [
+   "family"
+  ],
+  "source": "seed",
+  "example_en": "Our eldest child is a boy."
+ },
+ {
+  "baku": "bongsu",
+  "pos": "adj",
+  "gloss_en": "youngest (child)",
+  "example_baku": "Adik bongsu masih bayi.",
+  "tags": [
+   "family"
+  ],
+  "source": "seed",
+  "example_en": "The youngest is still a baby."
+ },
+ {
+  "baku": "bayi",
+  "pos": "noun",
+  "gloss_en": "baby",
+  "example_baku": "Bayi itu sedang tidur.",
+  "example_colloq": "Baby tu tengah tidur.",
+  "tags": [
+   "family"
+  ],
+  "source": "seed",
+  "example_en": "The baby is sleeping."
+ },
+ {
+  "baku": "sekolah",
+  "pos": "noun",
+  "gloss_en": "school",
+  "example_baku": "Anak saya suka sekolah.",
+  "tags": [
+   "school"
+  ],
+  "source": "seed",
+  "example_en": "My child likes school."
+ },
+ {
+  "baku": "guru",
+  "colloquial": "cikgu",
+  "pos": "noun",
+  "gloss_en": "teacher",
+  "example_baku": "Guru itu mengajar bahasa Melayu.",
+  "example_colloq": "Cikgu tu baik.",
+  "tags": [
+   "school"
+  ],
+  "source": "seed",
+  "example_en": "That teacher teaches Malay.",
+  "example_colloq_en": "That teacher is nice."
+ },
+ {
+  "baku": "murid",
+  "pos": "noun",
+  "gloss_en": "pupil / student",
+  "example_baku": "Murid-murid sedang membaca.",
+  "tags": [
+   "school"
+  ],
+  "source": "seed",
+  "example_en": "The pupils are reading."
+ },
+ {
+  "baku": "buku",
+  "pos": "noun",
+  "gloss_en": "book",
+  "example_baku": "Buku ini untuk anak saya.",
+  "tags": [
+   "school"
+  ],
+  "source": "seed",
+  "example_en": "This book is for my child."
+ },
+ {
+  "baku": "kelas",
+  "pos": "noun",
+  "gloss_en": "class",
+  "example_baku": "Kelas habis pukul satu.",
+  "tags": [
+   "school"
+  ],
+  "source": "seed",
+  "example_en": "Class ends at one."
+ },
+ {
+  "baku": "tadika",
+  "pos": "noun",
+  "gloss_en": "kindergarten",
+  "example_baku": "Anak sulung kami di tadika.",
+  "tags": [
+   "school",
+   "family"
+  ],
+  "source": "seed",
+  "example_en": "Our eldest is in kindergarten."
+ },
+ {
+  "baku": "cuaca",
+  "pos": "noun",
+  "gloss_en": "weather",
+  "example_baku": "Cuaca hari ini baik.",
+  "tags": [
+   "weather"
+  ],
+  "source": "seed",
+  "example_en": "The weather today is good."
+ },
+ {
+  "baku": "hujan",
+  "pos": "noun",
+  "gloss_en": "rain",
+  "example_baku": "Nanti petang hujan.",
+  "tags": [
+   "weather"
+  ],
+  "source": "seed",
+  "example_en": "It will rain later this afternoon."
+ },
+ {
+  "baku": "angin",
+  "pos": "noun",
+  "gloss_en": "wind",
+  "example_baku": "Angin laut sejuk.",
+  "tags": [
+   "weather"
+  ],
+  "source": "seed",
+  "example_en": "The sea breeze is cool."
+ },
+ {
+  "baku": "matahari",
+  "pos": "noun",
+  "gloss_en": "sun",
+  "example_baku": "Matahari sudah tinggi.",
+  "tags": [
+   "weather"
+  ],
+  "source": "seed",
+  "example_en": "The sun is already high."
+ },
+ {
+  "baku": "laut",
+  "pos": "noun",
+  "gloss_en": "sea",
+  "example_baku": "Kami tengok laut dari feri.",
+  "tags": [
+   "weather"
+  ],
+  "source": "seed",
+  "example_en": "We watched the sea from the ferry."
+ },
+ {
+  "baku": "pantai",
+  "pos": "noun",
+  "gloss_en": "beach",
+  "example_baku": "Pantai di sini cantik.",
+  "tags": [
+   "weather"
+  ],
+  "source": "seed",
+  "example_en": "The beaches here are beautiful."
+ },
+ {
+  "baku": "pulau",
+  "pos": "noun",
+  "gloss_en": "island",
+  "example_baku": "Pulau Pinang pulau yang sibuk.",
+  "tags": [
+   "weather",
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Penang is a busy island."
+ },
+ {
+  "baku": "bukit",
+  "pos": "noun",
+  "gloss_en": "hill",
+  "example_baku": "Sedikit-sedikit, lama-lama jadi bukit.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Little by little, it becomes a hill."
+ },
+ {
+  "baku": "rumah",
+  "pos": "noun",
+  "gloss_en": "house / home",
+  "example_baku": "Rumah kami dekat sekolah.",
+  "tags": [
+   "survival",
+   "family"
+  ],
+  "source": "seed",
+  "example_en": "Our house is near the school."
+ },
+ {
+  "baku": "bilik",
+  "pos": "noun",
+  "gloss_en": "room",
+  "example_baku": "Rumah ini ada tiga bilik.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "This house has three bedrooms."
+ },
+ {
+  "baku": "tandas",
+  "pos": "noun",
+  "gloss_en": "toilet",
+  "example_baku": "Tandas di mana, ya?",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Where is the toilet, please?"
+ },
+ {
+  "baku": "kunci",
+  "pos": "noun",
+  "gloss_en": "key / lock",
+  "example_baku": "Kunci rumah dalam beg.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "The house keys are in the bag."
+ },
+ {
+  "baku": "telefon",
+  "pos": "noun",
+  "gloss_en": "phone",
+  "example_baku": "Boleh saya guna telefon?",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "May I use the phone?"
+ },
+ {
+  "baku": "beg",
+  "pos": "noun",
+  "gloss_en": "bag",
+  "example_baku": "Beg saya di dalam kereta.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "My bag is in the car."
+ },
+ {
+  "baku": "baju",
+  "pos": "noun",
+  "gloss_en": "clothes / shirt",
+  "example_baku": "Baju baru untuk hari raya.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "New clothes for Hari Raya."
+ },
+ {
+  "baku": "kasut",
+  "pos": "noun",
+  "gloss_en": "shoes",
+  "example_baku": "Buka kasut sebelum masuk.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Take off your shoes before entering."
+ },
+ {
+  "baku": "meja",
+  "pos": "noun",
+  "gloss_en": "table",
+  "example_baku": "Meja itu penuh dengan buku.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "That table is covered with books."
+ },
+ {
+  "baku": "pintu",
+  "pos": "noun",
+  "gloss_en": "door",
+  "example_baku": "Tutup pintu, ya.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Close the door, please."
+ },
+ {
+  "baku": "hari raya",
+  "pos": "phrase",
+  "gloss_en": "festival day (Eid)",
+  "example_baku": "Selamat Hari Raya, maaf zahir dan batin.",
+  "tags": [
+   "masjid",
+   "family"
+  ],
+  "source": "seed",
+  "example_en": "Happy Hari Raya — forgive me for any wrongs."
+ },
+ {
+  "baku": "nama",
+  "pos": "noun",
+  "gloss_en": "name",
+  "example_baku": "Nama saya Ante.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "My name is Ante."
+ },
+ {
+  "baku": "alamat",
+  "pos": "noun",
+  "gloss_en": "address",
+  "example_baku": "Alamat rumah awak apa?",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "What is your home address?"
+ },
+ {
+  "baku": "ubat",
+  "pos": "noun",
+  "gloss_en": "medicine",
+  "example_baku": "Ambil ubat selepas makan.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Take the medicine after eating."
+ },
+ {
+  "baku": "payung",
+  "pos": "noun",
+  "gloss_en": "umbrella",
+  "example_baku": "Bawa payung hari ini.",
+  "tags": [
+   "survival",
+   "weather"
+  ],
+  "source": "seed",
+  "example_en": "Bring an umbrella today."
+ },
+ {
+  "baku": "gambar",
+  "pos": "noun",
+  "gloss_en": "picture / photo",
+  "example_baku": "Boleh ambil gambar di sini?",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Can I take a photo here?"
+ },
+ {
+  "baku": "waktu subuh",
+  "pos": "phrase",
+  "gloss_en": "dawn prayer time",
+  "arabic_cognate": "صبح",
+  "example_baku": "Kami bangun waktu subuh.",
+  "tags": [
+   "masjid",
+   "time"
+  ],
+  "source": "seed",
+  "example_en": "We wake up at dawn."
+ },
+ {
+  "baku": "subuh",
+  "pos": "noun",
+  "gloss_en": "dawn prayer",
+  "arabic_cognate": "صبح",
+  "example_baku": "Solat subuh di rumah.",
+  "tags": [
+   "masjid",
+   "time"
+  ],
+  "source": "seed",
+  "example_en": "I pray subuh at home."
+ },
+ {
+  "baku": "zohor",
+  "pos": "noun",
+  "gloss_en": "midday prayer",
+  "arabic_cognate": "ظهر",
+  "example_baku": "Jumpa selepas zohor.",
+  "tags": [
+   "masjid",
+   "time"
+  ],
+  "source": "seed",
+  "example_en": "See you after zohor."
+ },
+ {
+  "baku": "asar",
+  "pos": "noun",
+  "gloss_en": "afternoon prayer",
+  "arabic_cognate": "عصر",
+  "example_baku": "Waktu asar sudah masuk.",
+  "tags": [
+   "masjid",
+   "time"
+  ],
+  "source": "seed",
+  "example_en": "Asar time has come in."
+ },
+ {
+  "baku": "maghrib",
+  "pos": "noun",
+  "gloss_en": "sunset prayer",
+  "arabic_cognate": "مغرب",
+  "example_baku": "Kami berbuka waktu maghrib.",
+  "tags": [
+   "masjid",
+   "time"
+  ],
+  "source": "seed",
+  "example_en": "We break fast at maghrib."
+ },
+ {
+  "baku": "isyak",
+  "pos": "noun",
+  "gloss_en": "night prayer",
+  "arabic_cognate": "عشاء",
+  "example_baku": "Selepas isyak kami pulang.",
+  "tags": [
+   "masjid",
+   "time"
+  ],
+  "source": "seed",
+  "example_en": "After isyak we go home."
+ },
+ {
+  "baku": "Jumaat",
+  "pos": "noun",
+  "gloss_en": "Friday",
+  "arabic_cognate": "جمعة",
+  "example_baku": "Solat Jumaat pukul satu.",
+  "tags": [
+   "masjid",
+   "time"
+  ],
+  "source": "seed",
+  "example_en": "Friday prayers are at one."
+ },
+ {
+  "baku": "masjid",
+  "pos": "noun",
+  "gloss_en": "mosque",
+  "arabic_cognate": "مسجد",
+  "example_baku": "Masjid itu dekat rumah kami.",
+  "tags": [
+   "masjid"
+  ],
+  "source": "seed",
+  "example_en": "That mosque is near our house."
+ },
+ {
+  "baku": "solat",
+  "pos": "noun",
+  "gloss_en": "ritual prayer",
+  "arabic_cognate": "صلاة",
+  "example_baku": "Sudah solat asar?",
+  "example_colloq": "Dah solat asar?",
+  "tags": [
+   "masjid"
+  ],
+  "source": "seed",
+  "example_en": "Have you prayed asar?"
+ },
+ {
+  "baku": "wuduk",
+  "pos": "noun",
+  "gloss_en": "ablution",
+  "arabic_cognate": "وضوء",
+  "example_baku": "Ambil wuduk dulu.",
+  "tags": [
+   "masjid"
+  ],
+  "source": "seed",
+  "example_en": "Take wudu first."
+ },
+ {
+  "baku": "imam",
+  "pos": "noun",
+  "gloss_en": "imam / prayer leader",
+  "arabic_cognate": "إمام",
+  "example_baku": "Imam masjid ini masih muda.",
+  "tags": [
+   "masjid"
+  ],
+  "source": "seed",
+  "example_en": "The imam of this mosque is still young."
+ },
+ {
+  "baku": "jemaah",
+  "pos": "noun",
+  "gloss_en": "congregation",
+  "arabic_cognate": "جماعة",
+  "example_baku": "Jemaah subuh ramai hari ini.",
+  "tags": [
+   "masjid"
+  ],
+  "source": "seed",
+  "example_en": "The subuh congregation is big today."
+ },
+ {
+  "baku": "azan",
+  "pos": "noun",
+  "gloss_en": "call to prayer",
+  "arabic_cognate": "أذان",
+  "example_baku": "Saya dengar azan dari rumah.",
+  "tags": [
+   "masjid"
+  ],
+  "source": "seed",
+  "example_en": "I can hear the azan from the house."
+ },
+ {
+  "baku": "kiblat",
+  "pos": "noun",
+  "gloss_en": "direction of prayer",
+  "arabic_cognate": "قبلة",
+  "example_baku": "Kiblat di sebelah sana.",
+  "tags": [
+   "masjid"
+  ],
+  "source": "seed",
+  "example_en": "The qibla is that way."
+ },
+ {
+  "baku": "ilmu",
+  "pos": "noun",
+  "gloss_en": "knowledge",
+  "arabic_cognate": "علم",
+  "example_baku": "Menuntut ilmu itu wajib.",
+  "tags": [
+   "masjid",
+   "school"
+  ],
+  "source": "seed",
+  "example_en": "Seeking knowledge is obligatory."
+ },
+ {
+  "baku": "dunia",
+  "pos": "noun",
+  "gloss_en": "world",
+  "arabic_cognate": "دنيا",
+  "example_baku": "Dunia ini luas.",
+  "tags": [
+   "masjid"
+  ],
+  "source": "seed",
+  "example_en": "This world is vast."
+ },
+ {
+  "baku": "sabar",
+  "pos": "adj",
+  "gloss_en": "patient / patience",
+  "arabic_cognate": "صبر",
+  "example_baku": "Sabar, bas akan sampai.",
+  "tags": [
+   "survival",
+   "masjid"
+  ],
+  "source": "seed",
+  "example_en": "Be patient — the bus will come."
+ },
+ {
+  "baku": "kitab",
+  "pos": "noun",
+  "gloss_en": "book (religious)",
+  "arabic_cognate": "كتاب",
+  "example_baku": "Dia membaca kitab selepas maghrib.",
+  "tags": [
+   "masjid"
+  ],
+  "source": "seed",
+  "example_en": "He reads the kitab after maghrib."
+ },
+ {
+  "baku": "masyarakat",
+  "pos": "noun",
+  "gloss_en": "community / society",
+  "arabic_cognate": "مشاركة",
+  "example_baku": "Masyarakat di sini ramah.",
+  "tags": [
+   "masjid",
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "The community here is friendly."
+ },
+ {
+  "baku": "syukur",
+  "pos": "noun",
+  "gloss_en": "gratitude / thankful",
+  "arabic_cognate": "شكر",
+  "example_baku": "Syukur, semuanya selamat.",
+  "tags": [
+   "masjid"
+  ],
+  "source": "seed",
+  "example_en": "Thank God, everyone is safe."
+ },
+ {
+  "baku": "doa",
+  "pos": "noun",
+  "gloss_en": "prayer / supplication",
+  "arabic_cognate": "دعاء",
+  "example_baku": "Minta doa daripada ibu.",
+  "tags": [
+   "masjid"
+  ],
+  "source": "seed",
+  "example_en": "Ask for your mother's prayers."
+ },
+ {
+  "baku": "iman",
+  "pos": "noun",
+  "gloss_en": "faith",
+  "arabic_cognate": "إيمان",
+  "example_baku": "Iman itu penting.",
+  "tags": [
+   "masjid"
+  ],
+  "source": "seed",
+  "example_en": "Faith is important."
+ },
+ {
+  "baku": "wajib",
+  "pos": "adj",
+  "gloss_en": "obligatory",
+  "arabic_cognate": "واجب",
+  "example_baku": "Solat lima waktu itu wajib.",
+  "tags": [
+   "masjid"
+  ],
+  "source": "seed",
+  "example_en": "The five daily prayers are obligatory."
+ },
+ {
+  "baku": "halal",
+  "pos": "adj",
+  "gloss_en": "halal / permissible",
+  "arabic_cognate": "حلال",
+  "example_baku": "Kedai ini halal.",
+  "tags": [
+   "masjid",
+   "food"
+  ],
+  "source": "seed",
+  "example_en": "This shop is halal."
+ },
+ {
+  "baku": "haram",
+  "pos": "adj",
+  "gloss_en": "forbidden",
+  "arabic_cognate": "حرام",
+  "example_baku": "Itu haram, jangan ambil.",
+  "tags": [
+   "masjid"
+  ],
+  "source": "seed",
+  "example_en": "That is haram — don't take it."
+ },
+ {
+  "baku": "zakat",
+  "pos": "noun",
+  "gloss_en": "alms / zakat",
+  "arabic_cognate": "زكاة",
+  "example_baku": "Bayar zakat sebelum hari raya.",
+  "tags": [
+   "masjid"
+  ],
+  "source": "seed",
+  "example_en": "Pay zakat before Hari Raya."
+ },
+ {
+  "baku": "sejarah",
+  "pos": "noun",
+  "gloss_en": "history",
+  "arabic_cognate": "شجرة",
+  "example_baku": "Georgetown penuh dengan sejarah.",
+  "tags": [
+   "school"
+  ],
+  "source": "seed",
+  "example_en": "Georgetown is full of history."
+ },
+ {
+  "baku": "kerusi",
+  "pos": "noun",
+  "gloss_en": "chair",
+  "arabic_cognate": "كرسي",
+  "example_baku": "Kerusi itu untuk nenek.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "That chair is for Grandma."
+ },
+ {
+  "baku": "niat",
+  "pos": "noun",
+  "gloss_en": "intention",
+  "arabic_cognate": "نية",
+  "example_baku": "Niat yang baik itu penting.",
+  "tags": [
+   "masjid"
+  ],
+  "source": "seed",
+  "example_en": "A good intention matters."
+ },
+ {
+  "baku": "rezeki",
+  "pos": "noun",
+  "gloss_en": "sustenance / provision",
+  "arabic_cognate": "رزق",
+  "example_baku": "Rezeki hari ini cukup.",
+  "tags": [
+   "masjid"
+  ],
+  "source": "seed",
+  "example_en": "Today's provision is enough."
+ },
+ {
+  "baku": "sedekah",
+  "pos": "noun",
+  "gloss_en": "charity / alms",
+  "arabic_cognate": "صدقة",
+  "example_baku": "Beri sedekah di masjid.",
+  "tags": [
+   "masjid"
+  ],
+  "source": "seed",
+  "example_en": "Give alms at the mosque."
+ },
+ {
+  "baku": "salam",
+  "pos": "noun",
+  "gloss_en": "greeting of peace",
+  "arabic_cognate": "سلام",
+  "example_baku": "Kirim salam kepada keluarga.",
+  "tags": [
+   "masjid",
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Send my regards to the family."
+ },
+ {
+  "baku": "akal",
+  "pos": "noun",
+  "gloss_en": "mind / reason",
+  "arabic_cognate": "عقل",
+  "example_baku": "Fikir dengan akal.",
+  "tags": [
+   "masjid"
+  ],
+  "source": "seed",
+  "example_en": "Think it through with reason."
+ },
+ {
+  "baku": "badan",
+  "pos": "noun",
+  "gloss_en": "body",
+  "arabic_cognate": "بدن",
+  "example_baku": "Badan saya penat.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "My body is tired."
+ },
+ {
+  "baku": "umur",
+  "pos": "noun",
+  "gloss_en": "age",
+  "arabic_cognate": "عمر",
+  "example_baku": "Umur anak awak berapa?",
+  "tags": [
+   "family",
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "How old is your child?"
+ },
+ {
+  "baku": "kamus",
+  "pos": "noun",
+  "gloss_en": "dictionary",
+  "arabic_cognate": "قاموس",
+  "example_baku": "Cari dalam kamus.",
+  "tags": [
+   "school"
+  ],
+  "source": "seed",
+  "example_en": "Look it up in the dictionary."
+ },
+ {
+  "baku": "kertas",
+  "pos": "noun",
+  "gloss_en": "paper",
+  "arabic_cognate": "قرطاس",
+  "example_baku": "Tulis di atas kertas ini.",
+  "tags": [
+   "school"
+  ],
+  "source": "seed",
+  "example_en": "Write on this paper."
+ },
+ {
+  "baku": "soalan",
+  "pos": "noun",
+  "gloss_en": "question",
+  "arabic_cognate": "سؤال",
+  "example_baku": "Ada soalan lagi?",
+  "tags": [
+   "school"
+  ],
+  "source": "seed",
+  "example_en": "Any more questions?"
+ },
+ {
+  "baku": "nasihat",
+  "pos": "noun",
+  "gloss_en": "advice",
+  "arabic_cognate": "نصيحة",
+  "example_baku": "Terima kasih atas nasihat itu.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Thank you for the advice."
+ },
+ {
+  "baku": "ikhlas",
+  "pos": "adj",
+  "gloss_en": "sincere",
+  "arabic_cognate": "إخلاص",
+  "example_baku": "Dia tolong dengan ikhlas.",
+  "tags": [
+   "masjid"
+  ],
+  "source": "seed",
+  "example_en": "He helped sincerely."
+ },
+ {
+  "baku": "yakin",
+  "pos": "adj",
+  "gloss_en": "sure / confident",
+  "arabic_cognate": "يقين",
+  "example_baku": "Saya yakin jalan ini betul.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "I'm sure this is the right way."
+ },
+ {
+  "baku": "zaman",
+  "pos": "noun",
+  "gloss_en": "era / age",
+  "arabic_cognate": "زمان",
+  "example_baku": "Zaman dulu lain.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "The old days were different."
+ },
+ {
+  "baku": "musim",
+  "pos": "noun",
+  "gloss_en": "season",
+  "arabic_cognate": "موسم",
+  "example_baku": "Musim hujan sudah mula.",
+  "tags": [
+   "weather"
+  ],
+  "source": "seed",
+  "example_en": "The rainy season has begun."
+ },
+ {
+  "baku": "sabun",
+  "pos": "noun",
+  "gloss_en": "soap",
+  "arabic_cognate": "صابون",
+  "example_baku": "Beli sabun di kedai.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Buy soap at the shop."
+ },
+ {
+  "baku": "adat",
+  "pos": "noun",
+  "gloss_en": "custom / tradition",
+  "arabic_cognate": "عادة",
+  "example_baku": "Adat di sini lain sedikit.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "The customs here are a little different."
+ },
+ {
+  "baku": "alam",
+  "pos": "noun",
+  "gloss_en": "nature / the world",
+  "arabic_cognate": "عالم",
+  "example_baku": "Alam Pulau Pinang cantik.",
+  "tags": [
+   "weather"
+  ],
+  "source": "seed",
+  "example_en": "Penang's nature is beautiful."
+ },
+ {
+  "baku": "asal",
+  "pos": "noun",
+  "gloss_en": "origin",
+  "arabic_cognate": "أصل",
+  "example_baku": "Asal awak dari mana?",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Where are you from?"
+ },
+ {
+  "baku": "berkat",
+  "pos": "noun",
+  "gloss_en": "blessing",
+  "arabic_cognate": "بركة",
+  "example_baku": "Doa membawa berkat.",
+  "tags": [
+   "masjid"
+  ],
+  "source": "seed",
+  "example_en": "Prayer brings blessing."
+ },
+ {
+  "baku": "hormat",
+  "pos": "noun",
+  "gloss_en": "respect",
+  "arabic_cognate": "حرمة",
+  "example_baku": "Hormat orang tua.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Respect your elders."
+ },
+ {
+  "baku": "izin",
+  "pos": "noun",
+  "gloss_en": "permission",
+  "arabic_cognate": "إذن",
+  "example_baku": "Minta izin keluar dulu.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Excuse me — I need to step out first."
+ },
+ {
+  "baku": "kisah",
+  "pos": "noun",
+  "gloss_en": "story / tale",
+  "arabic_cognate": "قصة",
+  "example_baku": "Nenek suka cerita kisah lama.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Grandma loves telling old stories."
+ },
+ {
+  "baku": "makna",
+  "pos": "noun",
+  "gloss_en": "meaning",
+  "arabic_cognate": "معنى",
+  "example_baku": "Apa makna kata ini?",
+  "tags": [
+   "school"
+  ],
+  "source": "seed",
+  "example_en": "What does this word mean?"
+ },
+ {
+  "baku": "hadiah",
+  "pos": "noun",
+  "gloss_en": "gift / present",
+  "arabic_cognate": "هدية",
+  "example_baku": "Hadiah kecil untuk cikgu.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "A small gift for the teacher."
+ },
+ {
+  "baku": "hadir",
+  "pos": "verb",
+  "gloss_en": "to attend / present",
+  "arabic_cognate": "حاضر",
+  "example_baku": "Ramai yang hadir malam ini.",
+  "tags": [
+   "masjid"
+  ],
+  "source": "seed",
+  "example_en": "Many attended tonight."
+ },
+ {
+  "baku": "sebelum",
+  "pos": "preposition",
+  "gloss_en": "before",
+  "example_baku": "Mandi sebelum solat.",
+  "tags": [
+   "time"
+  ],
+  "source": "seed",
+  "example_en": "Bathe before praying."
+ },
+ {
+  "baku": "selepas",
+  "colloquial": "lepas",
+  "pos": "preposition",
+  "gloss_en": "after",
+  "example_baku": "Selepas makan, kita pergi.",
+  "example_colloq": "Lepas makan, kita gerak.",
+  "tags": [
+   "time"
+  ],
+  "source": "seed",
+  "example_en": "After eating, we'll go."
+ },
+ {
+  "baku": "setiap",
+  "pos": "adv",
+  "gloss_en": "every",
+  "example_baku": "Setiap pagi saya minum kopi.",
+  "tags": [
+   "time"
+  ],
+  "source": "seed",
+  "example_en": "Every morning I drink coffee."
+ },
+ {
+  "baku": "pindah",
+  "pos": "verb",
+  "gloss_en": "to move (house)",
+  "example_baku": "Kami pindah bulan depan.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "We move next month."
+ },
+ {
+  "baku": "tiada",
+  "colloquial": "takde",
+  "pos": "verb",
+  "gloss_en": "there is not / to not have",
+  "example_baku": "Tiada masalah.",
+  "example_colloq": "Takde masalah.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "No problem."
+ },
+ {
+  "baku": "masalah",
+  "pos": "noun",
+  "gloss_en": "problem",
+  "arabic_cognate": "مسألة",
+  "example_baku": "Ada masalah dengan kereta.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "There's a problem with the car."
+ },
+ {
+  "baku": "lain",
+  "pos": "adj",
+  "gloss_en": "other / different",
+  "example_baku": "Lain kali datang lagi.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Come again another time."
+ },
+ {
+  "baku": "sama",
+  "pos": "adj",
+  "gloss_en": "same / together",
+  "example_baku": "Kita sama-sama belajar.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "We're learning together."
+ },
+ {
+  "baku": "lebih",
+  "pos": "adv",
+  "gloss_en": "more (comparative)",
+  "example_baku": "Yang ini lebih murah.",
+  "tags": [
+   "market",
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "This one is cheaper."
+ },
+ {
+  "baku": "paling",
+  "pos": "adv",
+  "gloss_en": "the most",
+  "example_baku": "Ini yang paling sedap.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "This is the tastiest."
+ },
+ {
+  "baku": "terlalu",
+  "pos": "adv",
+  "gloss_en": "too (excessively)",
+  "example_baku": "Terlalu mahal untuk saya.",
+  "tags": [
+   "market"
+  ],
+  "source": "seed",
+  "example_en": "Too expensive for me."
+ },
+ {
+  "baku": "boleh tahan",
+  "pos": "phrase",
+  "gloss_en": "not bad / pretty good",
+  "example_baku": "Sedap? Boleh tahan.",
+  "tags": [
+   "survival",
+   "food"
+  ],
+  "source": "seed",
+  "example_en": "Tasty? Not bad at all."
+ },
+ {
+  "baku": "perlahan",
+  "colloquial": "slow",
+  "pos": "adj",
+  "gloss_en": "slow / softly",
+  "example_baku": "Cakap perlahan sedikit.",
+  "example_colloq": "Cakap slow sikit.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Speak a little more slowly."
+ },
+ {
+  "baku": "sibuk",
+  "pos": "adj",
+  "gloss_en": "busy",
+  "example_baku": "Jalan ini sibuk waktu pagi.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "This road is busy in the morning."
+ },
+ {
+  "baku": "ramah",
+  "pos": "adj",
+  "gloss_en": "friendly",
+  "example_baku": "Jiran kami ramah.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Our neighbours are friendly."
+ },
+ {
+  "baku": "segar",
+  "pos": "adj",
+  "gloss_en": "fresh",
+  "example_baku": "Sayur di pasar lebih segar.",
+  "tags": [
+   "market",
+   "food"
+  ],
+  "source": "seed",
+  "example_en": "The vegetables at the market are fresher."
+ },
+ {
+  "baku": "berat",
+  "pos": "adj",
+  "gloss_en": "heavy",
+  "example_baku": "Beg ini berat.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "This bag is heavy."
+ },
+ {
+  "baku": "ringan",
+  "pos": "adj",
+  "gloss_en": "light (weight)",
+  "example_baku": "Yang ini lebih ringan.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "This one is lighter."
+ },
+ {
+  "baku": "perut",
+  "pos": "noun",
+  "gloss_en": "stomach",
+  "example_baku": "Perut saya lapar.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "I'm hungry."
+ },
+ {
+  "baku": "tangan",
+  "pos": "noun",
+  "gloss_en": "hand",
+  "example_baku": "Basuh tangan sebelum makan.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Wash your hands before eating."
+ },
+ {
+  "baku": "kaki",
+  "pos": "noun",
+  "gloss_en": "foot / leg",
+  "example_baku": "Kaki saya sakit.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "My foot hurts."
+ },
+ {
+  "baku": "mata",
+  "pos": "noun",
+  "gloss_en": "eye",
+  "example_baku": "Mata anak itu besar.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "That child has big eyes."
+ },
+ {
+  "baku": "kepala",
+  "pos": "noun",
+  "gloss_en": "head",
+  "example_baku": "Kepala saya sakit sedikit.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "I have a slight headache."
+ },
+ {
+  "baku": "hati",
+  "pos": "noun",
+  "gloss_en": "heart (feelings) / liver",
+  "example_baku": "Hati-hati di jalan.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Be careful on the road."
+ },
+ {
+  "baku": "basuh",
+  "pos": "verb",
+  "gloss_en": "to wash",
+  "example_baku": "Basuh pinggan selepas makan.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Wash the dishes after eating."
+ },
+ {
+  "baku": "pinggan",
+  "pos": "noun",
+  "gloss_en": "plate",
+  "example_baku": "Pinggan di atas meja.",
+  "tags": [
+   "food",
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "The plates are on the table."
+ },
+ {
+  "baku": "cawan",
+  "pos": "noun",
+  "gloss_en": "cup",
+  "example_baku": "Satu cawan kopi lagi.",
+  "tags": [
+   "food"
+  ],
+  "source": "seed",
+  "example_en": "One more cup of coffee."
+ },
+ {
+  "baku": "sudu",
+  "pos": "noun",
+  "gloss_en": "spoon",
+  "example_baku": "Minta sudu satu.",
+  "tags": [
+   "food"
+  ],
+  "source": "seed",
+  "example_en": "One spoon, please."
+ },
+ {
+  "baku": "garpu",
+  "pos": "noun",
+  "gloss_en": "fork",
+  "example_baku": "Garpu dan sudu di sana.",
+  "tags": [
+   "food"
+  ],
+  "source": "seed",
+  "example_en": "Forks and spoons are over there."
+ },
+ {
+  "baku": "buah-buahan",
+  "pos": "noun",
+  "gloss_en": "fruits (various)",
+  "example_baku": "Buah-buahan tempatan murah.",
+  "tags": [
+   "food",
+   "market"
+  ],
+  "source": "seed",
+  "example_en": "Local fruit is cheap."
+ },
+ {
+  "baku": "kelapa",
+  "pos": "noun",
+  "gloss_en": "coconut",
+  "example_baku": "Air kelapa sejuk, sedap.",
+  "tags": [
+   "food"
+  ],
+  "source": "seed",
+  "example_en": "Cold coconut water — delicious."
+ },
+ {
+  "baku": "pisang",
+  "pos": "noun",
+  "gloss_en": "banana",
+  "example_baku": "Pisang goreng panas!",
+  "tags": [
+   "food",
+   "market"
+  ],
+  "source": "seed",
+  "example_en": "Hot banana fritters!"
+ },
+ {
+  "baku": "mangga",
+  "pos": "noun",
+  "gloss_en": "mango",
+  "example_baku": "Mangga ini manis sangat.",
+  "tags": [
+   "food",
+   "market"
+  ],
+  "source": "seed",
+  "example_en": "This mango is so sweet."
+ },
+ {
+  "baku": "limau",
+  "pos": "noun",
+  "gloss_en": "lime / citrus",
+  "example_baku": "Teh o limau ais satu.",
+  "tags": [
+   "food"
+  ],
+  "source": "seed",
+  "example_en": "One iced lime tea, please."
+ },
+ {
+  "baku": "udang",
+  "pos": "noun",
+  "gloss_en": "prawn",
+  "example_baku": "Mi udang Pulau Pinang terkenal.",
+  "tags": [
+   "food"
+  ],
+  "source": "seed",
+  "example_en": "Penang prawn noodles are famous."
+ },
+ {
+  "baku": "sotong",
+  "pos": "noun",
+  "gloss_en": "squid",
+  "example_baku": "Sotong goreng untuk kami.",
+  "tags": [
+   "food"
+  ],
+  "source": "seed",
+  "example_en": "Fried squid for us."
+ },
+ {
+  "baku": "terkenal",
+  "pos": "adj",
+  "gloss_en": "famous",
+  "example_baku": "Kedai ini terkenal dengan laksa.",
+  "tags": [
+   "food",
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "This shop is famous for its laksa."
+ },
+ {
+  "baku": "tolong bungkus",
+  "pos": "phrase",
+  "gloss_en": "please wrap it (takeaway)",
+  "example_baku": "Tolong bungkus dua nasi goreng.",
+  "tags": [
+   "food"
+  ],
+  "source": "seed",
+  "example_en": "Please wrap up two fried rice to go."
+ },
+ {
+  "baku": "berapa lama",
+  "pos": "phrase",
+  "gloss_en": "how long (time)",
+  "example_baku": "Berapa lama ke lapangan terbang?",
+  "tags": [
+   "transport",
+   "time"
+  ],
+  "source": "seed",
+  "example_en": "How long to the airport?"
+ },
+ {
+  "baku": "lapangan terbang",
+  "colloquial": "airport",
+  "pos": "noun",
+  "gloss_en": "airport",
+  "example_baku": "Kami ke lapangan terbang esok.",
+  "example_colloq": "Kitorang pi airport esok.",
+  "tags": [
+   "transport"
+  ],
+  "source": "seed",
+  "example_en": "We're going to the airport tomorrow.",
+  "example_colloq_kind": "utara"
+ },
+ {
+  "baku": "hati-hati",
+  "pos": "phrase",
+  "gloss_en": "be careful",
+  "example_baku": "Hati-hati bawa kereta.",
+  "tags": [
+   "survival",
+   "transport"
+  ],
+  "source": "seed",
+  "example_en": "Drive carefully."
+ },
+ {
+  "baku": "insya-Allah",
+  "pos": "phrase",
+  "gloss_en": "God willing",
+  "arabic_cognate": "إن شاء الله",
+  "example_baku": "Jumpa esok, insya-Allah.",
+  "tags": [
+   "masjid",
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "See you tomorrow, God willing."
+ },
+ {
+  "baku": "alhamdulillah",
+  "pos": "phrase",
+  "gloss_en": "praise be to God",
+  "arabic_cognate": "الحمد لله",
+  "example_baku": "Alhamdulillah, khabar baik.",
+  "tags": [
+   "masjid",
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Praise God, I'm well."
+ },
+ {
+  "baku": "bismillah",
+  "pos": "phrase",
+  "gloss_en": "in the name of God",
+  "arabic_cognate": "بسم الله",
+  "example_baku": "Bismillah, mari kita makan.",
+  "tags": [
+   "masjid"
+  ],
+  "source": "seed",
+  "example_en": "Bismillah — let's eat."
+ },
+ {
+  "baku": "puasa",
+  "pos": "noun",
+  "gloss_en": "fasting",
+  "example_baku": "Bulan puasa mula minggu depan.",
+  "tags": [
+   "masjid",
+   "time"
+  ],
+  "source": "seed",
+  "example_en": "The fasting month starts next week."
+ },
+ {
+  "baku": "berbuka",
+  "pos": "verb",
+  "gloss_en": "to break fast",
+  "example_baku": "Kami berbuka di masjid.",
+  "tags": [
+   "masjid",
+   "food"
+  ],
+  "source": "seed",
+  "example_en": "We break fast at the mosque."
+ },
+ {
+  "baku": "sahur",
+  "pos": "noun",
+  "gloss_en": "pre-dawn meal",
+  "arabic_cognate": "سحور",
+  "example_baku": "Bangun untuk sahur pukul lima.",
+  "tags": [
+   "masjid",
+   "food"
+  ],
+  "source": "seed",
+  "example_en": "Wake up for sahur at five."
+ },
+ {
+  "baku": "tolong sikit",
+  "colloquial": "tolong sikit",
+  "pos": "phrase",
+  "gloss_en": "a little help please",
+  "example_baku": "Tolong sedikit, beg ini berat.",
+  "example_colloq": "Tolong sikit, beg ni berat.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Help me a little — this bag is heavy."
+ },
+ {
+  "baku": "jom lah",
+  "colloquial": "jom lah",
+  "pos": "phrase",
+  "gloss_en": "come on then / let us go",
+  "example_baku": "Mari kita pergi sekarang.",
+  "example_colloq": "Jom lah, gerak sekarang.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Come on, let's go now."
+ },
+ {
+  "baku": "sekali",
+  "pos": "adv",
+  "gloss_en": "once / altogether",
+  "example_baku": "Semua sekali sepuluh ringgit.",
+  "tags": [
+   "market",
+   "numbers"
+  ],
+  "source": "seed",
+  "example_en": "Ten ringgit altogether."
+ },
+ {
+  "baku": "seorang",
+  "pos": "noun",
+  "gloss_en": "one person / alone",
+  "example_baku": "Dia datang seorang diri.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "He came alone."
+ },
+ {
+  "baku": "bahasa",
+  "pos": "noun",
+  "gloss_en": "language",
+  "example_baku": "Saya belajar bahasa Melayu.",
+  "tags": [
+   "school",
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "I'm learning Malay."
+ },
+ {
+  "baku": "kata",
+  "pos": "noun",
+  "gloss_en": "word / to say",
+  "example_baku": "Kata baru setiap hari.",
+  "tags": [
+   "school"
+  ],
+  "source": "seed",
+  "example_en": "New words every day."
+ },
+ {
+  "baku": "maksud",
+  "pos": "noun",
+  "gloss_en": "meaning / intent",
+  "arabic_cognate": "مقصود",
+  "example_baku": "Apa maksud awak?",
+  "tags": [
+   "survival",
+   "school"
+  ],
+  "source": "seed",
+  "example_en": "What do you mean?"
+ },
+ {
+  "baku": "cuba",
+  "pos": "verb",
+  "gloss_en": "to try",
+  "example_baku": "Cuba lagi sekali.",
+  "tags": [
+   "survival"
+  ],
+  "source": "seed",
+  "example_en": "Try once more."
+ },
+ {
+  "baku": "siap",
+  "pos": "adj",
+  "gloss_en": "ready / done",
+  "example_baku": "Makanan sudah siap.",
+  "example_colloq": "Makanan dah siap.",
+  "tags": [
+   "survival",
+   "food"
+  ],
+  "source": "seed",
+  "example_en": "The food is ready."
+ }
+]

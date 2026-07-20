@@ -1,0 +1,91 @@
+import { useEffect, useState } from 'react'
+import { HashRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom'
+import { useLiveQuery } from 'dexie-react-hooks'
+import { db, ensureSeeded, getSettings, migrateSeed } from './db/db'
+import { NavBar } from './components/NavBar'
+import { Onboarding } from './screens/Onboarding'
+import { Today } from './screens/Today'
+import { Review } from './screens/Review'
+import { Read } from './screens/Read'
+import { Speak } from './screens/Speak'
+import { Recall } from './screens/Recall'
+import { Practice } from './screens/Practice'
+import { Words } from './screens/Words'
+import { Progress } from './screens/Progress'
+import { Settings } from './screens/Settings'
+
+function Shell({ needsOnboarding }: { needsOnboarding: boolean }) {
+  const location = useLocation()
+  const inSession = ['/review', '/read', '/speak', '/recall', '/practice', '/onboarding'].some((p) =>
+    location.pathname.startsWith(p),
+  )
+  if (needsOnboarding && location.pathname !== '/onboarding') {
+    return <Navigate to="/onboarding" replace />
+  }
+  // Allow deliberate re-runs from Settings (?redo=1); otherwise bounce home.
+  if (
+    !needsOnboarding &&
+    location.pathname === '/onboarding' &&
+    !location.search.includes('redo')
+  ) {
+    return <Navigate to="/" replace />
+  }
+  return (
+    <>
+      <Routes>
+        <Route path="/onboarding" element={<Onboarding />} />
+        <Route path="/" element={<Today />} />
+        <Route path="/review" element={<Review />} />
+        <Route path="/read" element={<Read />} />
+        <Route path="/speak" element={<Speak />} />
+        <Route path="/recall" element={<Recall />} />
+        <Route path="/practice" element={<Practice />} />
+        <Route path="/words" element={<Words />} />
+        <Route path="/progress" element={<Progress />} />
+        <Route path="/settings" element={<Settings />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+      {!inSession && <NavBar />}
+    </>
+  )
+}
+
+export default function App() {
+  const [ready, setReady] = useState(false)
+  // Live so finishing onboarding immediately unblocks the router.
+  const settings = useLiveQuery(() => db.settings.get('settings'), [], undefined)
+
+  useEffect(() => {
+    ;(async () => {
+      // IndexedDB is the only store; ask the browser not to evict it. Without
+      // this, an inactive PWA can have its data cleared under storage pressure
+      // (notably iOS Safari's ~7-day cap) — months of FSRS history gone. Best
+      // effort: the prompt-less API silently no-ops where unsupported.
+      try {
+        await navigator.storage?.persist?.()
+      } catch {
+        /* storage API unavailable — nothing to do */
+      }
+      await ensureSeeded()
+      await getSettings() // materialise the settings row
+      await migrateSeed() // patch seed rows in place on upgrades (cards untouched)
+      setReady(true)
+    })()
+  }, [])
+
+  // First launch seeds 425 words into IndexedDB — show the spinner, not a
+  // blank plaster page (UX-REVIEW-001 H5).
+  if (!ready || !settings) {
+    return (
+      <div className="min-h-dvh grid place-items-center">
+        <span className="spinner" />
+      </div>
+    )
+  }
+
+  return (
+    <HashRouter>
+      <Shell needsOnboarding={!settings.onboarded} />
+    </HashRouter>
+  )
+}
