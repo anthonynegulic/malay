@@ -9,6 +9,9 @@ export function Settings() {
   const navigate = useNavigate()
   const [s, setS] = useState<SettingsT | null>(null)
   const [msg, setMsg] = useState('')
+  // Import is destructive (replaces the whole DB) — hold the chosen file and
+  // ask first instead of importing straight off the picker.
+  const [pendingImport, setPendingImport] = useState<File | null>(null)
   const fileRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -20,14 +23,18 @@ export function Settings() {
     setS(await getSettings())
   }
 
-  async function onImport(f: File | undefined) {
-    if (!f) return
+  async function confirmImport() {
+    if (!pendingImport) return
     try {
-      await importBackup(f)
-      setMsg('Import selesai (all data replaced).')
+      // Safety net: current data downloads as a backup before it is replaced.
+      await exportBackup()
+      await importBackup(pendingImport)
+      setMsg('Import selesai (all data replaced — previous data saved as a download).')
       setS(await getSettings())
     } catch {
-      setMsg('Import failed — not a valid Bukit backup file.')
+      setMsg('Import failed — not a valid Bukit backup file. Your current data is unchanged.')
+    } finally {
+      setPendingImport(null)
     }
   }
 
@@ -153,8 +160,39 @@ export function Settings() {
             type="file"
             accept="application/json"
             hidden
-            onChange={(e) => onImport(e.target.files?.[0])}
+            onChange={(e) => {
+              setPendingImport(e.target.files?.[0] ?? null)
+              setMsg('')
+              e.target.value = '' // allow re-picking the same file
+            }}
           />
+          {pendingImport && (
+            <div className="fade-in mt-3 border-[1.5px] border-oxblood rounded-[4px] p-4">
+              <div className="font-medium text-oxblood">
+                Ganti semua data?
+                <span className="text-muted text-sm font-normal"> (replace everything?)</span>
+              </div>
+              <p className="text-muted text-sm mt-1.5">
+                Importing <span className="text-charcoal">{pendingImport.name}</span> deletes every
+                word, card and review record on this device. A backup of your current data
+                downloads first.
+              </p>
+              <div className="mt-3 flex gap-2">
+                <button
+                  onClick={confirmImport}
+                  className="px-4 py-2.5 rounded-[4px] border-[1.5px] border-oxblood text-oxblood text-sm font-medium"
+                >
+                  Ganti <span className="text-oxblood/70">(replace)</span>
+                </button>
+                <button
+                  onClick={() => setPendingImport(null)}
+                  className="px-4 py-2.5 rounded-[4px] border-[1.5px] border-charcoal text-charcoal text-sm"
+                >
+                  Batal <span className="text-muted">(cancel)</span>
+                </button>
+              </div>
+            </div>
+          )}
           {msg && <div className="text-sm text-muted mt-2">{msg}</div>}
         </div>
 

@@ -23,7 +23,6 @@ export function Review() {
   const [queue, setQueue] = useState<QueueItem[] | null>(null)
   const [flipped, setFlipped] = useState(false)
   const [graded, setGraded] = useState(0)
-  const [total, setTotal] = useState(0)
   const [tts, setTts] = useState(false)
   const startedAt = useRef(Date.now())
 
@@ -39,7 +38,6 @@ export function Review() {
         if (word) items.push({ card, word })
       }
       setQueue(items)
-      setTotal(items.length)
     })()
   }, [sikit])
 
@@ -109,6 +107,9 @@ export function Review() {
   }
 
   const { card, word } = current!
+  // Again/Hard requeues grow the session, so the denominator is live:
+  // cards graded so far + cards still waiting (never shows 11 / 10).
+  const total = graded + queue.length
 
   // ————— front: indigo full-bleed, headword alone —————
   if (!flipped) {
