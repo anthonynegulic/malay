@@ -119,6 +119,8 @@ export interface Settings {
   seedVersion?: number
   /** December-checkpoint self-test checklist marks (index-aligned with CHECKPOINT.checklist). */
   checkpointMarks?: boolean[]
+  /** Epoch ms of the last successful JSON export — powers the backup-age nudge. */
+  lastBackupAt?: number
 }
 
 export const DEFAULT_SETTINGS: Settings = {

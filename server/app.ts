@@ -162,10 +162,10 @@ function normaliseGenOut(raw: Record<string, unknown>): GenOut {
 
 const app = new Hono().basePath('/api')
 
-// Optional passphrase gate: no-op unless APP_PASSPHRASE is set. When set, the
-// client must send a matching x-bukit-pass header (see src/lib/api.ts).
-app.use('/generate', passGuard)
-app.use('/grade', passGuard)
+// ————— Abuse guards on the two model-calling routes (each request spends
+// Anthropic credits). Order: rate limit, then passphrase, then the handler. —————
+app.use('/generate', rateLimit, passGuard)
+app.use('/grade', rateLimit, passGuard)
 
 async function passGuard(c: import('hono').Context, next: () => Promise<void>) {
   const { passphrase } = config()
@@ -174,6 +174,39 @@ async function passGuard(c: import('hono').Context, next: () => Promise<void>) {
   }
   await next()
 }
+
+/**
+ * Per-IP fixed-window rate limit — a burst guard so a discovered/leaked
+ * endpoint can't drain the API budget in a loop. In-memory, so on Vercel it is
+ * per-warm-instance (best-effort, not a global quota); the real gate for a
+ * public deploy is APP_PASSPHRASE (see docs/DEPLOY.md). For this single-user
+ * app the limit sits far above any human pace.
+ */
+const RATE_MAX = Number(process.env.RATE_LIMIT_MAX || 30) // requests per window
+const RATE_WINDOW_MS = 60_000
+const hits = new Map<string, number[]>()
+
+async function rateLimit(c: import('hono').Context, next: () => Promise<void>) {
+  const ip =
+    c.req.header('x-forwarded-for')?.split(',')[0]?.trim() ||
+    c.req.header('x-real-ip') ||
+    'local'
+  const now = Date.now()
+  const recent = (hits.get(ip) ?? []).filter((t) => now - t < RATE_WINDOW_MS)
+  if (recent.length >= RATE_MAX) {
+    // Opportunistic sweep so the map can't grow unbounded across many IPs.
+    for (const [k, ts] of hits) if (ts.every((t) => now - t >= RATE_WINDOW_MS)) hits.delete(k)
+    return c.json({ error: 'rate_limited' }, 429)
+  }
+  recent.push(now)
+  hits.set(ip, recent)
+  await next()
+}
+
+/** Cap incoming list/string sizes so one request can't balloon the prompt (and cost). */
+const clampList = (v: unknown, max: number): string[] =>
+  Array.isArray(v) ? v.filter((x) => typeof x === 'string').slice(0, max) : []
+const clampStr = (v: unknown, max: number): string => String(v ?? '').slice(0, max)
 
 app.post('/generate', async (c) => {
   if (!config().apiKey) return c.json({ error: 'ANTHROPIC_API_KEY not configured' }, 500)
@@ -187,8 +220,10 @@ app.post('/generate', async (c) => {
     minOccurrences: Number(body.tier?.min_occurrences ?? 2),
     questionLanguage: String(body.tier?.question_language ?? 'malay'),
   }
-  const studied: string[] = Array.isArray(body.studied_words) ? body.studied_words : []
-  const newWords: string[] = Array.isArray(body.new_words) ? body.new_words : []
+  // Bounded: a beginner's studied set is small; these caps sit well above any
+  // real deck while stopping a crafted request from inflating the prompt.
+  const studied: string[] = clampList(body.studied_words, 2000)
+  const newWords: string[] = clampList(body.new_words, 20)
   const allowExtras = tier.containment < 1
 
   const payload = {
@@ -202,8 +237,8 @@ app.post('/generate', async (c) => {
     studied_words: studied,
     new_words: newWords,
     register: body.register === 'colloquial' ? 'colloquial' : 'baku',
-    topic: String(body.topic ?? 'pasar'),
-    user_context: String(body.user_context ?? ''),
+    topic: clampStr(body.topic || 'pasar', 120),
+    user_context: clampStr(body.user_context, 500),
   }
 
   const validate = (out: GenOut) =>
@@ -285,8 +320,8 @@ app.post('/grade', async (c) => {
   if (!config().apiKey) return c.json({ error: 'ANTHROPIC_API_KEY not configured' }, 500)
   const body = await c.req.json()
   const payload = {
-    task_prompt: String(body.prompt ?? ''),
-    learner_response: String(body.response ?? ''),
+    task_prompt: clampStr(body.prompt, 1000),
+    learner_response: clampStr(body.response, 2000),
   }
   try {
     const out = (await callAndParse(GRADE_SYSTEM, JSON.stringify(payload))) as Record<
@@ -303,7 +338,13 @@ app.post('/grade', async (c) => {
 
 app.get('/health', (c) => {
   const { model, apiKey, passphrase } = config()
-  return c.json({ ok: true, model, keyConfigured: Boolean(apiKey), gated: Boolean(passphrase) })
+  return c.json({
+    ok: true,
+    model,
+    keyConfigured: Boolean(apiKey),
+    gated: Boolean(passphrase),
+    rateLimit: { max: RATE_MAX, windowMs: RATE_WINDOW_MS },
+  })
 })
 
 export default app

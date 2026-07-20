@@ -2305,8 +2305,8 @@ function normaliseGenOut(raw2) {
   };
 }
 var app = new Hono2().basePath("/api");
-app.use("/generate", passGuard);
-app.use("/grade", passGuard);
+app.use("/generate", rateLimit, passGuard);
+app.use("/grade", rateLimit, passGuard);
 async function passGuard(c, next) {
   const { passphrase } = config();
   if (passphrase && c.req.header("x-bukit-pass") !== passphrase) {
@@ -2314,6 +2314,23 @@ async function passGuard(c, next) {
   }
   await next();
 }
+var RATE_MAX = Number(process.env.RATE_LIMIT_MAX || 30);
+var RATE_WINDOW_MS = 6e4;
+var hits = /* @__PURE__ */ new Map();
+async function rateLimit(c, next) {
+  const ip = c.req.header("x-forwarded-for")?.split(",")[0]?.trim() || c.req.header("x-real-ip") || "local";
+  const now = Date.now();
+  const recent = (hits.get(ip) ?? []).filter((t) => now - t < RATE_WINDOW_MS);
+  if (recent.length >= RATE_MAX) {
+    for (const [k, ts] of hits) if (ts.every((t) => now - t >= RATE_WINDOW_MS)) hits.delete(k);
+    return c.json({ error: "rate_limited" }, 429);
+  }
+  recent.push(now);
+  hits.set(ip, recent);
+  await next();
+}
+var clampList = (v, max) => Array.isArray(v) ? v.filter((x) => typeof x === "string").slice(0, max) : [];
+var clampStr = (v, max) => String(v ?? "").slice(0, max);
 app.post("/generate", async (c) => {
   if (!config().apiKey) return c.json({ error: "ANTHROPIC_API_KEY not configured" }, 500);
   const body = await c.req.json();
@@ -2325,8 +2342,8 @@ app.post("/generate", async (c) => {
     minOccurrences: Number(body.tier?.min_occurrences ?? 2),
     questionLanguage: String(body.tier?.question_language ?? "malay")
   };
-  const studied = Array.isArray(body.studied_words) ? body.studied_words : [];
-  const newWords = Array.isArray(body.new_words) ? body.new_words : [];
+  const studied = clampList(body.studied_words, 2e3);
+  const newWords = clampList(body.new_words, 20);
   const allowExtras = tier.containment < 1;
   const payload = {
     tier: tier.id,
@@ -2338,8 +2355,8 @@ app.post("/generate", async (c) => {
     studied_words: studied,
     new_words: newWords,
     register: body.register === "colloquial" ? "colloquial" : "baku",
-    topic: String(body.topic ?? "pasar"),
-    user_context: String(body.user_context ?? "")
+    topic: clampStr(body.topic || "pasar", 120),
+    user_context: clampStr(body.user_context, 500)
   };
   const validate = (out) => validatePassage({
     lines: out.lines,
@@ -2400,8 +2417,8 @@ app.post("/grade", async (c) => {
   if (!config().apiKey) return c.json({ error: "ANTHROPIC_API_KEY not configured" }, 500);
   const body = await c.req.json();
   const payload = {
-    task_prompt: String(body.prompt ?? ""),
-    learner_response: String(body.response ?? "")
+    task_prompt: clampStr(body.prompt, 1e3),
+    learner_response: clampStr(body.response, 2e3)
   };
   try {
     const out = await callAndParse(GRADE_SYSTEM, JSON.stringify(payload));
@@ -2414,7 +2431,13 @@ app.post("/grade", async (c) => {
 });
 app.get("/health", (c) => {
   const { model, apiKey, passphrase } = config();
-  return c.json({ ok: true, model, keyConfigured: Boolean(apiKey), gated: Boolean(passphrase) });
+  return c.json({
+    ok: true,
+    model,
+    keyConfigured: Boolean(apiKey),
+    gated: Boolean(passphrase),
+    rateLimit: { max: RATE_MAX, windowMs: RATE_WINDOW_MS }
+  });
 });
 var app_default = app;
 export {

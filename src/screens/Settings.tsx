@@ -143,8 +143,12 @@ export function Settings() {
           <p className="text-muted text-sm mb-2">
             Your learning data lives in this browser. Export a backup now and then.
           </p>
+          <BackupAge at={s.lastBackupAt} />
           <button
-            onClick={exportBackup}
+            onClick={async () => {
+              await exportBackup()
+              setS(await getSettings())
+            }}
             className="w-full py-3 px-4 bg-gold text-gold-ink border-[1.5px] border-charcoal rounded-[4px] font-medium"
           >
             Eksport JSON <span className="mono-sm text-gold-ink/70 block mt-0.5">(download a backup)</span>
@@ -204,6 +208,24 @@ export function Settings() {
         </div>
       </div>
     </div>
+  )
+}
+
+/** Backup-age nudge: reassuring when recent, oxblood when stale or never. */
+function BackupAge({ at }: { at?: number }) {
+  const days = at ? Math.floor((Date.now() - at) / 86_400_000) : null
+  const stale = days === null || days >= 7
+  const text =
+    days === null
+      ? 'Belum pernah disandarkan · never backed up'
+      : days === 0
+        ? 'Disandarkan hari ini · backed up today'
+        : `Sandaran terakhir ${days} hari lalu · last backup ${days} day${days === 1 ? '' : 's'} ago`
+  return (
+    <p className={`text-sm mb-2 ${stale ? 'text-oxblood' : 'text-muted'}`}>
+      {text}
+      {stale && <span className="block text-muted">iOS can clear this browser’s data after ~7 idle days — export now.</span>}
+    </p>
   )
 }
 

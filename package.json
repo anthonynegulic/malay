@@ -13,7 +13,8 @@
     "preview": "vite preview",
     "icons": "node scripts/gen-icons.mjs",
     "check:seed": "node scripts/check-register-integrity.mjs",
-    "verify:glosses": "node scripts/verify-example-glosses.mjs"
+    "verify:glosses": "node scripts/verify-example-glosses.mjs",
+    "test": "tsx tests/p0.test.ts && tsx tests/scheduler.test.ts"
   },
   "dependencies": {
     "@fontsource-variable/bricolage-grotesque": "^5.2.0",

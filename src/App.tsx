@@ -57,6 +57,15 @@ export default function App() {
 
   useEffect(() => {
     ;(async () => {
+      // IndexedDB is the only store; ask the browser not to evict it. Without
+      // this, an inactive PWA can have its data cleared under storage pressure
+      // (notably iOS Safari's ~7-day cap) — months of FSRS history gone. Best
+      // effort: the prompt-less API silently no-ops where unsupported.
+      try {
+        await navigator.storage?.persist?.()
+      } catch {
+        /* storage API unavailable — nothing to do */
+      }
       await ensureSeeded()
       await getSettings() // materialise the settings row
       await migrateSeed() // patch seed rows in place on upgrades (cards untouched)

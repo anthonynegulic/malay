@@ -72,6 +72,17 @@ phrase gets a 401 and can't generate anything. Reviews, the word browser, and al
 local-only features keep working without it. Leave `APP_PASSPHRASE` unset for a
 fully open deployment (fine for a quick private test).
 
+> **Recommended: set `APP_PASSPHRASE` on any deployment that stays up.** It is
+> the only *global* guard. A per-IP burst limiter (default 30 requests/minute,
+> override with `RATE_LIMIT_MAX`) also runs on both routes and caps runaway
+> loops, but it is in-memory and therefore per-warm-serverless-instance on
+> Vercel — a backstop, not a substitute for the passphrase. Both routes also
+> bound the request payload (studied-word list, context, response length) so a
+> single crafted call can't inflate the prompt.
+
+Confirm the guard is live: `/api/health` reports `"gated":true` when the
+passphrase is set, and echoes the active `"rateLimit"`.
+
 ## Verifying a deploy
 
 - `https://<your-app>.vercel.app/api/health` → `{"ok":true,"keyConfigured":true,"gated":…}`.
