@@ -24,6 +24,16 @@ const GLOSS_MODE: Record<number, GlossMode> = { 0: 'always', 1: 'tap', 2: 'tap',
 
 const introKey = () => `bukit-intro-${todayStr()}`
 
+/** The how-to paragraph earns retirement after five readings (UX M7). */
+function useCoachNote(): boolean {
+  const [show] = useState(() => {
+    const n = Number(localStorage.getItem('bukit-coach-count') ?? '0')
+    if (n < 5) localStorage.setItem('bukit-coach-count', String(n + 1))
+    return n < 5
+  })
+  return show
+}
+
 export function Read() {
   const navigate = useNavigate()
   const [register, setRegister] = useState<Register>('baku')
@@ -47,6 +57,7 @@ export function Read() {
   const [voiceOk, setVoiceOk] = useState(false)
   const [noVoiceNote, setNoVoiceNote] = useState(false)
   const tts = ttsOn && voiceOk
+  const coachNote = useCoachNote()
   const startedAt = useRef(Date.now())
 
   async function load(reg: Register) {
@@ -91,6 +102,12 @@ export function Read() {
   }, [])
 
   const newSurfaces = useMemo(() => new Set(newWords.map((w) => w.baku.toLowerCase())), [newWords])
+  // Glossed words carry a dotted underline so tappability is visible, not
+  // explained (UI-REVIEW-001 §4); new words keep the gold mark alone.
+  const glossSurfaces = useMemo(
+    () => new Set((passage?.glossary ?? []).map((g) => cleanToken(g.word))),
+    [passage],
+  )
 
   const lines: PassageLine[] = useMemo(() => {
     if (!passage) return []
@@ -168,7 +185,13 @@ export function Read() {
         <button
           key={i}
           onClick={() => tapWord(tok)}
-          className={`active:bg-gold/15 ${newSurfaces.has(cleanToken(tok)) ? 'mark-new' : ''}`}
+          className={`active:bg-gold/15 ${
+            newSurfaces.has(cleanToken(tok))
+              ? 'mark-new'
+              : glossSurfaces.has(cleanToken(tok))
+                ? 'tap-hint'
+                : ''
+          }`}
         >
           {tok}
         </button>
@@ -187,10 +210,10 @@ export function Read() {
     return (
       <div className="min-h-dvh flex flex-col bg-indigo text-plaster">
         <div className="px-5 pt-6 flex items-center justify-between">
-          <button onClick={exit} className="mono text-indigo-hi">
+          <button onClick={exit} className="mono text-indigo-hi hit">
             ← keluar · exit
           </button>
-          <span className="mono text-gold">
+          <span className="mono text-gold-hi">
             KATA BARU {introIdx + 1} / {newWords.length}
           </span>
         </div>
@@ -202,7 +225,7 @@ export function Read() {
               <button
                 onClick={() => speak(w.baku)}
                 aria-label="Main audio"
-                className="text-gold shrink-0 mb-2"
+                className="text-gold-hi shrink-0 mb-2 hit"
               >
                 <SpeakerIcon className="w-7 h-7" />
               </button>
@@ -236,7 +259,7 @@ export function Read() {
         <div className="p-5">
           <button
             onClick={() => (last ? done() : setIntroIdx(introIdx + 1))}
-            className="w-full bg-gold text-gold-ink py-4 rounded-[4px] border-[1.5px] border-charcoal font-medium active:opacity-90"
+            className="w-full bg-gold text-gold-ink py-4 px-4 rounded-[4px] border-[1.5px] border-charcoal font-medium active:opacity-90"
           >
             {last ? (
               <Bi ms="Mula membaca" en="start reading" enClass="text-gold-ink/70" />
@@ -256,7 +279,7 @@ export function Read() {
   return (
     <div className="min-h-dvh max-w-md mx-auto flex flex-col">
       <header className="bg-indigo text-plaster px-5 py-4 flex items-center justify-between">
-        <button onClick={exit} className="mono text-indigo-hi">
+        <button onClick={exit} className="mono text-indigo-hi hit">
           ← keluar · exit
         </button>
         <div className="flex items-center gap-4">
@@ -266,7 +289,7 @@ export function Read() {
               onClick={toggleMute}
               aria-label={ttsOn ? 'Senyapkan audio' : 'Buka audio'}
               aria-pressed={!ttsOn}
-              className={ttsOn ? 'text-gold' : 'text-indigo-lo'}
+              className={`hit ${ttsOn ? 'text-gold-hi' : 'text-indigo-lo'}`}
             >
               {ttsOn ? <SpeakerIcon className="w-5 h-5" /> : <MuteIcon className="w-5 h-5" />}
             </button>
@@ -276,7 +299,7 @@ export function Read() {
             <button
               onClick={toggleRegister}
               disabled={loading}
-              className="flex items-center gap-2 disabled:opacity-40"
+              className="flex items-center gap-2 disabled:opacity-40 hit"
               title="Regenerate this passage in the other register"
             >
               <RegisterChip kind={register === 'baku' ? 'baku' : 'colloq'} />
@@ -302,21 +325,20 @@ export function Read() {
               <CloudIcon className="w-9 h-9 text-muted mb-3" />
               <div className="font-medium">Tak boleh jana hari ini — cuba lagi.</div>
               <div className="text-muted text-sm mt-1 max-w-xs">
-                Could not generate today&rsquo;s reading. Check your connection and try again — if
-                it keeps failing, the server&rsquo;s ANTHROPIC_API_KEY may be missing or invalid.
+                Could not generate today&rsquo;s reading. Check your connection and try again.
               </div>
               <div className="mt-5 flex gap-3">
                 <button
                   onClick={() => load(register)}
                   className="px-5 py-2.5 rounded-[4px] bg-gold text-gold-ink border-[1.5px] border-charcoal font-medium"
                 >
-                  Cuba lagi <span className="mono-sm text-gold-ink/70">(try again)</span>
+                  Cuba lagi <span className="mono-sm text-gold-ink/70 block mt-0.5">(try again)</span>
                 </button>
                 <button
-                  onClick={() => navigate('/?done=sikit', { replace: true })}
+                  onClick={exit}
                   className="px-5 py-2.5 rounded-[4px] border-[1.5px] border-charcoal text-charcoal"
                 >
-                  Selesai <span className="mono-sm text-muted">(finish)</span>
+                  Keluar <span className="mono-sm text-muted block mt-0.5">(exit)</span>
                 </button>
               </div>
             </div>
@@ -328,7 +350,7 @@ export function Read() {
             <div className="flex items-center justify-between mb-2">
               <Label ms={passage.topic} en={passage.date} color="muted" />
               {tts && (
-                <button onClick={() => speak(passage.text)} className="flex items-center gap-1.5 text-gold">
+                <button onClick={() => speak(passage.text)} className="flex items-center gap-1.5 text-gold hit">
                   <SpeakerIcon className="w-5 h-5" />
                   <span className="mono">dengar · listen</span>
                 </button>
@@ -344,11 +366,13 @@ export function Read() {
               </p>
             )}
 
-            <p className="text-sm text-muted mb-3">
-              A short reading written just for you — today&rsquo;s{' '}
-              <span className="mark-new text-charcoal">new words</span> are underlined; everything
-              else uses only words you&rsquo;ve already studied. Tap any word for its meaning.
-            </p>
+            {coachNote && (
+              <p className="text-sm text-muted mb-3">
+                A short reading written just for you — today&rsquo;s{' '}
+                <span className="mark-new text-charcoal">new words</span> are underlined; everything
+                else uses only words you&rsquo;ve already studied. Tap any word for its meaning.
+              </p>
+            )}
 
             {/* passage on plaster, framed by charcoal rules */}
             <div className="border-y-[1.5px] border-charcoal py-4">
@@ -372,7 +396,7 @@ export function Read() {
                           <button
                             onClick={() => speak(line.text)}
                             aria-label="Main audio baris"
-                            className="text-gold shrink-0 self-center"
+                            className="text-gold shrink-0 self-center hit"
                           >
                             <SpeakerIcon className="w-4 h-4" />
                           </button>
@@ -387,7 +411,7 @@ export function Read() {
                               })
                             }
                             aria-label="Toggle English gloss"
-                            className={`mono-sm rounded-[2px] px-1 py-0.5 shrink-0 self-center ${
+                            className={`mono-sm rounded-[2px] px-1.5 py-1 shrink-0 self-center ${
                               openGlosses.has(i) ? 'bg-charcoal text-plaster' : 'border border-hairline text-muted'
                             }`}
                           >
@@ -410,7 +434,7 @@ export function Read() {
                   {!allRevealed && (
                     <button
                       onClick={() => setVisibleLines((v) => (v ?? 0) + 1)}
-                      className="w-full py-3 border-[1.5px] border-charcoal rounded-[4px] text-charcoal active:bg-charcoal/5"
+                      className="w-full py-3 px-4 border-[1.5px] border-charcoal rounded-[4px] text-charcoal active:bg-charcoal/5"
                     >
                       <Bi ms="Baris seterusnya" en="next line" className="font-medium" />
                     </button>
@@ -542,7 +566,7 @@ export function Read() {
 
                 <button
                   onClick={continueOn}
-                  className="mt-6 w-full bg-gold text-gold-ink py-4 rounded-[4px] border-[1.5px] border-charcoal active:opacity-90"
+                  className="mt-6 w-full bg-gold text-gold-ink py-4 px-4 rounded-[4px] border-[1.5px] border-charcoal active:opacity-90"
                 >
                   <span className="font-medium">Teruskan — cakap sikit</span>
                   <span className="mono-sm text-gold-ink/70 block mt-0.5">
@@ -570,7 +594,7 @@ export function Read() {
                 <button
                   onClick={() => speak(popover.token)}
                   aria-label="Main audio"
-                  className="text-gold mt-1"
+                  className="text-gold mt-1 hit"
                 >
                   <SpeakerIcon className="w-5 h-5" />
                 </button>
@@ -600,7 +624,7 @@ export function Read() {
               {!popover.hasCard && !popover.status && (
                 <button
                   onClick={tambah}
-                  className="w-full py-3.5 rounded-[4px] bg-gold text-gold-ink border-[1.5px] border-charcoal font-medium"
+                  className="w-full py-3.5 px-4 rounded-[4px] bg-gold text-gold-ink border-[1.5px] border-charcoal font-medium"
                 >
                   Tambah <span className="mono-sm text-gold-ink/70">(add to my words)</span>
                 </button>

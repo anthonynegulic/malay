@@ -12,8 +12,8 @@ function StatusChip({ state }: { state: CardState | undefined }) {
     state === undefined
       ? ['BARU', 'border border-hairline text-muted']
       : state === 'review'
-        ? ['MATANG', 'bg-indigo text-plaster']
-        : ['BELAJAR', 'bg-oxblood text-plaster']
+        ? ['MATANG', 'border border-indigo text-indigo']
+        : ['BELAJAR', 'border border-oxblood text-oxblood']
   return <span className={`mono-sm rounded-[2px] px-1.5 py-0.5 ${cls}`}>{label}</span>
 }
 
@@ -27,6 +27,12 @@ export function Words() {
   const [tag, setTag] = useState<string | null>(null)
   const [filter, setFilter] = useState<'all' | 'studied' | 'backlog' | 'variants' | 'harvested'>('all')
   const [openId, setOpenId] = useState<string | null>(null)
+  // 425+ rows render incrementally (UX-REVIEW-001 M2).
+  const [visibleCount, setVisibleCount] = useState(60)
+
+  useEffect(() => {
+    setVisibleCount(60)
+  }, [q, tag, filter])
 
   useEffect(() => {
     db.words.orderBy('addedAt').toArray().then(setWords)
@@ -58,7 +64,7 @@ export function Words() {
     <div className="max-w-md mx-auto pb-24">
       <header className="bg-indigo text-plaster px-5 pt-6 pb-5">
         <Label ms="Kata" en="words" color="indigo-hi" />
-        <div className="display text-plaster mt-1" style={{ fontSize: 40 }}>
+        <div className="display display-md text-plaster mt-1">
           {words.length}
         </div>
         <div className="text-indigo-hi text-sm">
@@ -73,12 +79,12 @@ export function Words() {
       </header>
 
       <div className="px-5">
-        <div className="flex gap-2 overflow-x-auto py-3 -mx-5 px-5">
+        <div className="flex gap-2 overflow-x-auto py-3 -mx-5 px-5 fade-x">
           {(
             [
               ['all', 'semua · all'],
               ['studied', 'dipelajari · studied'],
-              ['backlog', 'backlog'],
+              ['backlog', 'baru · backlog'],
               ['variants', 'ada loghat · variants'],
               ['harvested', 'dituai · harvested'],
             ] as const
@@ -94,7 +100,7 @@ export function Words() {
             </button>
           ))}
         </div>
-        <div className="flex gap-2 overflow-x-auto pb-2 -mx-5 px-5">
+        <div className="flex gap-2 overflow-x-auto pb-2 -mx-5 px-5 fade-x">
           {TAG_FILTERS.map((t) => (
             <button
               key={t}
@@ -119,14 +125,17 @@ export function Words() {
                 })}`,
               )
             }
-            className="w-full py-3 border-[1.5px] border-charcoal text-charcoal rounded-[4px]"
+            className="w-full py-3 px-4 border-[1.5px] border-charcoal text-charcoal rounded-[4px]"
           >
             <Bi ms="Ulangkaji bebas" en="free practice" className="font-medium" />
           </button>
         )}
 
-        <ul className="mt-2 divide-y divide-hairline border-y border-hairline">
-          {shown.map((w) => (
+        <div className="mono text-muted mt-3 mb-1">
+          {shown.length} padanan · {shown.length === 1 ? 'match' : 'matches'}
+        </div>
+        <ul className="divide-y divide-hairline border-y border-hairline">
+          {shown.slice(0, visibleCount).map((w) => (
             <li key={w.id}>
               <button
                 onClick={() => setOpenId(openId === w.id ? null : w.id)}
@@ -145,9 +154,9 @@ export function Words() {
               {openId === w.id && (
                 <div className="fade-in pb-4 space-y-3">
                   <div className="flex items-center justify-between">
-                    <Label ms={`${w.pos} · ${w.tags.join(', ')}`} en={w.source} color="muted" />
+                    <Label ms={`${w.pos} · ${w.tags.join(', ')}`} en={w.source === 'seed' ? 'core list' : w.source} color="muted" />
                     {ttsAvailable() && (
-                      <button onClick={() => speak(w.baku)} className="text-gold">
+                      <button onClick={() => speak(w.baku)} className="text-gold hit">
                         <SpeakerIcon className="w-5 h-5" />
                       </button>
                     )}
@@ -188,6 +197,18 @@ export function Words() {
             </li>
           )}
         </ul>
+        {shown.length > visibleCount && (
+          <button
+            onClick={() => setVisibleCount((n) => n + 100)}
+            className="mt-3 w-full py-3 px-4 border-[1.5px] border-charcoal text-charcoal rounded-[4px]"
+          >
+            <Bi
+              ms="Tunjuk lagi"
+              en={`show more — ${shown.length - visibleCount} left`}
+              className="font-medium"
+            />
+          </button>
+        )}
       </div>
     </div>
   )

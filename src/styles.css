@@ -5,14 +5,15 @@
    gold and oxblood. No other colours. */
 @theme {
   --color-indigo: #2b4c9b; /* field colour — headers, card fronts. NEVER a button. */
-  --color-indigo-lo: #93a6d2; /* muted text on indigo */
-  --color-indigo-hi: #c6cfe6; /* brighter text on indigo */
+  --color-indigo-lo: #b8c4e4; /* muted text on indigo — ≥4.5:1 (UX-REVIEW-001 H3) */
+  --color-indigo-hi: #d5dcef; /* brighter text on indigo — ≥4.5:1 */
   --color-indigo-rl: #4c69ae; /* rule lines on indigo */
   --color-plaster: #efe9da; /* page background, text on indigo */
   --color-charcoal: #221f1c; /* text, borders, rules */
-  --color-muted: #6f6a5e; /* secondary text */
+  --color-muted: #655f52; /* secondary text — ≥4.5:1 on plaster (H3) */
   --color-hairline: #c9c2b0; /* internal rules on plaster */
   --color-gold: #c8912f; /* THE action colour. Also audio icons, milestones. */
+  --color-gold-hi: #e6bb6a; /* gold TEXT/icons on indigo — plain gold is 2.9:1 there (H3) */
   --color-gold-ink: #3d2b09; /* text on gold */
   --color-oxblood: #8c2f26; /* progress, "today", the Lagi grade, COLLOQ chip */
   --color-jade: #8fbba6; /* BAKU chip, Senang grade */
@@ -37,19 +38,21 @@ body {
   overscroll-behavior-y: none;
 }
 
-/* Signage mono utility: uppercase, wide tracking, tiny (P1.2) */
+/* Signage mono utility: uppercase, wide tracking, small (P1.2).
+   11/10px — the 10/9.5px originals sat under the legibility floor for
+   controls that use these classes (UX-REVIEW-001 H3). */
 .mono {
   font-family: var(--font-mono);
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  font-size: 10px;
+  font-size: 11px;
   line-height: 1.3;
 }
 .mono-sm {
   font-family: var(--font-mono);
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  font-size: 9.5px;
+  font-size: 10px;
   line-height: 1.2;
 }
 
@@ -68,6 +71,64 @@ body {
   font-weight: 800;
   letter-spacing: -0.03em;
   line-height: 1;
+}
+/* The display scale — stat numerals share three sizes instead of per-screen
+   magic numbers (UI-REVIEW-001 §2). */
+.display-lg {
+  font-size: 64px;
+}
+.display-md {
+  font-size: 40px;
+}
+.display-sm {
+  font-size: 24px;
+}
+
+/* Tap-target helper: grows the hit area of small text/icon controls without
+   moving the layout (UX-REVIEW-001 H4). */
+.hit {
+  padding: 12px;
+  margin: -12px;
+}
+
+/* Horizontal-scroll rows fade at the trailing edge to hint scrollability
+   (UI-REVIEW-001 §5.6). */
+.fade-x {
+  mask-image: linear-gradient(to right, black 0, black calc(100% - 28px), transparent);
+}
+
+/* Tappable glossed words in the passage carry their own affordance
+   (UI-REVIEW-001 §4 Read). New words keep the gold mark instead. */
+.tap-hint {
+  text-decoration: underline dotted;
+  text-decoration-color: color-mix(in srgb, var(--color-charcoal) 35%, transparent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+
+/* Ranges drawn in-system instead of stock browser chrome (UI-REVIEW-001 §3.3) */
+input[type='range'] {
+  appearance: none;
+  -webkit-appearance: none;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--color-hairline);
+}
+input[type='range']::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 9999px;
+  background: var(--color-oxblood);
+  border: 1.5px solid var(--color-charcoal);
+}
+input[type='range']::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 9999px;
+  background: var(--color-oxblood);
+  border: 1.5px solid var(--color-charcoal);
 }
 
 /* Reading passage measure (kept from v1 — the best thing in the build) */

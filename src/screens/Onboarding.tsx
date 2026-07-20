@@ -24,6 +24,8 @@ export function Onboarding() {
   const [i, setI] = useState(0)
   const [knownCount, setKnownCount] = useState(0)
   const [paused, setPaused] = useState(false)
+  // Mis-taps during a 425-word pass must be reversible (UX-REVIEW-001 M1).
+  const [undoStack, setUndoStack] = useState<{ id: string; known: boolean }[]>([])
 
   useEffect(() => {
     ;(async () => {
@@ -46,10 +48,23 @@ export function Onboarding() {
       await db.cards.add(knownCard(w.id))
       setKnownCount((c) => c + 1)
     }
+    setUndoStack((s) => [...s, { id: w.id, known }])
     const next = i + 1
     if (next >= words.length) return finish()
     if (next % BATCH === 0) setPaused(true)
     setI(next)
+  }
+
+  async function undo() {
+    const last = undoStack[undoStack.length - 1]
+    if (!last) return
+    if (last.known) {
+      await db.cards.where('wordId').equals(last.id).delete()
+      setKnownCount((c) => c - 1)
+    }
+    setUndoStack((s) => s.slice(0, -1))
+    setPaused(false)
+    setI((n) => n - 1)
   }
 
   useEffect(() => {
@@ -63,7 +78,7 @@ export function Onboarding() {
     return (
       <div className="min-h-dvh flex flex-col max-w-md mx-auto">
         <header className="bg-indigo text-plaster px-5 pt-6 pb-6">
-          <div className="mono text-gold">SELAMAT DATANG · WELCOME</div>
+          <div className="mono text-gold-hi">SELAMAT DATANG · WELCOME</div>
           <h1 className="display text-plaster text-2xl mt-2">Selamat datang ke Bukit</h1>
           <p className="text-indigo-hi text-sm mt-1">One question before we start.</p>
         </header>
@@ -77,7 +92,7 @@ export function Onboarding() {
           <div className="mt-8 space-y-3">
             <button
               onClick={finish}
-              className="w-full bg-gold text-gold-ink py-5 rounded-[4px] border-[1.5px] border-charcoal active:opacity-90"
+              className="w-full bg-gold text-gold-ink py-5 px-4 rounded-[4px] border-[1.5px] border-charcoal active:opacity-90"
             >
               <span className="display text-xl">Belum — saya baru bermula</span>
               <span className="mono-sm block text-gold-ink/70 mt-1">
@@ -86,7 +101,7 @@ export function Onboarding() {
             </button>
             <button
               onClick={() => setPhase('review')}
-              className="w-full py-5 rounded-[4px] border-[1.5px] border-charcoal text-charcoal active:bg-charcoal/5"
+              className="w-full py-5 px-4 rounded-[4px] border-[1.5px] border-charcoal text-charcoal active:bg-charcoal/5"
             >
               <span className="display text-xl">Tahu sikit-sikit</span>
               <span className="mono-sm block text-muted mt-1">
@@ -111,7 +126,7 @@ export function Onboarding() {
     return (
       <div className="min-h-dvh flex flex-col max-w-md mx-auto">
         <header className="bg-indigo text-plaster px-5 pt-6 pb-6">
-          <div className="mono text-gold">REHAT SEBENTAR · QUICK PAUSE</div>
+          <div className="mono text-gold-hi">REHAT SEBENTAR · QUICK PAUSE</div>
           <h1 className="display text-plaster text-2xl mt-2">
             {i} kata disemak — {knownCount} tahu
           </h1>
@@ -124,7 +139,7 @@ export function Onboarding() {
           <div className="space-y-3">
             <button
               onClick={finish}
-              className="w-full bg-gold text-gold-ink py-5 rounded-[4px] border-[1.5px] border-charcoal active:opacity-90"
+              className="w-full bg-gold text-gold-ink py-5 px-4 rounded-[4px] border-[1.5px] border-charcoal active:opacity-90"
             >
               <span className="display text-xl">Cukup — mula belajar</span>
               <span className="mono-sm block text-gold-ink/70 mt-1">
@@ -133,11 +148,16 @@ export function Onboarding() {
             </button>
             <button
               onClick={() => setPaused(false)}
-              className="w-full py-5 rounded-[4px] border-[1.5px] border-charcoal text-charcoal active:bg-charcoal/5"
+              className="w-full py-5 px-4 rounded-[4px] border-[1.5px] border-charcoal text-charcoal active:bg-charcoal/5"
             >
               <span className="display text-xl">Teruskan</span>
               <span className="mono-sm block text-muted mt-1">(keep marking — {BATCH} more)</span>
             </button>
+            {undoStack.length > 0 && (
+              <button onClick={undo} className="w-full py-2 mono text-muted">
+                ← undur · undo last
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -149,7 +169,7 @@ export function Onboarding() {
   return (
     <div className="min-h-dvh flex flex-col max-w-md mx-auto">
       <header className="bg-indigo text-plaster px-5 pt-6 pb-5">
-        <div className="mono text-gold">
+        <div className="mono text-gold-hi">
           {redo ? 'PENILAIAN SEMULA · REASSESS' : 'SELAMAT DATANG · WELCOME'}
         </div>
         <h1 className="display text-plaster text-2xl mt-2">Tanda kata yang anda tahu</h1>
@@ -195,17 +215,22 @@ export function Onboarding() {
       </div>
 
       <div className="px-5 pb-6">
+        {undoStack.length > 0 && (
+          <button onClick={undo} className="mono text-muted mb-2 hit">
+            ← undur · undo last
+          </button>
+        )}
         <div className="grid grid-cols-2 border-[1.5px] border-charcoal rounded-[4px] overflow-hidden">
           <button
             onClick={() => mark(false)}
-            className="py-4 bg-transparent text-charcoal border-r-[1.5px] border-charcoal active:bg-charcoal/5"
+            className="py-4 px-2 bg-transparent text-charcoal border-r-[1.5px] border-charcoal active:bg-charcoal/5"
           >
             <span className="font-semibold">Belum</span>
             <span className="mono-sm block text-muted mt-0.5">(not yet)</span>
           </button>
           <button
             onClick={() => mark(true)}
-            className="py-4 bg-jade text-jade-ink active:opacity-90"
+            className="py-4 px-2 bg-jade text-jade-ink active:opacity-90"
           >
             <span className="font-semibold">Tahu</span>
             <span className="mono-sm block text-jade-ink/70 mt-0.5">(I know this)</span>

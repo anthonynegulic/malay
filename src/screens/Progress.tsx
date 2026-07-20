@@ -75,7 +75,7 @@ export function Progress() {
     <div className="max-w-md mx-auto pb-24">
       <header className="bg-indigo text-plaster px-5 pt-6 pb-6">
         <Label ms="Kemajuan" en="progress" color="indigo-hi" />
-        <div className="display text-plaster mt-2" style={{ fontSize: 64 }}>
+        <div className="display display-lg text-plaster mt-2">
           {stats.studied}
         </div>
         <div className="text-indigo-hi">
@@ -86,10 +86,10 @@ export function Progress() {
       <div className="px-5">
         {/* milestone bar */}
         <div className="pt-6">
-          <div className="flex items-baseline justify-between mb-2">
+          <div className="flex items-baseline justify-between gap-3 mb-2">
             <Label ms="jalan ke puncak" en="road to the summit" color="muted" />
-            <span className="mono text-muted">
-              {stats.studied} / {target}
+            <span className="mono text-muted shrink-0 whitespace-nowrap">
+              {stats.studied} / 1000
             </span>
           </div>
           <div className="relative h-2 bg-hairline">
@@ -137,7 +137,10 @@ export function Progress() {
         {/* review-debt trend */}
         {stats.debtTrend.length > 1 && (
           <div className="mt-5">
-            <Label ms="aliran hutang" en="debt trend" color="muted" className="block mb-2" />
+            <div className="flex items-baseline justify-between gap-3 mb-2">
+              <Label ms="aliran hutang" en="debt trend" color="muted" />
+              <span className="mono text-muted shrink-0">semasa · now {stats.due}</span>
+            </div>
             <div className="flex items-end gap-0.5 h-10 border-b border-hairline">
               {stats.debtTrend.map((d, i) => (
                 <div
@@ -189,7 +192,7 @@ export function Progress() {
             <span className="mono text-muted">{CHECKPOINT.label}</span>
           </div>
           <div className="mt-3 flex items-baseline gap-2">
-            <span className="display text-2xl text-charcoal">
+            <span className="display text-2xl text-charcoal shrink-0 whitespace-nowrap">
               {stats.studied} <span className="text-muted font-body font-normal text-base">/ {CHECKPOINT.targetWords}</span>
             </span>
             <Label ms="kata menjelang trip" en="words by the trip" color="muted" />
@@ -200,7 +203,7 @@ export function Progress() {
               style={{ width: `${Math.min(100, (stats.studied / CHECKPOINT.targetWords) * 100)}%` }}
             />
           </div>
-          {weeks.length > 0 && (
+          {weeks.some((d) => d > 0) && (
             <div className="mt-4">
               <Label ms="rentak 12 minggu" en="trailing rhythm" color="muted" className="block mb-1.5" />
               <div className="flex items-end gap-1 h-8 border-b border-hairline">
@@ -222,11 +225,11 @@ export function Progress() {
                 <li key={i}>
                   <button
                     onClick={() => toggleMark(i)}
-                    className="w-full flex items-center gap-3 py-2.5 text-left"
+                    className="w-full flex items-start gap-3 py-2.5 text-left"
                     aria-pressed={marks[i] ?? false}
                   >
                     <span
-                      className={`w-4 h-4 shrink-0 border-[1.5px] border-charcoal ${
+                      className={`w-4 h-4 mt-0.5 shrink-0 border-[1.5px] border-charcoal ${
                         marks[i] ? 'bg-jade' : 'bg-transparent'
                       }`}
                     />
@@ -241,13 +244,18 @@ export function Progress() {
         {/* footpath — ruled row of practised days, gaps visible */}
         {history.length > 0 && (
           <div className="mt-6 border-t-[1.5px] border-charcoal pt-4">
-            <Label ms="laluan" en="the footpath — full history" color="muted" className="block mb-3" />
+            <div className="flex items-baseline justify-between gap-3 mb-3">
+              <Label ms="laluan" en="the footpath — full history" color="muted" />
+              <span className="mono text-muted shrink-0">
+                {history.filter((d) => d.counted).length} hari
+              </span>
+            </div>
             <div className="flex flex-wrap gap-1.5">
               {history.map((d) => (
                 <span
                   key={d.date}
                   title={d.date}
-                  className={`w-3.5 h-3.5 ${d.counted ? 'bg-indigo' : 'border border-hairline'}`}
+                  className={`w-3.5 h-3.5 ${d.counted ? 'bg-indigo' : 'border-[1.5px] border-hairline'}`}
                 />
               ))}
             </div>

@@ -23,7 +23,6 @@ export function Review() {
   const [queue, setQueue] = useState<QueueItem[] | null>(null)
   const [flipped, setFlipped] = useState(false)
   const [graded, setGraded] = useState(0)
-  const [total, setTotal] = useState(0)
   const [tts, setTts] = useState(false)
   const startedAt = useRef(Date.now())
 
@@ -39,7 +38,6 @@ export function Review() {
         if (word) items.push({ card, word })
       }
       setQueue(items)
-      setTotal(items.length)
     })()
   }, [sikit])
 
@@ -80,7 +78,7 @@ export function Review() {
     return (
       <div className="min-h-dvh flex flex-col bg-indigo text-plaster">
         <div className="px-5 pt-6">
-          <button onClick={exit} className="mono text-indigo-hi">
+          <button onClick={exit} className="mono text-indigo-hi hit">
             ← keluar · exit
           </button>
         </div>
@@ -95,7 +93,7 @@ export function Review() {
         <div className="p-5">
           <button
             onClick={finish}
-            className="w-full border-[1.5px] border-plaster/50 text-plaster py-4 rounded-[4px]"
+            className="w-full border-[1.5px] border-plaster/50 text-plaster py-4 px-4 rounded-[4px]"
           >
             {sikit ? (
               <Bi ms="Selesai" en="finish" enClass="text-plaster/70" />
@@ -109,16 +107,19 @@ export function Review() {
   }
 
   const { card, word } = current!
+  // Again/Hard requeues grow the session, so the denominator is live:
+  // cards graded so far + cards still waiting (never shows 11 / 10).
+  const total = graded + queue.length
 
   // ————— front: indigo full-bleed, headword alone —————
   if (!flipped) {
     return (
       <div className="min-h-dvh flex flex-col bg-indigo text-plaster">
         <div className="px-5 pt-6 flex items-center justify-between">
-          <button onClick={exit} className="mono text-indigo-hi">
+          <button onClick={exit} className="mono text-indigo-hi hit">
             ← keluar · exit
           </button>
-          <span className="mono text-gold">
+          <span className="mono text-gold-hi">
             {graded + 1} / {total}
             {sikit ? ' · sikit je' : ''}
           </span>
@@ -133,7 +134,7 @@ export function Review() {
               <button
                 onClick={() => speak(word.example_baku || word.baku)}
                 aria-label="Main audio"
-                className="text-gold mt-8"
+                className="text-gold-hi mt-8 hit"
               >
                 <SpeakerIcon className="w-8 h-8 mx-auto" />
               </button>
@@ -144,7 +145,7 @@ export function Review() {
         <div className="p-5">
           <button
             onClick={() => setFlipped(true)}
-            className="w-full bg-plaster text-charcoal py-4 rounded-[4px] border-[1.5px] border-charcoal active:opacity-90"
+            className="w-full bg-plaster text-charcoal py-4 px-4 rounded-[4px] border-[1.5px] border-charcoal active:opacity-90"
           >
             <span className="font-medium">Tunjuk</span>
             <span className="mono-sm text-muted block mt-0.5">(tap to reveal)</span>
@@ -159,10 +160,10 @@ export function Review() {
     <div className="min-h-dvh flex flex-col bg-plaster">
       <div className="bg-indigo text-plaster px-5 pt-6 pb-5">
         <div className="flex items-center justify-between mb-3">
-          <button onClick={exit} className="mono text-indigo-hi">
+          <button onClick={exit} className="mono text-indigo-hi hit">
             ← keluar · exit
           </button>
-          <span className="mono text-gold">
+          <span className="mono text-gold-hi">
             {graded + 1} / {total}
           </span>
         </div>
@@ -179,7 +180,7 @@ export function Review() {
             <div className="flex items-center justify-between">
               <Label ms="contoh" en="example" color="muted" />
               {tts && (
-                <button onClick={() => speak(word.example_baku)} aria-label="Main audio" className="text-gold">
+                <button onClick={() => speak(word.example_baku)} aria-label="Main audio" className="text-gold hit">
                   <SpeakerIcon className="w-5 h-5" />
                 </button>
               )}
@@ -219,7 +220,7 @@ export function Review() {
             <GradeBtn label="Lagi" en="again" sub={intervals.again} cls="border-[1.5px] border-oxblood text-oxblood" onClick={() => grade(Rating.Again)} />
             <GradeBtn label="Susah" en="hard" sub={intervals.hard} cls="border-[1.5px] border-charcoal text-charcoal" onClick={() => grade(Rating.Hard)} />
             <GradeBtn label="Okey" en="good" sub={intervals.good} cls="border-[1.5px] border-charcoal text-charcoal" onClick={() => grade(Rating.Good)} />
-            <GradeBtn label="Senang" en="easy" sub={intervals.easy} cls="bg-jade text-jade-ink border-[1.5px] border-jade" onClick={() => grade(Rating.Easy)} />
+            <GradeBtn label="Senang" en="easy" sub={intervals.easy} cls="border-[1.5px] border-jade text-jade-ink" onClick={() => grade(Rating.Easy)} />
           </div>
         </div>
       )}
@@ -241,7 +242,7 @@ function GradeBtn({
   onClick: () => void
 }) {
   return (
-    <button onClick={onClick} className={`py-3 rounded-[4px] active:opacity-90 ${cls}`}>
+    <button onClick={onClick} className={`py-3 px-2 rounded-[4px] active:opacity-90 ${cls}`}>
       <span className="font-medium">{label}</span>
       <span className="mono-sm block mt-0.5 opacity-70">
         ({en}) · {sub}

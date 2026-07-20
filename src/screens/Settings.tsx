@@ -9,6 +9,9 @@ export function Settings() {
   const navigate = useNavigate()
   const [s, setS] = useState<SettingsT | null>(null)
   const [msg, setMsg] = useState('')
+  // Import is destructive (replaces the whole DB) — hold the chosen file and
+  // ask first instead of importing straight off the picker.
+  const [pendingImport, setPendingImport] = useState<File | null>(null)
   const fileRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -20,14 +23,18 @@ export function Settings() {
     setS(await getSettings())
   }
 
-  async function onImport(f: File | undefined) {
-    if (!f) return
+  async function confirmImport() {
+    if (!pendingImport) return
     try {
-      await importBackup(f)
-      setMsg('Import selesai (all data replaced).')
+      // Safety net: current data downloads as a backup before it is replaced.
+      await exportBackup()
+      await importBackup(pendingImport)
+      setMsg('Import selesai (all data replaced — previous data saved as a download).')
       setS(await getSettings())
     } catch {
-      setMsg('Import failed — not a valid Bukit backup file.')
+      setMsg('Import failed — not a valid Bukit backup file. Your current data is unchanged.')
+    } finally {
+      setPendingImport(null)
     }
   }
 
@@ -37,10 +44,10 @@ export function Settings() {
     <div className="max-w-md mx-auto pb-24">
       <header className="bg-indigo text-plaster px-5 pt-6 pb-5 flex items-end justify-between">
         <div>
-          <Label ms="Tetapan" en="settings" color="indigo-hi" />
-          <div className="display text-plaster mt-1 text-3xl">Tetapan</div>
+          <div className="display text-plaster text-3xl">Tetapan</div>
+          <span className="mono text-indigo-hi mt-1 block">settings</span>
         </div>
-        <button onClick={() => navigate(-1)} className="mono text-indigo-hi">
+        <button onClick={() => navigate(-1)} className="mono text-indigo-hi hit">
           tutup · close
         </button>
       </header>
@@ -71,9 +78,9 @@ export function Settings() {
           />
         </Row>
 
-        <div className="py-4 flex items-center justify-between">
+        <div className="py-4 flex items-center justify-between flex-wrap gap-2">
           <Label ms="Register bacaan" en="reading register" color="charcoal" />
-          <div className="flex border-[1.5px] border-charcoal rounded-[4px] overflow-hidden mono">
+          <div className="flex shrink-0 border-[1.5px] border-charcoal rounded-[4px] overflow-hidden mono">
             {(['baku', 'colloquial'] as const).map((r) => (
               <button
                 key={r}
@@ -112,7 +119,7 @@ export function Settings() {
             onChange={(e) => setS({ ...s, userContext: e.target.value })}
             onBlur={() => patch({ userContext: s.userContext })}
             rows={3}
-            className="mt-2 w-full border-[1.5px] border-charcoal bg-plaster p-3 text-sm rounded-[4px] focus:border-gold"
+            className="mt-2 w-full resize-none border-[1.5px] border-charcoal bg-plaster p-3 text-sm rounded-[4px] focus:border-gold"
           />
           <p className="text-muted text-sm">Used to personalise the topics of your generated reading.</p>
         </div>
@@ -125,9 +132,9 @@ export function Settings() {
           </p>
           <button
             onClick={() => navigate('/onboarding?redo=1')}
-            className="w-full py-3 border-[1.5px] border-charcoal text-charcoal rounded-[4px]"
+            className="w-full py-3 px-4 border-[1.5px] border-charcoal text-charcoal rounded-[4px]"
           >
-            Tanda kata yang anda tahu <span className="mono-sm text-muted">(mark words you know)</span>
+            Tanda kata yang anda tahu <span className="mono-sm text-muted block mt-0.5">(mark words you know)</span>
           </button>
         </div>
 
@@ -138,23 +145,54 @@ export function Settings() {
           </p>
           <button
             onClick={exportBackup}
-            className="w-full py-3 bg-gold text-gold-ink border-[1.5px] border-charcoal rounded-[4px] font-medium"
+            className="w-full py-3 px-4 bg-gold text-gold-ink border-[1.5px] border-charcoal rounded-[4px] font-medium"
           >
-            Eksport JSON <span className="mono-sm text-gold-ink/70">(download a backup)</span>
+            Eksport JSON <span className="mono-sm text-gold-ink/70 block mt-0.5">(download a backup)</span>
           </button>
           <button
             onClick={() => fileRef.current?.click()}
-            className="mt-2 w-full py-3 border-[1.5px] border-charcoal text-charcoal rounded-[4px]"
+            className="mt-2 w-full py-3 px-4 border-[1.5px] border-charcoal text-charcoal rounded-[4px]"
           >
-            Import JSON <span className="mono-sm text-muted">(replaces all current data)</span>
+            Import JSON <span className="mono-sm text-muted block mt-0.5">(replaces all current data)</span>
           </button>
           <input
             ref={fileRef}
             type="file"
             accept="application/json"
             hidden
-            onChange={(e) => onImport(e.target.files?.[0])}
+            onChange={(e) => {
+              setPendingImport(e.target.files?.[0] ?? null)
+              setMsg('')
+              e.target.value = '' // allow re-picking the same file
+            }}
           />
+          {pendingImport && (
+            <div className="fade-in mt-3 border-[1.5px] border-oxblood rounded-[4px] p-4">
+              <div className="font-medium text-oxblood">
+                Ganti semua data?
+                <span className="text-muted text-sm font-normal"> (replace everything?)</span>
+              </div>
+              <p className="text-muted text-sm mt-1.5">
+                Importing <span className="text-charcoal">{pendingImport.name}</span> deletes every
+                word, card and review record on this device. A backup of your current data
+                downloads first.
+              </p>
+              <div className="mt-3 flex gap-2">
+                <button
+                  onClick={confirmImport}
+                  className="px-4 py-2.5 rounded-[4px] border-[1.5px] border-oxblood text-oxblood text-sm font-medium"
+                >
+                  Ganti <span className="text-oxblood/70">(replace)</span>
+                </button>
+                <button
+                  onClick={() => setPendingImport(null)}
+                  className="px-4 py-2.5 rounded-[4px] border-[1.5px] border-charcoal text-charcoal text-sm"
+                >
+                  Batal <span className="text-muted">(cancel)</span>
+                </button>
+              </div>
+            </div>
+          )}
           {msg && <div className="text-sm text-muted mt-2">{msg}</div>}
         </div>
 
@@ -182,9 +220,9 @@ function Row({
 }) {
   return (
     <div className="py-4">
-      <div className="flex items-baseline justify-between">
+      <div className="flex items-baseline justify-between gap-3">
         <Label ms={label} en={en} color="charcoal" />
-        <span className="display text-lg text-charcoal">{value}</span>
+        <span className="display text-lg text-charcoal shrink-0">{value}</span>
       </div>
       {children}
     </div>

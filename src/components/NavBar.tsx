@@ -10,7 +10,7 @@ const tabs = [
 /** Tab bar is indigo; active tab plaster, inactive indigo-lo (P1.5). */
 export function NavBar() {
   return (
-    <nav className="fixed bottom-0 inset-x-0 bg-indigo pb-[env(safe-area-inset-bottom)]">
+    <nav className="fixed bottom-0 inset-x-0 bg-indigo border-t border-indigo-rl pb-[env(safe-area-inset-bottom)]">
       <div className="max-w-md mx-auto grid grid-cols-3">
         {tabs.map((t) => (
           <NavLink
@@ -18,7 +18,7 @@ export function NavBar() {
             to={t.to}
             end={t.to === '/'}
             className={({ isActive }) =>
-              `flex flex-col items-center gap-1 py-2.5 ${
+              `flex flex-col items-center gap-1 py-2.5 px-1 ${
                 isActive ? 'text-plaster' : 'text-indigo-lo'
               }`
             }
@@ -26,7 +26,8 @@ export function NavBar() {
             <t.Icon className="w-5 h-5" />
             <span className="mono-sm">
               {t.ms}
-              <span className="opacity-60"> · {t.en}</span>
+              {/* English drops below 400px — the bilingual label clips there (UX M8) */}
+              <span className="opacity-60 hidden min-[400px]:inline"> · {t.en}</span>
             </span>
           </NavLink>
         ))}
