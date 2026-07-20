@@ -1,4 +1,4 @@
-import { db } from '../db/db'
+import { db, saveSettings } from '../db/db'
 
 interface Backup {
   app: 'bukit'
@@ -29,6 +29,7 @@ export async function exportBackup(): Promise<void> {
   a.download = `bukit-backup-${backup.exportedAt.slice(0, 10)}.json`
   a.click()
   URL.revokeObjectURL(url)
+  await saveSettings({ lastBackupAt: Date.now() })
 }
 
 export async function importBackup(file: File): Promise<void> {
