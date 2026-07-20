@@ -75,7 +75,7 @@ export function Progress() {
     <div className="max-w-md mx-auto pb-24">
       <header className="bg-indigo text-plaster px-5 pt-6 pb-6">
         <Label ms="Kemajuan" en="progress" color="indigo-hi" />
-        <div className="display text-plaster mt-2" style={{ fontSize: 64 }}>
+        <div className="display display-lg text-plaster mt-2">
           {stats.studied}
         </div>
         <div className="text-indigo-hi">
@@ -86,9 +86,9 @@ export function Progress() {
       <div className="px-5">
         {/* milestone bar */}
         <div className="pt-6">
-          <div className="flex items-baseline justify-between mb-2">
+          <div className="flex items-baseline justify-between gap-3 mb-2">
             <Label ms="jalan ke puncak" en="road to the summit" color="muted" />
-            <span className="mono text-muted">
+            <span className="mono text-muted shrink-0 whitespace-nowrap">
               {stats.studied} / {target}
             </span>
           </div>
@@ -189,7 +189,7 @@ export function Progress() {
             <span className="mono text-muted">{CHECKPOINT.label}</span>
           </div>
           <div className="mt-3 flex items-baseline gap-2">
-            <span className="display text-2xl text-charcoal">
+            <span className="display text-2xl text-charcoal shrink-0 whitespace-nowrap">
               {stats.studied} <span className="text-muted font-body font-normal text-base">/ {CHECKPOINT.targetWords}</span>
             </span>
             <Label ms="kata menjelang trip" en="words by the trip" color="muted" />
@@ -222,11 +222,11 @@ export function Progress() {
                 <li key={i}>
                   <button
                     onClick={() => toggleMark(i)}
-                    className="w-full flex items-center gap-3 py-2.5 text-left"
+                    className="w-full flex items-start gap-3 py-2.5 text-left"
                     aria-pressed={marks[i] ?? false}
                   >
                     <span
-                      className={`w-4 h-4 shrink-0 border-[1.5px] border-charcoal ${
+                      className={`w-4 h-4 mt-0.5 shrink-0 border-[1.5px] border-charcoal ${
                         marks[i] ? 'bg-jade' : 'bg-transparent'
                       }`}
                     />
@@ -247,7 +247,7 @@ export function Progress() {
                 <span
                   key={d.date}
                   title={d.date}
-                  className={`w-3.5 h-3.5 ${d.counted ? 'bg-indigo' : 'border border-hairline'}`}
+                  className={`w-3.5 h-3.5 ${d.counted ? 'bg-indigo' : 'border-[1.5px] border-hairline'}`}
                 />
               ))}
             </div>

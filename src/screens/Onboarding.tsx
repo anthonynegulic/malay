@@ -63,7 +63,7 @@ export function Onboarding() {
     return (
       <div className="min-h-dvh flex flex-col max-w-md mx-auto">
         <header className="bg-indigo text-plaster px-5 pt-6 pb-6">
-          <div className="mono text-gold">SELAMAT DATANG · WELCOME</div>
+          <div className="mono text-gold-hi">SELAMAT DATANG · WELCOME</div>
           <h1 className="display text-plaster text-2xl mt-2">Selamat datang ke Bukit</h1>
           <p className="text-indigo-hi text-sm mt-1">One question before we start.</p>
         </header>
@@ -77,7 +77,7 @@ export function Onboarding() {
           <div className="mt-8 space-y-3">
             <button
               onClick={finish}
-              className="w-full bg-gold text-gold-ink py-5 rounded-[4px] border-[1.5px] border-charcoal active:opacity-90"
+              className="w-full bg-gold text-gold-ink py-5 px-4 rounded-[4px] border-[1.5px] border-charcoal active:opacity-90"
             >
               <span className="display text-xl">Belum — saya baru bermula</span>
               <span className="mono-sm block text-gold-ink/70 mt-1">
@@ -86,7 +86,7 @@ export function Onboarding() {
             </button>
             <button
               onClick={() => setPhase('review')}
-              className="w-full py-5 rounded-[4px] border-[1.5px] border-charcoal text-charcoal active:bg-charcoal/5"
+              className="w-full py-5 px-4 rounded-[4px] border-[1.5px] border-charcoal text-charcoal active:bg-charcoal/5"
             >
               <span className="display text-xl">Tahu sikit-sikit</span>
               <span className="mono-sm block text-muted mt-1">
@@ -111,7 +111,7 @@ export function Onboarding() {
     return (
       <div className="min-h-dvh flex flex-col max-w-md mx-auto">
         <header className="bg-indigo text-plaster px-5 pt-6 pb-6">
-          <div className="mono text-gold">REHAT SEBENTAR · QUICK PAUSE</div>
+          <div className="mono text-gold-hi">REHAT SEBENTAR · QUICK PAUSE</div>
           <h1 className="display text-plaster text-2xl mt-2">
             {i} kata disemak — {knownCount} tahu
           </h1>
@@ -124,7 +124,7 @@ export function Onboarding() {
           <div className="space-y-3">
             <button
               onClick={finish}
-              className="w-full bg-gold text-gold-ink py-5 rounded-[4px] border-[1.5px] border-charcoal active:opacity-90"
+              className="w-full bg-gold text-gold-ink py-5 px-4 rounded-[4px] border-[1.5px] border-charcoal active:opacity-90"
             >
               <span className="display text-xl">Cukup — mula belajar</span>
               <span className="mono-sm block text-gold-ink/70 mt-1">
@@ -133,7 +133,7 @@ export function Onboarding() {
             </button>
             <button
               onClick={() => setPaused(false)}
-              className="w-full py-5 rounded-[4px] border-[1.5px] border-charcoal text-charcoal active:bg-charcoal/5"
+              className="w-full py-5 px-4 rounded-[4px] border-[1.5px] border-charcoal text-charcoal active:bg-charcoal/5"
             >
               <span className="display text-xl">Teruskan</span>
               <span className="mono-sm block text-muted mt-1">(keep marking — {BATCH} more)</span>
@@ -149,7 +149,7 @@ export function Onboarding() {
   return (
     <div className="min-h-dvh flex flex-col max-w-md mx-auto">
       <header className="bg-indigo text-plaster px-5 pt-6 pb-5">
-        <div className="mono text-gold">
+        <div className="mono text-gold-hi">
           {redo ? 'PENILAIAN SEMULA · REASSESS' : 'SELAMAT DATANG · WELCOME'}
         </div>
         <h1 className="display text-plaster text-2xl mt-2">Tanda kata yang anda tahu</h1>
@@ -198,14 +198,14 @@ export function Onboarding() {
         <div className="grid grid-cols-2 border-[1.5px] border-charcoal rounded-[4px] overflow-hidden">
           <button
             onClick={() => mark(false)}
-            className="py-4 bg-transparent text-charcoal border-r-[1.5px] border-charcoal active:bg-charcoal/5"
+            className="py-4 px-2 bg-transparent text-charcoal border-r-[1.5px] border-charcoal active:bg-charcoal/5"
           >
             <span className="font-semibold">Belum</span>
             <span className="mono-sm block text-muted mt-0.5">(not yet)</span>
           </button>
           <button
             onClick={() => mark(true)}
-            className="py-4 bg-jade text-jade-ink active:opacity-90"
+            className="py-4 px-2 bg-jade text-jade-ink active:opacity-90"
           >
             <span className="font-semibold">Tahu</span>
             <span className="mono-sm block text-jade-ink/70 mt-0.5">(I know this)</span>

@@ -42,10 +42,10 @@ export function FlipDeck({
     return (
       <div className="min-h-dvh flex flex-col bg-indigo text-plaster">
         <div className="px-5 pt-6 flex items-center justify-between">
-          <button onClick={onExit} className="mono text-indigo-hi">
+          <button onClick={onExit} className="mono text-indigo-hi hit">
             ← keluar · exit
           </button>
-          <span className="mono text-gold">
+          <span className="mono text-gold-hi">
             {i + 1} / {words.length} · {headerMs.toUpperCase()}
           </span>
         </div>
@@ -58,7 +58,7 @@ export function FlipDeck({
               <button
                 onClick={() => speak(word.example_baku || word.baku)}
                 aria-label="Main audio"
-                className="text-gold mt-8"
+                className="text-gold-hi mt-8 hit"
               >
                 <SpeakerIcon className="w-8 h-8 mx-auto" />
               </button>
@@ -68,7 +68,7 @@ export function FlipDeck({
         <div className="p-5">
           <button
             onClick={() => setFlipped(true)}
-            className="w-full bg-plaster text-charcoal py-4 rounded-[4px] border-[1.5px] border-charcoal active:opacity-90"
+            className="w-full bg-plaster text-charcoal py-4 px-4 rounded-[4px] border-[1.5px] border-charcoal active:opacity-90"
           >
             <span className="font-medium">Cuba ingat, kemudian tunjuk</span>
             <span className="mono-sm text-muted block mt-0.5">(try to recall, then reveal)</span>
@@ -82,10 +82,10 @@ export function FlipDeck({
     <div className="min-h-dvh flex flex-col bg-plaster">
       <div className="bg-indigo text-plaster px-5 pt-6 pb-5">
         <div className="flex items-center justify-between mb-3">
-          <button onClick={onExit} className="mono text-indigo-hi">
+          <button onClick={onExit} className="mono text-indigo-hi hit">
             ← keluar · exit
           </button>
-          <span className="mono text-gold">
+          <span className="mono text-gold-hi">
             {i + 1} / {words.length}
           </span>
         </div>
@@ -105,7 +105,7 @@ export function FlipDeck({
                 <button
                   onClick={() => speak(word.example_baku)}
                   aria-label="Main audio"
-                  className="text-gold"
+                  className="text-gold hit"
                 >
                   <SpeakerIcon className="w-5 h-5" />
                 </button>
@@ -141,7 +141,7 @@ export function FlipDeck({
       <div className="px-5 pb-5 pt-3 border-t-[1.5px] border-charcoal">
         <button
           onClick={next}
-          className="w-full bg-gold text-gold-ink py-4 rounded-[4px] border-[1.5px] border-charcoal font-medium active:opacity-90"
+          className="w-full bg-gold text-gold-ink py-4 px-4 rounded-[4px] border-[1.5px] border-charcoal font-medium active:opacity-90"
         >
           {i + 1 >= words.length ? (
             <Bi ms="Selesai" en="done" enClass="text-gold-ink/70" />

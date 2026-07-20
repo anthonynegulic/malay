@@ -76,15 +76,15 @@ export function Today() {
       {/* ————— indigo header floods the top third ————— */}
       <header className="bg-indigo text-plaster px-5 pt-6 pb-7">
         <div className="flex items-start justify-between">
-          <span className="mono text-gold">{dateLabel}</span>
-          <Link to="/settings" className="mono text-indigo-hi">
+          <span className="mono text-gold-hi">{dateLabel}</span>
+          <Link to="/settings" className="mono text-indigo-hi hit">
             tetapan · settings
           </Link>
         </div>
 
         {done ? (
           <div className="mt-8 mb-2">
-            <div className="display text-plaster" style={{ fontSize: 46 }}>
+            <div className="display display-md text-plaster">
               Siap.
             </div>
             <p className="text-indigo-hi mt-2">
@@ -113,7 +113,7 @@ export function Today() {
                   <button
                     onClick={() => speak(word.example_baku || word.baku)}
                     aria-label="Main audio"
-                    className="text-gold shrink-0 mb-1"
+                    className="text-gold-hi shrink-0 mb-1 hit"
                   >
                     <SpeakerIcon className="w-7 h-7" />
                   </button>
@@ -206,14 +206,14 @@ export function Today() {
             <div className={`${projected > 18 ? 'mt-3' : 'mt-6'} border-[1.5px] border-charcoal rounded-[4px] overflow-hidden`}>
               <button
                 onClick={start}
-                className="w-full bg-gold text-gold-ink py-4 border-b-[1.5px] border-charcoal active:opacity-90"
+                className="w-full bg-gold text-gold-ink py-4 px-4 border-b-[1.5px] border-charcoal active:opacity-90"
               >
                 <span className="display text-xl">Mula</span>
                 <span className="block mono-sm text-gold-ink/70 mt-0.5">(start today&rsquo;s session)</span>
               </button>
               <button
                 onClick={() => navigate('/review?mode=sikit')}
-                className="w-full bg-transparent text-charcoal py-3 active:bg-charcoal/5"
+                className="w-full bg-transparent text-charcoal py-3 px-4 active:bg-charcoal/5"
               >
                 <span className="font-medium">Sikit je</span>
                 <span className="text-muted text-sm"> (reviews only, ~5 min)</span>

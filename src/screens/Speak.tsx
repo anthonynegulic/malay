@@ -63,7 +63,7 @@ export function Speak() {
             void addPhaseTime('speakMs', startedAt.current)
             navigate('/')
           }}
-          className="mono text-indigo-hi"
+          className="mono text-indigo-hi hit"
         >
           ← keluar · exit
         </button>
@@ -102,7 +102,7 @@ export function Speak() {
                   : 'Jawab dalam Bahasa Melayu… (answer in Malay — imperfect is fine)'
               }
               rows={4}
-              className="mt-4 w-full border-[1.5px] border-charcoal bg-plaster p-4 passage rounded-[4px] focus:border-gold"
+              className="mt-4 w-full resize-none border-[1.5px] border-charcoal bg-plaster p-4 passage rounded-[4px] focus:border-gold"
             />
             {error && (
               <div className="mt-2 text-sm text-muted">
@@ -113,7 +113,7 @@ export function Speak() {
             <button
               onClick={submit}
               disabled={busy || !answer.trim()}
-              className="mt-4 w-full bg-gold text-gold-ink py-4 rounded-[4px] border-[1.5px] border-charcoal font-medium disabled:opacity-40"
+              className="mt-4 w-full bg-gold text-gold-ink py-4 px-4 rounded-[4px] border-[1.5px] border-charcoal font-medium disabled:opacity-40"
             >
               {busy ? 'Menyemak… (checking…)' : 'Hantar (send)'}
             </button>
@@ -134,7 +134,7 @@ export function Speak() {
                   <button
                     onClick={() => speak(result.corrected)}
                     aria-label="Main audio"
-                    className="text-gold shrink-0 mt-1"
+                    className="text-gold shrink-0 mt-1 hit"
                   >
                     <SpeakerIcon className="w-5 h-5" />
                   </button>
@@ -156,7 +156,7 @@ export function Speak() {
             </div>
             <button
               onClick={finish}
-              className="w-full bg-gold text-gold-ink py-4 rounded-[4px] border-[1.5px] border-charcoal font-medium"
+              className="w-full bg-gold text-gold-ink py-4 px-4 rounded-[4px] border-[1.5px] border-charcoal font-medium"
             >
               Selesai hari ini <span className="mono-sm text-gold-ink/70">(done for today)</span>
             </button>

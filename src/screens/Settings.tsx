@@ -47,7 +47,7 @@ export function Settings() {
           <Label ms="Tetapan" en="settings" color="indigo-hi" />
           <div className="display text-plaster mt-1 text-3xl">Tetapan</div>
         </div>
-        <button onClick={() => navigate(-1)} className="mono text-indigo-hi">
+        <button onClick={() => navigate(-1)} className="mono text-indigo-hi hit">
           tutup · close
         </button>
       </header>
@@ -78,9 +78,9 @@ export function Settings() {
           />
         </Row>
 
-        <div className="py-4 flex items-center justify-between">
+        <div className="py-4 flex items-center justify-between flex-wrap gap-2">
           <Label ms="Register bacaan" en="reading register" color="charcoal" />
-          <div className="flex border-[1.5px] border-charcoal rounded-[4px] overflow-hidden mono">
+          <div className="flex shrink-0 border-[1.5px] border-charcoal rounded-[4px] overflow-hidden mono">
             {(['baku', 'colloquial'] as const).map((r) => (
               <button
                 key={r}
@@ -119,7 +119,7 @@ export function Settings() {
             onChange={(e) => setS({ ...s, userContext: e.target.value })}
             onBlur={() => patch({ userContext: s.userContext })}
             rows={3}
-            className="mt-2 w-full border-[1.5px] border-charcoal bg-plaster p-3 text-sm rounded-[4px] focus:border-gold"
+            className="mt-2 w-full resize-none border-[1.5px] border-charcoal bg-plaster p-3 text-sm rounded-[4px] focus:border-gold"
           />
           <p className="text-muted text-sm">Used to personalise the topics of your generated reading.</p>
         </div>
@@ -132,9 +132,9 @@ export function Settings() {
           </p>
           <button
             onClick={() => navigate('/onboarding?redo=1')}
-            className="w-full py-3 border-[1.5px] border-charcoal text-charcoal rounded-[4px]"
+            className="w-full py-3 px-4 border-[1.5px] border-charcoal text-charcoal rounded-[4px]"
           >
-            Tanda kata yang anda tahu <span className="mono-sm text-muted">(mark words you know)</span>
+            Tanda kata yang anda tahu <span className="mono-sm text-muted block mt-0.5">(mark words you know)</span>
           </button>
         </div>
 
@@ -145,15 +145,15 @@ export function Settings() {
           </p>
           <button
             onClick={exportBackup}
-            className="w-full py-3 bg-gold text-gold-ink border-[1.5px] border-charcoal rounded-[4px] font-medium"
+            className="w-full py-3 px-4 bg-gold text-gold-ink border-[1.5px] border-charcoal rounded-[4px] font-medium"
           >
-            Eksport JSON <span className="mono-sm text-gold-ink/70">(download a backup)</span>
+            Eksport JSON <span className="mono-sm text-gold-ink/70 block mt-0.5">(download a backup)</span>
           </button>
           <button
             onClick={() => fileRef.current?.click()}
-            className="mt-2 w-full py-3 border-[1.5px] border-charcoal text-charcoal rounded-[4px]"
+            className="mt-2 w-full py-3 px-4 border-[1.5px] border-charcoal text-charcoal rounded-[4px]"
           >
-            Import JSON <span className="mono-sm text-muted">(replaces all current data)</span>
+            Import JSON <span className="mono-sm text-muted block mt-0.5">(replaces all current data)</span>
           </button>
           <input
             ref={fileRef}
@@ -220,9 +220,9 @@ function Row({
 }) {
   return (
     <div className="py-4">
-      <div className="flex items-baseline justify-between">
+      <div className="flex items-baseline justify-between gap-3">
         <Label ms={label} en={en} color="charcoal" />
-        <span className="display text-lg text-charcoal">{value}</span>
+        <span className="display text-lg text-charcoal shrink-0">{value}</span>
       </div>
       {children}
     </div>

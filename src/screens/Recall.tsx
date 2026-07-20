@@ -44,7 +44,7 @@ export function Recall() {
     return (
       <div className="min-h-dvh flex flex-col bg-indigo text-plaster">
         <div className="px-5 pt-6">
-          <span className="mono text-gold">IMBAS KEMBALI · RECALL</span>
+          <span className="mono text-gold-hi">IMBAS KEMBALI · RECALL</span>
         </div>
         <div className="flex-1 grid place-items-center px-6 text-center">
           <div>
@@ -60,7 +60,7 @@ export function Recall() {
         <div className="p-5 space-y-3">
           <button
             onClick={() => setStarted(true)}
-            className="w-full bg-gold text-gold-ink py-4 rounded-[4px] border-[1.5px] border-charcoal font-medium active:opacity-90"
+            className="w-full bg-gold text-gold-ink py-4 px-4 rounded-[4px] border-[1.5px] border-charcoal font-medium active:opacity-90"
           >
             Mula imbasan
             <span className="mono-sm block text-gold-ink/70 mt-0.5">(start — under a minute)</span>
