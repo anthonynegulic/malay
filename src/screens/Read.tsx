@@ -24,6 +24,16 @@ const GLOSS_MODE: Record<number, GlossMode> = { 0: 'always', 1: 'tap', 2: 'tap',
 
 const introKey = () => `bukit-intro-${todayStr()}`
 
+/** The how-to paragraph earns retirement after five readings (UX M7). */
+function useCoachNote(): boolean {
+  const [show] = useState(() => {
+    const n = Number(localStorage.getItem('bukit-coach-count') ?? '0')
+    if (n < 5) localStorage.setItem('bukit-coach-count', String(n + 1))
+    return n < 5
+  })
+  return show
+}
+
 export function Read() {
   const navigate = useNavigate()
   const [register, setRegister] = useState<Register>('baku')
@@ -47,6 +57,7 @@ export function Read() {
   const [voiceOk, setVoiceOk] = useState(false)
   const [noVoiceNote, setNoVoiceNote] = useState(false)
   const tts = ttsOn && voiceOk
+  const coachNote = useCoachNote()
   const startedAt = useRef(Date.now())
 
   async function load(reg: Register) {
@@ -314,8 +325,7 @@ export function Read() {
               <CloudIcon className="w-9 h-9 text-muted mb-3" />
               <div className="font-medium">Tak boleh jana hari ini — cuba lagi.</div>
               <div className="text-muted text-sm mt-1 max-w-xs">
-                Could not generate today&rsquo;s reading. Check your connection and try again — if
-                it keeps failing, the server&rsquo;s ANTHROPIC_API_KEY may be missing or invalid.
+                Could not generate today&rsquo;s reading. Check your connection and try again.
               </div>
               <div className="mt-5 flex gap-3">
                 <button
@@ -325,10 +335,10 @@ export function Read() {
                   Cuba lagi <span className="mono-sm text-gold-ink/70 block mt-0.5">(try again)</span>
                 </button>
                 <button
-                  onClick={() => navigate('/?done=sikit', { replace: true })}
+                  onClick={exit}
                   className="px-5 py-2.5 rounded-[4px] border-[1.5px] border-charcoal text-charcoal"
                 >
-                  Selesai <span className="mono-sm text-muted block mt-0.5">(finish)</span>
+                  Keluar <span className="mono-sm text-muted block mt-0.5">(exit)</span>
                 </button>
               </div>
             </div>
@@ -356,11 +366,13 @@ export function Read() {
               </p>
             )}
 
-            <p className="text-sm text-muted mb-3">
-              A short reading written just for you — today&rsquo;s{' '}
-              <span className="mark-new text-charcoal">new words</span> are underlined; everything
-              else uses only words you&rsquo;ve already studied. Tap any word for its meaning.
-            </p>
+            {coachNote && (
+              <p className="text-sm text-muted mb-3">
+                A short reading written just for you — today&rsquo;s{' '}
+                <span className="mark-new text-charcoal">new words</span> are underlined; everything
+                else uses only words you&rsquo;ve already studied. Tap any word for its meaning.
+              </p>
+            )}
 
             {/* passage on plaster, framed by charcoal rules */}
             <div className="border-y-[1.5px] border-charcoal py-4">

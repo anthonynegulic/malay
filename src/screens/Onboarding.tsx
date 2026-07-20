@@ -24,6 +24,8 @@ export function Onboarding() {
   const [i, setI] = useState(0)
   const [knownCount, setKnownCount] = useState(0)
   const [paused, setPaused] = useState(false)
+  // Mis-taps during a 425-word pass must be reversible (UX-REVIEW-001 M1).
+  const [undoStack, setUndoStack] = useState<{ id: string; known: boolean }[]>([])
 
   useEffect(() => {
     ;(async () => {
@@ -46,10 +48,23 @@ export function Onboarding() {
       await db.cards.add(knownCard(w.id))
       setKnownCount((c) => c + 1)
     }
+    setUndoStack((s) => [...s, { id: w.id, known }])
     const next = i + 1
     if (next >= words.length) return finish()
     if (next % BATCH === 0) setPaused(true)
     setI(next)
+  }
+
+  async function undo() {
+    const last = undoStack[undoStack.length - 1]
+    if (!last) return
+    if (last.known) {
+      await db.cards.where('wordId').equals(last.id).delete()
+      setKnownCount((c) => c - 1)
+    }
+    setUndoStack((s) => s.slice(0, -1))
+    setPaused(false)
+    setI((n) => n - 1)
   }
 
   useEffect(() => {
@@ -138,6 +153,11 @@ export function Onboarding() {
               <span className="display text-xl">Teruskan</span>
               <span className="mono-sm block text-muted mt-1">(keep marking — {BATCH} more)</span>
             </button>
+            {undoStack.length > 0 && (
+              <button onClick={undo} className="w-full py-2 mono text-muted">
+                ← undur · undo last
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -195,6 +215,11 @@ export function Onboarding() {
       </div>
 
       <div className="px-5 pb-6">
+        {undoStack.length > 0 && (
+          <button onClick={undo} className="mono text-muted mb-2 hit">
+            ← undur · undo last
+          </button>
+        )}
         <div className="grid grid-cols-2 border-[1.5px] border-charcoal rounded-[4px] overflow-hidden">
           <button
             onClick={() => mark(false)}

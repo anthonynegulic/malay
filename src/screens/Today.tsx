@@ -5,12 +5,9 @@ import type { Word } from '../db/types'
 import { dueCount } from '../lib/fsrs'
 import {
   getOrCreateTodaySession,
-  historyDays,
-  isFirstEverSession,
   newWordBudgetRemaining,
   nextMilestone,
   projectedSessionMinutes,
-  todayStr,
   weekRhythm,
   wordOfTheDay,
   type WeekRhythm,
@@ -30,11 +27,9 @@ export function Today() {
   const [budget, setBudget] = useState(0)
   const [studied, setStudied] = useState(0)
   const [rhythm, setRhythm] = useState<WeekRhythm | null>(null)
-  const [history, setHistory] = useState<boolean[]>([])
   const [word, setWord] = useState<Word | null>(null)
   const [firstWord, setFirstWord] = useState(false)
   const [tts, setTts] = useState(false)
-  const [firstEver, setFirstEver] = useState(false)
   const [projected, setProjected] = useState(0)
 
   useEffect(() => {
@@ -45,22 +40,20 @@ export function Today() {
       setBudget(await newWordBudgetRemaining())
       setStudied(await db.cards.count())
       setRhythm(await weekRhythm())
-      setHistory((await historyDays()).slice(-14).map((d) => d.counted))
       const wotd = await wordOfTheDay()
       setWord(wotd?.word ?? null)
       setFirstWord(wotd?.first ?? false)
-      setFirstEver(await isFirstEverSession())
       setProjected(await projectedSessionMinutes())
       const s = await getSettings()
       setTts(s.ttsEnabled && ttsAvailable())
     })()
   }, [done])
 
-  /** Day-0 routing (pedagogy-response §2.1): an empty queue on the very first
-   *  session must not open with an empty state — go straight to the reading.
-   *  On later days the friendly empty state in Review stays. */
+  /** An empty queue goes straight to the reading on any day — Mula should
+   *  never land on Review's empty state (UX-REVIEW-001 M3, generalising the
+   *  original day-0 routing from pedagogy-response §2.1). */
   function start() {
-    if (due === 0 && firstEver) navigate('/read')
+    if (due === 0) navigate('/read')
     else navigate('/review?mode=full')
   }
 
@@ -141,14 +134,11 @@ export function Today() {
             <span className="display text-charcoal text-xl">
               {studied} <span className="text-muted font-body font-normal text-base">/ {target} kata</span>
             </span>
-            <span className="mono text-muted">
-              next · {target}
-            </span>
+            <span className="mono text-muted">words learned</span>
           </div>
           <div className="mt-2 h-1.5 bg-hairline relative">
             <div className="absolute inset-y-0 left-0 bg-oxblood" style={{ width: `${pct}%` }} />
           </div>
-          <div className="mono text-muted mt-1.5">{studied} words learned</div>
         </div>
 
         {/* weekday row — practised / today / future, gaps visible */}

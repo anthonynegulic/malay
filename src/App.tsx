@@ -64,7 +64,15 @@ export default function App() {
     })()
   }, [])
 
-  if (!ready || !settings) return null
+  // First launch seeds 425 words into IndexedDB — show the spinner, not a
+  // blank plaster page (UX-REVIEW-001 H5).
+  if (!ready || !settings) {
+    return (
+      <div className="min-h-dvh grid place-items-center">
+        <span className="spinner" />
+      </div>
+    )
+  }
 
   return (
     <HashRouter>

@@ -1,5 +1,10 @@
 # UX Review 001 — all screens
 
+> **Status:** H1–H5, M1–M9, and the Today/Settings duplication items were
+> fixed on this branch (see `git log` for the three fix commits). Still open:
+> the Low-tier notes on slider labelling, passage button semantics for screen
+> readers, popover copy, and system-back behaviour in sessions.
+
 Reviewed: Onboarding, Today, Review, Read, Speak, Recall, Practice, Words,
 Progress, Settings, plus NavBar and the shared FlipDeck/ui components.
 Method: full code read + live run at 390×844 (Chromium), seeded DB, no API key

@@ -1,5 +1,11 @@
 # UI Review 001 — visual craft, all screens
 
+> **Status:** §1.1 (status chips), the §5 small-wins list, the Settings
+> double title, the grade-grid fill, and the contrast/type-size items were
+> fixed on this branch. Still open: the full display-scale consolidation
+> beyond the stat numerals (§2, example-sentence sizes), button label
+> anatomy unification (§3.1), and the Today header height cap (§4).
+
 Companion to UX-REVIEW-001 (behaviour and flows). This review is about the
 *visual layer*: the token system, type scale, component consistency, spacing,
 and per-screen finish. Method: live captures at 390×844 and 320×690, including

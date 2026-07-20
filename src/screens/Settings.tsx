@@ -44,8 +44,8 @@ export function Settings() {
     <div className="max-w-md mx-auto pb-24">
       <header className="bg-indigo text-plaster px-5 pt-6 pb-5 flex items-end justify-between">
         <div>
-          <Label ms="Tetapan" en="settings" color="indigo-hi" />
-          <div className="display text-plaster mt-1 text-3xl">Tetapan</div>
+          <div className="display text-plaster text-3xl">Tetapan</div>
+          <span className="mono text-indigo-hi mt-1 block">settings</span>
         </div>
         <button onClick={() => navigate(-1)} className="mono text-indigo-hi hit">
           tutup · close

@@ -160,6 +160,10 @@ export function Speak() {
             >
               Selesai hari ini <span className="mono-sm text-gold-ink/70">(done for today)</span>
             </button>
+            {/* the pedagogical moment: say it right this time (UX M9) */}
+            <button onClick={() => setResult(null)} className="w-full py-2 text-muted text-sm">
+              Cuba lagi <span className="text-muted/70">(edit your answer and resend)</span>
+            </button>
           </div>
         )}
       </div>

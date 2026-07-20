@@ -27,6 +27,12 @@ export function Words() {
   const [tag, setTag] = useState<string | null>(null)
   const [filter, setFilter] = useState<'all' | 'studied' | 'backlog' | 'variants' | 'harvested'>('all')
   const [openId, setOpenId] = useState<string | null>(null)
+  // 425+ rows render incrementally (UX-REVIEW-001 M2).
+  const [visibleCount, setVisibleCount] = useState(60)
+
+  useEffect(() => {
+    setVisibleCount(60)
+  }, [q, tag, filter])
 
   useEffect(() => {
     db.words.orderBy('addedAt').toArray().then(setWords)
@@ -78,7 +84,7 @@ export function Words() {
             [
               ['all', 'semua · all'],
               ['studied', 'dipelajari · studied'],
-              ['backlog', 'backlog'],
+              ['backlog', 'baru · backlog'],
               ['variants', 'ada loghat · variants'],
               ['harvested', 'dituai · harvested'],
             ] as const
@@ -125,8 +131,11 @@ export function Words() {
           </button>
         )}
 
-        <ul className="mt-2 divide-y divide-hairline border-y border-hairline">
-          {shown.map((w) => (
+        <div className="mono text-muted mt-3 mb-1">
+          {shown.length} padanan · {shown.length === 1 ? 'match' : 'matches'}
+        </div>
+        <ul className="divide-y divide-hairline border-y border-hairline">
+          {shown.slice(0, visibleCount).map((w) => (
             <li key={w.id}>
               <button
                 onClick={() => setOpenId(openId === w.id ? null : w.id)}
@@ -188,6 +197,18 @@ export function Words() {
             </li>
           )}
         </ul>
+        {shown.length > visibleCount && (
+          <button
+            onClick={() => setVisibleCount((n) => n + 100)}
+            className="mt-3 w-full py-3 px-4 border-[1.5px] border-charcoal text-charcoal rounded-[4px]"
+          >
+            <Bi
+              ms="Tunjuk lagi"
+              en={`show more — ${shown.length - visibleCount} left`}
+              className="font-medium"
+            />
+          </button>
+        )}
       </div>
     </div>
   )

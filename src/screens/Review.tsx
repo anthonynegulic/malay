@@ -220,7 +220,7 @@ export function Review() {
             <GradeBtn label="Lagi" en="again" sub={intervals.again} cls="border-[1.5px] border-oxblood text-oxblood" onClick={() => grade(Rating.Again)} />
             <GradeBtn label="Susah" en="hard" sub={intervals.hard} cls="border-[1.5px] border-charcoal text-charcoal" onClick={() => grade(Rating.Hard)} />
             <GradeBtn label="Okey" en="good" sub={intervals.good} cls="border-[1.5px] border-charcoal text-charcoal" onClick={() => grade(Rating.Good)} />
-            <GradeBtn label="Senang" en="easy" sub={intervals.easy} cls="bg-jade text-jade-ink border-[1.5px] border-jade" onClick={() => grade(Rating.Easy)} />
+            <GradeBtn label="Senang" en="easy" sub={intervals.easy} cls="border-[1.5px] border-jade text-jade-ink" onClick={() => grade(Rating.Easy)} />
           </div>
         </div>
       )}

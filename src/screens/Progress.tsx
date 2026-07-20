@@ -89,7 +89,7 @@ export function Progress() {
           <div className="flex items-baseline justify-between gap-3 mb-2">
             <Label ms="jalan ke puncak" en="road to the summit" color="muted" />
             <span className="mono text-muted shrink-0 whitespace-nowrap">
-              {stats.studied} / {target}
+              {stats.studied} / 1000
             </span>
           </div>
           <div className="relative h-2 bg-hairline">
@@ -137,7 +137,10 @@ export function Progress() {
         {/* review-debt trend */}
         {stats.debtTrend.length > 1 && (
           <div className="mt-5">
-            <Label ms="aliran hutang" en="debt trend" color="muted" className="block mb-2" />
+            <div className="flex items-baseline justify-between gap-3 mb-2">
+              <Label ms="aliran hutang" en="debt trend" color="muted" />
+              <span className="mono text-muted shrink-0">semasa · now {stats.due}</span>
+            </div>
             <div className="flex items-end gap-0.5 h-10 border-b border-hairline">
               {stats.debtTrend.map((d, i) => (
                 <div
@@ -200,7 +203,7 @@ export function Progress() {
               style={{ width: `${Math.min(100, (stats.studied / CHECKPOINT.targetWords) * 100)}%` }}
             />
           </div>
-          {weeks.length > 0 && (
+          {weeks.some((d) => d > 0) && (
             <div className="mt-4">
               <Label ms="rentak 12 minggu" en="trailing rhythm" color="muted" className="block mb-1.5" />
               <div className="flex items-end gap-1 h-8 border-b border-hairline">
@@ -241,7 +244,12 @@ export function Progress() {
         {/* footpath — ruled row of practised days, gaps visible */}
         {history.length > 0 && (
           <div className="mt-6 border-t-[1.5px] border-charcoal pt-4">
-            <Label ms="laluan" en="the footpath — full history" color="muted" className="block mb-3" />
+            <div className="flex items-baseline justify-between gap-3 mb-3">
+              <Label ms="laluan" en="the footpath — full history" color="muted" />
+              <span className="mono text-muted shrink-0">
+                {history.filter((d) => d.counted).length} hari
+              </span>
+            </div>
             <div className="flex flex-wrap gap-1.5">
               {history.map((d) => (
                 <span
