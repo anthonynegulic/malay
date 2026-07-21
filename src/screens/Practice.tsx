@@ -82,6 +82,22 @@ export function Practice() {
     setMode('run')
   }
 
+  /** Re-drill the SAME slice (cursor unchanged), reshuffled so it isn't rote
+   *  order — the point of batches: stay on a set until it sticks. */
+  function repeatBatch() {
+    if (words) {
+      const copy = [...words]
+      const start = cursor
+      const end = Math.min(cursor + batch, copy.length)
+      for (let i = end - 1; i > start; i--) {
+        const j = start + Math.floor(Math.random() * (i - start + 1))
+        ;[copy[i], copy[j]] = [copy[j], copy[i]]
+      }
+      setWords(copy)
+    }
+    setMode('run')
+  }
+
   /** Drill the whole deck again from a fresh shuffle. */
   function again() {
     if (words) {
@@ -221,13 +237,22 @@ export function Practice() {
               Ulang semula <span className="mono-sm text-gold-ink/70">(drill all again, reshuffled)</span>
             </button>
           ) : (
-            <button
-              onClick={nextBatch}
-              className="w-full bg-gold text-gold-ink py-4 px-4 rounded-[4px] border-[1.5px] border-charcoal font-medium active:opacity-90"
-            >
-              Teruskan
-              <span className="mono-sm text-gold-ink/70"> (continue — next {Math.min(effBatch, left)})</span>
-            </button>
+            <>
+              <button
+                onClick={repeatBatch}
+                className="w-full bg-gold text-gold-ink py-4 px-4 rounded-[4px] border-[1.5px] border-charcoal font-medium active:opacity-90"
+              >
+                Ulang set ini
+                <span className="mono-sm text-gold-ink/70"> (repeat these {Math.min(effBatch, drilled - cursor)} until they stick)</span>
+              </button>
+              <button
+                onClick={nextBatch}
+                className="w-full py-3.5 px-4 rounded-[4px] border-[1.5px] border-plaster/40 text-plaster active:bg-plaster/10"
+              >
+                Teruskan
+                <span className="mono-sm text-indigo-lo"> (continue — next {Math.min(effBatch, left)})</span>
+              </button>
+            </>
           )}
           <button onClick={exit} className="w-full py-2 text-indigo-hi text-sm">
             Selesai <span className="text-indigo-lo">(done)</span>
