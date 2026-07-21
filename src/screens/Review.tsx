@@ -6,7 +6,7 @@ import { dueCards, gradeCard, previewIntervals, Rating, type Grade } from '../li
 import { addPhaseTime, getOrCreateTodaySession, updateSession } from '../lib/session'
 import { ExampleBlock, VariantLedger } from '../components/RegisterChip'
 import { Bi, Headword, Label, SpeakerIcon } from '../components/ui'
-import { speak, ttsAvailable } from '../lib/tts'
+import { speak, useVoiceReady } from '../lib/tts'
 
 const SIKIT_CAP = 20
 
@@ -23,14 +23,16 @@ export function Review() {
   const [queue, setQueue] = useState<QueueItem[] | null>(null)
   const [flipped, setFlipped] = useState(false)
   const [graded, setGraded] = useState(0)
-  const [tts, setTts] = useState(false)
+  const [ttsPref, setTtsPref] = useState(false)
+  const voiceReady = useVoiceReady()
+  const tts = ttsPref && voiceReady
   const startedAt = useRef(Date.now())
 
   useEffect(() => {
     ;(async () => {
       await getOrCreateTodaySession()
       const settings = await getSettings()
-      setTts(settings.ttsEnabled && ttsAvailable())
+      setTtsPref(settings.ttsEnabled)
       const cards = await dueCards(sikit ? SIKIT_CAP : undefined)
       const items: QueueItem[] = []
       for (const card of cards) {

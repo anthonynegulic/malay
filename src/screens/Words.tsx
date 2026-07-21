@@ -4,7 +4,7 @@ import { db } from '../db/db'
 import type { CardState, Word } from '../db/types'
 import { ExampleBlock, RegisterChip, VariantChips } from '../components/RegisterChip'
 import { Bi, Label, SpeakerIcon } from '../components/ui'
-import { speak, ttsAvailable } from '../lib/tts'
+import { speak, useVoiceReady } from '../lib/tts'
 
 /** Study-state chip (P1.5): BARU = backlog, BELAJAR = in learning, MATANG = mature. */
 function StatusChip({ state }: { state: CardState | undefined }) {
@@ -27,6 +27,7 @@ export function Words() {
   const [tag, setTag] = useState<string | null>(null)
   const [filter, setFilter] = useState<'all' | 'studied' | 'backlog' | 'variants' | 'harvested'>('all')
   const [openId, setOpenId] = useState<string | null>(null)
+  const voiceReady = useVoiceReady()
   // 425+ rows render incrementally (UX-REVIEW-001 M2).
   const [visibleCount, setVisibleCount] = useState(60)
 
@@ -155,7 +156,7 @@ export function Words() {
                 <div className="fade-in pb-4 space-y-3">
                   <div className="flex items-center justify-between">
                     <Label ms={`${w.pos} · ${w.tags.join(', ')}`} en={w.source === 'seed' ? 'core list' : w.source} color="muted" />
-                    {ttsAvailable() && (
+                    {voiceReady && (
                       <button onClick={() => speak(w.baku)} className="text-gold hit">
                         <SpeakerIcon className="w-5 h-5" />
                       </button>

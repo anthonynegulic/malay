@@ -14,7 +14,7 @@ import {
 } from '../lib/session'
 import { Bi, Headword, Label, SpeakerIcon } from '../components/ui'
 import { ExampleBlock, RegisterChip } from '../components/RegisterChip'
-import { speak, ttsAvailable } from '../lib/tts'
+import { speak, useVoiceReady } from '../lib/tts'
 
 const DAY_LABELS = ['I', 'S', 'R', 'K', 'J', 'S', 'A'] // Isnin..Ahad
 
@@ -29,7 +29,9 @@ export function Today() {
   const [rhythm, setRhythm] = useState<WeekRhythm | null>(null)
   const [word, setWord] = useState<Word | null>(null)
   const [firstWord, setFirstWord] = useState(false)
-  const [tts, setTts] = useState(false)
+  const [ttsPref, setTtsPref] = useState(false)
+  const voiceReady = useVoiceReady()
+  const tts = ttsPref && voiceReady
   const [projected, setProjected] = useState(0)
 
   useEffect(() => {
@@ -45,7 +47,7 @@ export function Today() {
       setFirstWord(wotd?.first ?? false)
       setProjected(await projectedSessionMinutes())
       const s = await getSettings()
-      setTts(s.ttsEnabled && ttsAvailable())
+      setTtsPref(s.ttsEnabled)
     })()
   }, [done])
 

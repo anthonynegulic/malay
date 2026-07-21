@@ -4,7 +4,7 @@ import { getSettings } from '../db/db'
 import type { Word } from '../db/types'
 import { todaysNewWords, updateSession } from '../lib/session'
 import { FlipDeck } from '../components/FlipDeck'
-import { ttsAvailable } from '../lib/tts'
+import { useVoiceReady } from '../lib/tts'
 
 /**
  * End-of-lesson recall pass (pedagogy-response §1-Q1): a short, no-stakes
@@ -18,12 +18,14 @@ export function Recall() {
   const navigate = useNavigate()
   const [words, setWords] = useState<Word[] | null>(null)
   const [started, setStarted] = useState(false)
-  const [tts, setTts] = useState(false)
+  const [ttsPref, setTtsPref] = useState(false)
+  const voiceReady = useVoiceReady()
+  const tts = ttsPref && voiceReady
 
   useEffect(() => {
     ;(async () => {
       const settings = await getSettings()
-      setTts(settings.ttsEnabled && ttsAvailable())
+      setTtsPref(settings.ttsEnabled)
       setWords(await todaysNewWords())
     })()
   }, [])

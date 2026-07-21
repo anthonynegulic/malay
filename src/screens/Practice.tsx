@@ -5,7 +5,7 @@ import type { Word } from '../db/types'
 import { getOrCreateTodaySession, updateSession } from '../lib/session'
 import { FlipDeck } from '../components/FlipDeck'
 import { Bi, Label } from '../components/ui'
-import { ttsAvailable } from '../lib/tts'
+import { useVoiceReady } from '../lib/tts'
 
 /**
  * Ulangkaji bebas (feedback-002 R4): Quizlet-style flipping through
@@ -41,7 +41,9 @@ export function Practice() {
   const navigate = useNavigate()
   const [params] = useSearchParams()
   const [words, setWords] = useState<Word[] | null>(null)
-  const [tts, setTts] = useState(false)
+  const [ttsPref, setTtsPref] = useState(false)
+  const voiceReady = useVoiceReady()
+  const tts = ttsPref && voiceReady
   // 'setup' picks batch size; 'run' drills a slice; 'pause' sits between batches.
   const [mode, setMode] = useState<'setup' | 'run' | 'pause'>('setup')
   const [cursor, setCursor] = useState(0)
@@ -51,7 +53,7 @@ export function Practice() {
   useEffect(() => {
     ;(async () => {
       const settings = await getSettings()
-      setTts(settings.ttsEnabled && ttsAvailable())
+      setTtsPref(settings.ttsEnabled)
       const cards = await db.cards.toArray()
       const cardByWord = new Map(cards.map((c) => [c.wordId, c]))
       const studiedIds = new Set(cards.map((c) => c.wordId))

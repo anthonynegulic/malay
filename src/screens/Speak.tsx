@@ -6,7 +6,7 @@ import { gradeResponse, outputPrompt, type SpeakTask } from '../lib/api'
 import { addPhaseTime, todayStr, updateSession } from '../lib/session'
 import { tierFor } from '../lib/tier'
 import { Label, SpeakerIcon } from '../components/ui'
-import { speak, ttsAvailable } from '../lib/tts'
+import { speak, useVoiceReady } from '../lib/tts'
 
 export function Speak() {
   const navigate = useNavigate()
@@ -15,7 +15,9 @@ export function Speak() {
   const [busy, setBusy] = useState(false)
   const [result, setResult] = useState<GradeResult | null>(null)
   const [error, setError] = useState(false)
-  const [tts, setTts] = useState(false)
+  const [ttsPref, setTtsPref] = useState(false)
+  const voiceReady = useVoiceReady()
+  const tts = ttsPref && voiceReady
   const startedAt = useRef(Date.now())
 
   useEffect(() => {
@@ -24,7 +26,7 @@ export function Speak() {
       const tier = tierFor(await db.cards.count())
       setTask(outputPrompt(p?.topic ?? 'pasar', tier.id))
       const s = await getSettings()
-      setTts(s.ttsEnabled && ttsAvailable())
+      setTtsPref(s.ttsEnabled)
     })()
   }, [])
 

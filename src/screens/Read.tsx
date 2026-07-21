@@ -6,7 +6,7 @@ import { getOrGeneratePassage } from '../lib/api'
 import { addPhaseTime, harvestWord, todayStr, updateSession, type HarvestResult } from '../lib/session'
 import { ExampleBlock, RegisterChip } from '../components/RegisterChip'
 import { Bi, CloudIcon, Headword, Label, MuteIcon, SpeakerIcon } from '../components/ui'
-import { speak, ttsAvailable } from '../lib/tts'
+import { speak, ttsAvailable, useVoiceReady } from '../lib/tts'
 
 function cleanToken(t: string): string {
   return t.toLowerCase().replace(/[^a-zà-ɏ'-]/gi, '')
@@ -52,9 +52,10 @@ export function Read() {
   const [introIdx, setIntroIdx] = useState(0)
   // Tier-0 tap-to-advance: lines reveal one at a time; null = all visible.
   const [visibleLines, setVisibleLines] = useState<number | null>(null)
-  // Audio: user toggle (persisted) × voice availability (device).
+  // Audio: user toggle (persisted) × voice availability (device). Voice
+  // availability is reactive — voices can load after mount.
   const [ttsOn, setTtsOn] = useState(false)
-  const [voiceOk, setVoiceOk] = useState(false)
+  const voiceOk = useVoiceReady()
   const [noVoiceNote, setNoVoiceNote] = useState(false)
   const tts = ttsOn && voiceOk
   const coachNote = useCoachNote()
@@ -89,17 +90,23 @@ export function Read() {
     getSettings().then((s) => {
       setRegister(s.registerPreference)
       setTtsOn(s.ttsEnabled)
-      const ok = ttsAvailable()
-      setVoiceOk(ok)
-      // Degrade gracefully when no Malay voice exists: hide the controls and
-      // say so once (pedagogy-response §1-Q2).
-      if (s.ttsEnabled && !ok && localStorage.getItem('bukit-novoice') !== '1') {
-        setNoVoiceNote(true)
-        localStorage.setItem('bukit-novoice', '1')
-      }
       void load(s.registerPreference)
     })
   }, [])
+
+  // Degrade gracefully when no Malay voice exists: hide the controls and say
+  // so once (pedagogy-response §1-Q2). Voices load asynchronously, so wait a
+  // beat before declaring them absent — otherwise a slow load looks voiceless.
+  useEffect(() => {
+    if (!ttsOn || voiceOk) return
+    const t = setTimeout(() => {
+      if (!ttsAvailable() && localStorage.getItem('bukit-novoice') !== '1') {
+        setNoVoiceNote(true)
+        localStorage.setItem('bukit-novoice', '1')
+      }
+    }, 1500)
+    return () => clearTimeout(t)
+  }, [ttsOn, voiceOk])
 
   const newSurfaces = useMemo(() => new Set(newWords.map((w) => w.baku.toLowerCase())), [newWords])
   // Glossed words carry a dotted underline so tappability is visible, not
@@ -357,7 +364,7 @@ export function Read() {
               )}
             </div>
 
-            {noVoiceNote && (
+            {noVoiceNote && !voiceOk && (
               <p className="text-sm text-muted mb-3">
                 <Bi
                   ms="Tiada suara Melayu pada peranti ini"
@@ -544,9 +551,12 @@ export function Read() {
                           value={typedAnswer}
                           onChange={(e) => setTypedAnswer(e.target.value)}
                           onKeyDown={(e) => e.key === 'Enter' && typedAnswer.trim() && setShowAnswer(true)}
-                          placeholder="Taip jawapan anda… (type your answer, then check)"
+                          placeholder="Taip jawapan anda…"
                           className="w-full border-[1.5px] border-charcoal bg-plaster px-3 py-2.5 rounded-[4px] focus:border-gold"
                         />
+                        <p className="mono-sm text-muted mt-1.5">
+                          type your answer, then check — or just show it
+                        </p>
                         <div className="mt-2.5 flex items-center gap-4">
                           <button
                             onClick={() => setShowAnswer(true)}
@@ -601,7 +611,11 @@ export function Read() {
               )}
             </div>
             <div className="mt-2 text-muted">
-              {popover.gloss ? `(${popover.gloss})` : 'No gloss available.'}
+              {popover.gloss ? (
+                `(${popover.gloss})`
+              ) : (
+                <Bi ms="Tiada makna tersimpan" en="no meaning stored yet" />
+              )}
             </div>
             <div className="mt-5">
               {popover.status === 'added' && (
