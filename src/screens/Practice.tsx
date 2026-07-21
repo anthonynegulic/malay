@@ -19,7 +19,17 @@ import { ttsAvailable } from '../lib/tts'
  * words already drilled this session are excluded until the pool is exhausted.
  * Batching is session-scoped only; nothing persists across visits (free
  * practice stays deliberately stateless — the real reviews are the scheduler).
+ *
+ * Deck source (Anki "custom study", made safe): 'all' = every studied word
+ * (honouring the Kata filters you arrived with); 'hard' = your weak spots,
+ * most-forgotten first (by lapses, then FSRS difficulty, then low stability).
+ * We deliberately do NOT offer a "today's due cards" source: cramming the due
+ * queue here and then grading it Easy in the real review minutes later feeds
+ * FSRS crammed short-term recall and blows the intervals out — the exact
+ * corruption this write-free surface exists to avoid.
  */
+type Source = 'all' | 'hard'
+
 const BATCH_KEY = 'bukit-practice-batch'
 const BATCH_MIN = 5
 const BATCH_DEFAULT = 10
@@ -36,26 +46,43 @@ export function Practice() {
   const [mode, setMode] = useState<'setup' | 'run' | 'pause'>('setup')
   const [cursor, setCursor] = useState(0)
   const [batch, setBatch] = useState(BATCH_DEFAULT)
+  const [source, setSource] = useState<Source>('all')
 
   useEffect(() => {
     ;(async () => {
       const settings = await getSettings()
       setTts(settings.ttsEnabled && ttsAvailable())
       const cards = await db.cards.toArray()
+      const cardByWord = new Map(cards.map((c) => [c.wordId, c]))
       const studiedIds = new Set(cards.map((c) => c.wordId))
       const tag = params.get('tag')
       const filter = params.get('filter')
       let deck = (await db.words.toArray()).filter((w) => studiedIds.has(w.id))
-      if (tag) deck = deck.filter((w) => w.tags.includes(tag))
-      if (filter === 'variants') deck = deck.filter((w) => w.colloquial || w.utara)
-      if (filter === 'harvested') deck = deck.filter((w) => w.source === 'harvested')
-      shuffle(deck)
+
+      if (source === 'hard') {
+        // Weak spots: most-forgotten first. Lapses dominate, then FSRS
+        // difficulty, then low stability as a fine tiebreak. No shuffle — the
+        // whole point is hardest-first. (Kata filters are ignored here: weak
+        // spots are a cross-cutting SRS view, not a tag slice.)
+        const hardness = (w: Word) => {
+          const c = cardByWord.get(w.id)
+          if (!c) return -1
+          return c.lapses * 100 + c.difficulty + Math.max(0, 5 - Math.min(5, c.stability)) * 0.1
+        }
+        deck.sort((a, b) => hardness(b) - hardness(a))
+      } else {
+        if (tag) deck = deck.filter((w) => w.tags.includes(tag))
+        if (filter === 'variants') deck = deck.filter((w) => w.colloquial || w.utara)
+        if (filter === 'harvested') deck = deck.filter((w) => w.source === 'harvested')
+        shuffle(deck)
+      }
+
       setWords(deck)
       // Restore the last chosen batch size, clamped to this deck.
       const saved = Number(localStorage.getItem(BATCH_KEY) || BATCH_DEFAULT)
       setBatch(Math.max(BATCH_MIN, Math.min(saved || BATCH_DEFAULT, deck.length)))
     })()
-  }, [params])
+  }, [params, source])
 
   async function logRun() {
     const s = await getOrCreateTodaySession()
@@ -111,32 +138,14 @@ export function Practice() {
 
   if (!words) return null
 
-  if (words.length === 0) {
-    return (
-      <div className="min-h-dvh grid place-items-center bg-indigo text-plaster px-6 text-center">
-        <div>
-          <p>
-            Tiada kata dipelajari dalam tapisan ini{' '}
-            <span className="text-indigo-lo">(no studied words match these filters)</span>
-          </p>
-          <button
-            onClick={exit}
-            className="mt-5 px-5 py-2.5 border-[1.5px] border-plaster/50 rounded-[4px]"
-          >
-            Kembali <span className="text-indigo-lo">(back)</span>
-          </button>
-        </div>
-      </div>
-    )
-  }
-
   const total = words.length
+  const empty = total === 0
   // Small decks aren't worth batching — drill the lot, hide the slider.
   const canBatch = total > BATCH_MIN
   const effBatch = canBatch ? batch : total
   const sliderMax = Math.max(BATCH_MIN, total)
 
-  // ————— setup: choose how many to drill —————
+  // ————— setup: choose the source and how many to drill —————
   if (mode === 'setup') {
     return (
       <div className="min-h-dvh flex flex-col bg-indigo text-plaster">
@@ -145,13 +154,58 @@ export function Practice() {
         </div>
         <div className="flex-1 grid place-items-center px-6 text-center">
           <div className="w-full max-w-xs">
-            <div className="display text-plaster text-3xl">{total} kata</div>
+            <div className="display text-plaster text-3xl">
+              {empty ? 'Tiada kata' : `${total} kata`}
+            </div>
             <p className="text-indigo-hi mt-3">
               Latihan sahaja — tidak mengubah jadual ulangkaji{' '}
               <span className="text-indigo-lo">
                 (practice only — doesn&rsquo;t change your review schedule)
               </span>
             </p>
+
+            {/* source: all studied words vs your weak spots */}
+            <div className="mt-8 text-left">
+              <Label ms="Apa nak diulang?" en="what to drill" color="indigo-hi" className="block mb-2" />
+              <div className="grid grid-cols-2 border-[1.5px] border-plaster/40 rounded-[4px] overflow-hidden">
+                {(
+                  [
+                    ['all', 'Semua', 'all studied'],
+                    ['hard', 'Paling susah', 'weak spots'],
+                  ] as const
+                ).map(([key, ms, en]) => (
+                  <button
+                    key={key}
+                    onClick={() => setSource(key)}
+                    className={`py-2.5 px-2 ${
+                      source === key ? 'bg-plaster text-indigo' : 'text-plaster active:bg-plaster/10'
+                    }`}
+                  >
+                    <span className="font-medium block leading-tight">{ms}</span>
+                    <span className="mono-sm opacity-70">{en}</span>
+                  </button>
+                ))}
+              </div>
+              <div className="mono-sm text-indigo-lo mt-2">
+                {source === 'hard'
+                  ? 'kata paling kerap terlupa dahulu · most-forgotten first'
+                  : 'semua kata yang dipelajari · everything you have studied'}
+              </div>
+            </div>
+
+            {empty && (
+              <p className="text-indigo-hi text-sm mt-6">
+                <Bi
+                  ms="Tiada kata dalam tapisan ini"
+                  en={
+                    source === 'hard'
+                      ? 'nothing studied yet'
+                      : 'no studied words match these filters — try weak spots'
+                  }
+                  enClass="text-indigo-lo"
+                />
+              </p>
+            )}
 
             {canBatch && (
               <div className="mt-8 text-left">
@@ -180,13 +234,14 @@ export function Practice() {
         </div>
         <div className="p-5 space-y-3">
           <button
+            disabled={empty}
             onClick={() => {
               setCursor(0)
               setMode('run')
             }}
-            className="w-full bg-gold text-gold-ink py-4 px-4 rounded-[4px] border-[1.5px] border-charcoal font-medium active:opacity-90"
+            className="w-full bg-gold text-gold-ink py-4 px-4 rounded-[4px] border-[1.5px] border-charcoal font-medium active:opacity-90 disabled:opacity-40"
           >
-            Mula <span className="mono-sm text-gold-ink/70">(start{canBatch ? ` — ${effBatch} kata` : ''})</span>
+            Mula <span className="mono-sm text-gold-ink/70">(start{!empty && canBatch ? ` — ${effBatch} kata` : ''})</span>
           </button>
           <button onClick={exit} className="w-full py-2 text-indigo-hi text-sm">
             Kembali <span className="text-indigo-lo">(back)</span>
