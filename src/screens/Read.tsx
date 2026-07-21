@@ -159,7 +159,12 @@ export function Read() {
     const glossEntry = passage.glossary.find((g) => cleanToken(g.word) === clean)
     const inv = await db.words.where('baku').equals(clean).first()
     const hasCard = inv ? Boolean(await db.cards.where('wordId').equals(inv.id).first()) : false
-    setPopover({ token: clean, gloss: glossEntry?.gloss ?? inv?.gloss_en, hasCard })
+    // The server flags out-of-vocabulary words by adding them to the glossary
+    // with an empty gloss (QA marker, not a definition). An empty string is not
+    // nullish, so `??` would keep it and hide a meaning we already hold locally
+    // — fall through to the word inventory whenever the passage gloss is blank.
+    const gloss = glossEntry?.gloss?.trim() || inv?.gloss_en
+    setPopover({ token: clean, gloss, hasCard })
   }
 
   async function tambah() {
